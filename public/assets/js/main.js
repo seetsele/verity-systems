@@ -1,284 +1,285 @@
-// ===========================
-// DARK MODE TOGGLE
-// ===========================
-const themeToggle = document.querySelector('.theme-toggle');
-const htmlElement = document.documentElement;
+// ================================================
+// VERITY SYSTEMS - GSAP ANIMATIONS
+// ================================================
 
-// Check for saved theme preference or default to light mode
-const currentTheme = localStorage.getItem('theme') || 'light';
-if (currentTheme === 'dark') {
-    htmlElement.classList.add('dark-mode');
+gsap.registerPlugin(ScrollTrigger);
+
+// Prevent animations on first load for smoother experience
+const mm = gsap.matchMedia();
+
+// ================================================
+// HERO ANIMATIONS
+// ================================================
+
+// Animate hero lines on load
+function animateHeroTitle() {
+    const lines = document.querySelectorAll('.line');
+    
+    gsap.from(lines, {
+        duration: 0.8,
+        y: 120,
+        opacity: 0,
+        stagger: 0.15,
+        ease: 'power4.out'
+    });
 }
 
-// Toggle dark mode
-themeToggle.addEventListener('click', () => {
-    htmlElement.classList.toggle('dark-mode');
-    const theme = htmlElement.classList.contains('dark-mode') ? 'dark' : 'light';
-    localStorage.setItem('theme', theme);
-    updateThemeIcon();
+// Animate hero buttons
+function animateHeroButtons() {
+    const buttons = document.querySelectorAll('.hero-buttons .btn');
+    
+    gsap.from(buttons, {
+        duration: 0.8,
+        y: 30,
+        opacity: 0,
+        stagger: 0.2,
+        delay: 0.4,
+        ease: 'power3.out'
+    });
+}
+
+// Run hero animations on page load
+window.addEventListener('load', () => {
+    animateHeroTitle();
+    animateHeroButtons();
 });
 
-function updateThemeIcon() {
-    const icon = themeToggle.querySelector('i');
-    if (htmlElement.classList.contains('dark-mode')) {
-        icon.classList.remove('fa-moon');
-        icon.classList.add('fa-sun');
-    } else {
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon');
-    }
-}
+// ================================================
+// SCROLL ANIMATIONS
+// ================================================
 
-updateThemeIcon();
+// Service cards animation
+const serviceCards = document.querySelectorAll('.service-item');
+serviceCards.forEach((card, index) => {
+    gsap.from(card, {
+        scrollTrigger: {
+            trigger: card,
+            start: 'top 80%',
+            end: 'top 60%',
+            scrub: 0.5
+        },
+        duration: 0.6,
+        y: 40,
+        opacity: 0,
+        ease: 'power3.out'
+    });
+});
 
-// ===========================
-// SMOOTH SCROLLING
-// ===========================
+// Process cards animation with stagger
+gsap.from('.process-card', {
+    scrollTrigger: {
+        trigger: '.process',
+        start: 'top 75%'
+    },
+    duration: 0.6,
+    y: 40,
+    opacity: 0,
+    stagger: 0.1,
+    ease: 'power3.out'
+});
+
+// Feature cards animation
+gsap.from('.feature-card', {
+    scrollTrigger: {
+        trigger: '.features',
+        start: 'top 75%'
+    },
+    duration: 0.6,
+    y: 40,
+    opacity: 0,
+    stagger: 0.08,
+    ease: 'power3.out'
+});
+
+// Pricing cards animation
+gsap.from('.pricing-card', {
+    scrollTrigger: {
+        trigger: '.pricing',
+        start: 'top 75%'
+    },
+    duration: 0.6,
+    y: 40,
+    opacity: 0,
+    stagger: 0.12,
+    ease: 'power3.out'
+});
+
+// ================================================
+// HOVER ANIMATIONS
+// ================================================
+
+// Card hover effects
+const allCards = document.querySelectorAll('.service-item, .process-card, .feature-card, .pricing-card');
+
+allCards.forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        gsap.to(this, {
+            duration: 0.3,
+            y: -8,
+            boxShadow: '0 20px 40px rgba(0, 217, 255, 0.1)',
+            ease: 'power2.out'
+        });
+    });
+
+    card.addEventListener('mouseleave', function() {
+        gsap.to(this, {
+            duration: 0.3,
+            y: 0,
+            boxShadow: '0 0px 0px rgba(0, 217, 255, 0)',
+            ease: 'power2.out'
+        });
+    });
+});
+
+// Button hover effects
+const buttons = document.querySelectorAll('.btn');
+
+buttons.forEach(btn => {
+    btn.addEventListener('mouseenter', function() {
+        gsap.to(this, {
+            duration: 0.3,
+            y: -2,
+            ease: 'power2.out'
+        });
+    });
+
+    btn.addEventListener('mouseleave', function() {
+        gsap.to(this, {
+            duration: 0.3,
+            y: 0,
+            ease: 'power2.out'
+        });
+    });
+});
+
+// ================================================
+// SMOOTH SCROLL BEHAVIOR
+// ================================================
+
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
+            gsap.to(window, {
+                duration: 0.8,
+                scrollTo: {
+                    y: target,
+                    autoKill: false
+                },
+                ease: 'power2.inOut'
             });
         }
     });
 });
 
-// ===========================
-// NAVBAR SCROLL EFFECT
-// ===========================
-let lastScrollTop = 0;
-const navbar = document.querySelector('.navbar');
+// ================================================
+// FORM ANIMATIONS
+// ================================================
+
+const contactForm = document.querySelector('.contact-form');
+if (contactForm) {
+    const inputs = contactForm.querySelectorAll('input, textarea');
+    
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            gsap.to(this, {
+                duration: 0.3,
+                scale: 1.02,
+                ease: 'power2.out'
+            });
+        });
+
+        input.addEventListener('blur', function() {
+            gsap.to(this, {
+                duration: 0.3,
+                scale: 1,
+                ease: 'power2.out'
+            });
+        });
+    });
+
+    // Form submission animation
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const button = this.querySelector('button');
+        const originalText = button.textContent;
+        
+        gsap.to(button, {
+            duration: 0.3,
+            scale: 0.95,
+            ease: 'back.out'
+        });
+
+        setTimeout(() => {
+            button.textContent = '✓ Message Sent!';
+            gsap.to(button, {
+                duration: 0.3,
+                scale: 1,
+                ease: 'back.out'
+            });
+
+            setTimeout(() => {
+                button.textContent = originalText;
+                this.reset();
+            }, 2000);
+        }, 500);
+    });
+}
+
+// ================================================
+// NAVIGATION ACTIVE LINK ANIMATION
+// ================================================
+
+const navLinks = document.querySelectorAll('.nav-links a');
 
 window.addEventListener('scroll', () => {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    let current = '';
     
-    if (scrollTop > 100) {
-        navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
-    } else {
-        navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.08)';
-    }
-    
-    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-});
-
-// ===========================
-// INTERSECTION OBSERVER FOR ANIMATIONS
-// ===========================
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
+    const sections = document.querySelectorAll('section[id]');
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        
+        if (scrollY >= sectionTop - 200) {
+            current = section.getAttribute('id');
         }
     });
-}, observerOptions);
 
-document.querySelectorAll('.service-card, .feature-item, .testimonial-card, .price-card').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-    observer.observe(el);
-});
-
-// ===========================
-// CONTACT FORM HANDLING
-// ===========================
-const contactForm = document.getElementById('contactForm');
-
-if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const button = contactForm.querySelector('button');
-        const originalText = button.innerHTML;
-        button.disabled = true;
-        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-        
-        const formData = new FormData(contactForm);
-        const data = Object.fromEntries(formData);
-        
-        try {
-            // FOR NOW: Log form data (EmailJS integration would go here)
-            console.log('Form submitted:', data);
-            
-            // Simulate sending
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            // Show success message
-            button.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
-            button.style.background = '#10B981';
-            
-            contactForm.reset();
-            
-            // Reset button after 3 seconds
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.style.background = '';
-                button.disabled = false;
-            }, 3000);
-            
-        } catch (error) {
-            console.error('Error:', error);
-            button.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error Sending';
-            button.style.background = '#EF4444';
-            
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.style.background = '';
-                button.disabled = false;
-            }, 3000);
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href').slice(1) === current) {
+            link.classList.add('active');
         }
     });
-}
-
-// ===========================
-// DYNAMIC STAT COUNTER
-// ===========================
-function animateCounter(element, target, duration = 2000) {
-    let current = 0;
-    const increment = target / (duration / 16);
-    
-    const interval = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-            element.textContent = target;
-            clearInterval(interval);
-        } else {
-            element.textContent = Math.floor(current);
-        }
-    }, 16);
-}
-
-// Trigger counters when stats section is visible
-const statsSection = document.querySelector('.stats');
-if (statsSection) {
-    const statsObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                document.querySelectorAll('.stat-number').forEach(stat => {
-                    const text = stat.textContent;
-                    const number = parseInt(text);
-                    if (!isNaN(number)) {
-                        animateCounter(stat, number);
-                    }
-                });
-                statsObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    statsObserver.observe(statsSection);
-}
-
-// ===========================
-// KEYBOARD SHORTCUTS
-// ===========================
-document.addEventListener('keydown', (e) => {
-    // Ctrl/Cmd + K to focus search (if added)
-    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        // Focus search input here when added
-    }
-    
-    // Escape to close any modals
-    if (e.key === 'Escape') {
-        // Close modals here
-    }
 });
 
-// ===========================
-// FORM VALIDATION
-// ===========================
-const validateEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-};
+// ================================================
+// PARALLAX EFFECT FOR BACKGROUND LOGOS
+// ================================================
 
-if (contactForm) {
-    const emailInput = contactForm.querySelector('input[type="email"]');
-    if (emailInput) {
-        emailInput.addEventListener('blur', () => {
-            if (!validateEmail(emailInput.value)) {
-                emailInput.style.borderColor = '#EF4444';
-            } else {
-                emailInput.style.borderColor = '';
-            }
+window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    
+    const bgLogos = document.querySelectorAll('.logo-bg');
+    bgLogos.forEach((logo, index) => {
+        const speed = 0.5 + (index * 0.1);
+        gsap.to(logo, {
+            duration: 0,
+            y: scrolled * speed * 0.1
         });
-    }
-}
-
-// ===========================
-// ANALYTICS TRACKING (placeholder)
-// ===========================
-function trackEvent(eventName, eventData) {
-    console.log(`Event: ${eventName}`, eventData);
-    // Google Analytics or similar would go here
-}
-
-document.querySelectorAll('a.cta-button, a.btn-primary').forEach(btn => {
-    btn.addEventListener('click', () => {
-        trackEvent('cta_click', { button: btn.textContent });
     });
 });
 
-// ===========================
-// MOBILE MENU TOGGLE
-// ===========================
-function setupMobileMenu() {
-    const navLinks = document.querySelector('.nav-links');
-    const navContainer = document.querySelector('.nav-container');
-    
-    // Only for mobile
-    if (window.innerWidth <= 768) {
-        const menuButton = document.createElement('button');
-        menuButton.className = 'mobile-menu-toggle';
-        menuButton.innerHTML = '<i class="fas fa-bars"></i>';
-        menuButton.style.cssText = `
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-primary);
-            display: flex;
-        `;
-        
-        navContainer.insertBefore(menuButton, navLinks);
-        
-        menuButton.addEventListener('click', () => {
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-        });
-    }
-}
+// ================================================
+// PAGE LOAD ANIMATION
+// ================================================
 
-setupMobileMenu();
-window.addEventListener('resize', setupMobileMenu);
+gsap.from('body', {
+    duration: 0.6,
+    opacity: 0,
+    ease: 'power2.out'
+});
 
-// ===========================
-// PERFORMANCE: Lazy load images
-// ===========================
-if ('IntersectionObserver' in window) {
-    const images = document.querySelectorAll('img[data-src]');
-    const imageObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
-                imageObserver.unobserve(img);
-            }
-        });
-    });
-    
-    images.forEach(img => imageObserver.observe(img));
-}
-
-console.log('%cVerity Systems - Truth at Speed', 'color: #0066FF; font-size: 20px; font-weight: bold;');
+console.log('%c✓ Verity Systems Loaded', 'color: #00d9ff; font-size: 14px; font-weight: bold;');

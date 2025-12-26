@@ -145,6 +145,17 @@ html.dark-mode .navbar {
     letter-spacing: -0.5px;
 }
 
+.logo-image {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.logo-text {
+    display: inline-block;
+}
+
 .logo-glyph {
     width: 36px;
     height: 36px;
@@ -781,7 +792,7 @@ html.dark-mode .navbar {
     padding: 2.5rem;
     border-radius: var(--radius-lg);
     position: relative;
-    transition: all var(--duration-fast) var(--ease-in-out));
+    transition: all var(--duration-fast) var(--ease-in-out);
 }
 
 .price-card:hover {
@@ -987,6 +998,13 @@ html.dark-mode .navbar {
     margin-bottom: 1rem;
 }
 
+.footer-logo-image {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+}
+
 .footer-section h4 {
     color: white;
     font-size: 0.95rem;
@@ -1034,7 +1052,7 @@ html.dark-mode .navbar {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all var(--duration-fast) var(--ease-in-out));
+    transition: all var(--duration-fast) var(--ease-in-out);
 }
 
 .social-links a:hover {
