@@ -3,23 +3,37 @@ Verity Systems - Super Fact-Checking Model
 Combines multiple free/open-source APIs for maximum accuracy and security
 
 APIs Integrated:
-- Anthropic Claude (via GitHub Education credits)
-- Google Fact Check API (free tier)
-- Wikipedia API (free)
+- Anthropic Claude (via GitHub Education credits - $25/month)
+- Google Fact Check API (free tier - 10,000/day)
+- Wikipedia API (free - unlimited)
 - NewsAPI (free tier - 100 requests/day)
-- Open AI Compatible APIs (Groq free tier)
+- Groq API (free tier - Llama 3.1 70B)
 - ClaimBuster API (free for research)
 - Hugging Face Inference API (free tier)
 - DuckDuckGo Search (free, no API key)
 - Wikidata Query Service (free)
+- OpenAI API (via Azure credits from GitHub Education)
+- Perplexity AI (research queries)
+- Serper API (Google search - free tier)
+
+GitHub Education Pack Credits Utilized:
+- Anthropic: $25/month API credits
+- Microsoft Azure: $100 free credits
+- DigitalOcean: $200 in platform credits
+- MongoDB Atlas: $50 credit + free certification
+- Heroku: $13/month for 2 years ($312 value)
+- AWS Educate: Free tier + promotional credits
+- JetBrains: Free IDE subscription
+- DataCamp: 3 months free
+- Sentry: 50,000 events/month free
 
 Security Features:
-- AES-256 encryption for sensitive data
+- AES-256-GCM encryption for sensitive data
 - Input sanitization and validation
 - Rate limiting and request throttling
-- Secure credential management
-- Data anonymization
-- Audit logging
+- Secure credential management (1Password integration)
+- Data anonymization (GDPR compliant)
+- Audit logging with integrity verification
 """
 
 import os
@@ -29,9 +43,10 @@ import secrets
 import asyncio
 import aiohttp
 import logging
+import anthropic
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple, Any
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from enum import Enum
 from abc import ABC, abstractmethod
 import re
@@ -701,7 +716,6 @@ class AnthropicProvider(FactCheckProvider):
             return []
         
         try:
-            import anthropic
             client = anthropic.Anthropic(api_key=self.api_key)
             
             response = client.messages.create(
@@ -733,6 +747,316 @@ class AnthropicProvider(FactCheckProvider):
         except Exception as e:
             logger.error(f"Anthropic API error: {e}")
         return []
+
+
+class SerperProvider(FactCheckProvider):
+    """
+    Serper API - Google Search API alternative
+    Free tier: 2,500 searches/month
+    Great for finding relevant sources and fact-checks
+    """
+    
+    def __init__(self, api_key: Optional[str] = None):
+        self.api_key = api_key or os.getenv('SERPER_API_KEY')
+        self.base_url = "https://google.serper.dev/search"
+    
+    @property
+    def name(self) -> str:
+        return "Serper (Google Search)"
+    
+    @property
+    def is_available(self) -> bool:
+        return bool(self.api_key)
+    
+    async def check_claim(self, claim: str) -> List[Dict]:
+        if not self.is_available:
+            return []
+        
+        try:
+            async with aiohttp.ClientSession() as session:
+                headers = {
+                    'X-API-KEY': self.api_key,
+                    'Content-Type': 'application/json'
+                }
+                payload = {
+                    'q': f'fact check {claim}',
+                    'num': 10
+                }
+                
+                async with session.post(self.base_url, headers=headers, json=payload) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        return self._parse_results(data)
+        except Exception as e:
+            logger.error(f"Serper API error: {e}")
+        return []
+    
+    def _parse_results(self, data: Dict) -> List[Dict]:
+        results = []
+        
+        # Organic results
+        for item in data.get('organic', [])[:5]:
+            results.append({
+                'source': 'Serper',
+                'title': item.get('title'),
+                'snippet': item.get('snippet'),
+                'url': item.get('link'),
+                'position': item.get('position')
+            })
+        
+        # Knowledge graph
+        if data.get('knowledgeGraph'):
+            kg = data['knowledgeGraph']
+            results.append({
+                'source': 'Serper (Knowledge Graph)',
+                'title': kg.get('title'),
+                'description': kg.get('description'),
+                'type': kg.get('type'),
+                'attributes': kg.get('attributes', {})
+            })
+        
+        return results
+
+
+class AzureOpenAIProvider(FactCheckProvider):
+    """
+    Azure OpenAI Service
+    GitHub Education Pack: $100 Azure credits
+    Access to GPT-4 and other OpenAI models via Azure
+    """
+    
+    def __init__(self, api_key: Optional[str] = None, endpoint: Optional[str] = None):
+        self.api_key = api_key or os.getenv('AZURE_OPENAI_API_KEY')
+        self.endpoint = endpoint or os.getenv('AZURE_OPENAI_ENDPOINT')
+        self.deployment_name = os.getenv('AZURE_OPENAI_DEPLOYMENT', 'gpt-4')
+        self.api_version = '2024-02-15-preview'
+    
+    @property
+    def name(self) -> str:
+        return "Azure OpenAI"
+    
+    @property
+    def is_available(self) -> bool:
+        return bool(self.api_key and self.endpoint)
+    
+    async def check_claim(self, claim: str) -> List[Dict]:
+        if not self.is_available:
+            return []
+        
+        try:
+            async with aiohttp.ClientSession() as session:
+                url = f"{self.endpoint}/openai/deployments/{self.deployment_name}/chat/completions?api-version={self.api_version}"
+                headers = {
+                    'api-key': self.api_key,
+                    'Content-Type': 'application/json'
+                }
+                payload = {
+                    'messages': [
+                        {
+                            'role': 'system',
+                            'content': '''You are a fact-checking expert. Analyze the claim and provide:
+                            1. Verdict: TRUE, FALSE, PARTIALLY_TRUE, MISLEADING, or UNVERIFIABLE
+                            2. Confidence: 0-100%
+                            3. Key Evidence: Specific facts supporting your verdict
+                            4. Sources: Known authoritative sources
+                            5. Context: Important context the reader should know
+                            Respond in JSON format.'''
+                        },
+                        {
+                            'role': 'user',
+                            'content': f'Fact-check this claim: "{claim}"'
+                        }
+                    ],
+                    'temperature': 0.1,
+                    'max_tokens': 1500
+                }
+                
+                async with session.post(url, headers=headers, json=payload) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        content = data['choices'][0]['message']['content']
+                        try:
+                            analysis = json.loads(content)
+                        except json.JSONDecodeError:
+                            analysis = {'raw_response': content}
+                        
+                        return [{
+                            'source': 'Azure OpenAI (GPT-4)',
+                            'analysis': analysis
+                        }]
+        except Exception as e:
+            logger.error(f"Azure OpenAI API error: {e}")
+        return []
+
+
+class PerplexityProvider(FactCheckProvider):
+    """
+    Perplexity AI API - Research-focused AI
+    Great for fact-checking with real-time internet search
+    """
+    
+    def __init__(self, api_key: Optional[str] = None):
+        self.api_key = api_key or os.getenv('PERPLEXITY_API_KEY')
+        self.base_url = "https://api.perplexity.ai/chat/completions"
+    
+    @property
+    def name(self) -> str:
+        return "Perplexity AI"
+    
+    @property
+    def is_available(self) -> bool:
+        return bool(self.api_key)
+    
+    async def check_claim(self, claim: str) -> List[Dict]:
+        if not self.is_available:
+            return []
+        
+        try:
+            async with aiohttp.ClientSession() as session:
+                headers = {
+                    'Authorization': f'Bearer {self.api_key}',
+                    'Content-Type': 'application/json'
+                }
+                payload = {
+                    'model': 'llama-3.1-sonar-small-128k-online',
+                    'messages': [
+                        {
+                            'role': 'system',
+                            'content': 'You are a fact-checking assistant. Search the internet and provide accurate fact-checks with sources.'
+                        },
+                        {
+                            'role': 'user',
+                            'content': f'Fact-check this claim and provide sources: "{claim}"'
+                        }
+                    ],
+                    'temperature': 0.1,
+                    'max_tokens': 1000,
+                    'search_domain_filter': ['fact-check', 'news', 'wiki'],
+                    'return_citations': True
+                }
+                
+                async with session.post(self.base_url, headers=headers, json=payload) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        return [{
+                            'source': 'Perplexity AI',
+                            'analysis': data['choices'][0]['message']['content'],
+                            'citations': data.get('citations', [])
+                        }]
+        except Exception as e:
+            logger.error(f"Perplexity API error: {e}")
+        return []
+
+
+class OpenRouterProvider(FactCheckProvider):
+    """
+    OpenRouter - Access to multiple AI models through one API
+    Free tier available, pay-per-use for premium models
+    Great for comparing different model outputs
+    """
+    
+    def __init__(self, api_key: Optional[str] = None):
+        self.api_key = api_key or os.getenv('OPENROUTER_API_KEY')
+        self.base_url = "https://openrouter.ai/api/v1/chat/completions"
+    
+    @property
+    def name(self) -> str:
+        return "OpenRouter"
+    
+    @property
+    def is_available(self) -> bool:
+        return bool(self.api_key)
+    
+    async def check_claim(self, claim: str) -> List[Dict]:
+        if not self.is_available:
+            return []
+        
+        try:
+            async with aiohttp.ClientSession() as session:
+                headers = {
+                    'Authorization': f'Bearer {self.api_key}',
+                    'Content-Type': 'application/json',
+                    'HTTP-Referer': 'https://verity-systems.vercel.app',
+                    'X-Title': 'Verity Systems'
+                }
+                payload = {
+                    'model': 'google/gemma-2-9b-it:free',  # Free model
+                    'messages': [
+                        {
+                            'role': 'system',
+                            'content': 'You are a fact-checking AI. Analyze claims for accuracy and provide detailed verdicts with evidence.'
+                        },
+                        {
+                            'role': 'user',
+                            'content': f'Fact-check: "{claim}". Provide verdict (TRUE/FALSE/PARTIALLY_TRUE/UNVERIFIABLE), confidence (0-100%), and reasoning.'
+                        }
+                    ],
+                    'temperature': 0.1
+                }
+                
+                async with session.post(self.base_url, headers=headers, json=payload) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        return [{
+                            'source': 'OpenRouter (Gemma 2)',
+                            'analysis': data['choices'][0]['message']['content']
+                        }]
+        except Exception as e:
+            logger.error(f"OpenRouter API error: {e}")
+        return []
+
+
+class PolygonProvider(FactCheckProvider):
+    """
+    Polygon.io API - Financial data verification
+    Free tier: 5 API calls/minute
+    Great for verifying financial claims and stock data
+    """
+    
+    def __init__(self, api_key: Optional[str] = None):
+        self.api_key = api_key or os.getenv('POLYGON_API_KEY')
+        self.base_url = "https://api.polygon.io"
+    
+    @property
+    def name(self) -> str:
+        return "Polygon.io (Finance)"
+    
+    @property
+    def is_available(self) -> bool:
+        return bool(self.api_key)
+    
+    async def check_claim(self, claim: str) -> List[Dict]:
+        if not self.is_available:
+            return []
+        
+        # Extract stock tickers from claim
+        tickers = re.findall(r'\$([A-Z]{1,5})\b|\b([A-Z]{2,5})\s+stock\b', claim)
+        if not tickers:
+            return []
+        
+        results = []
+        try:
+            async with aiohttp.ClientSession() as session:
+                for ticker_match in tickers[:3]:
+                    ticker = ticker_match[0] or ticker_match[1]
+                    url = f"{self.base_url}/v3/reference/tickers/{ticker}?apiKey={self.api_key}"
+                    
+                    async with session.get(url) as response:
+                        if response.status == 200:
+                            data = await response.json()
+                            if data.get('results'):
+                                results.append({
+                                    'source': 'Polygon.io',
+                                    'ticker': ticker,
+                                    'company_name': data['results'].get('name'),
+                                    'market_cap': data['results'].get('market_cap'),
+                                    'description': data['results'].get('description'),
+                                    'homepage': data['results'].get('homepage_url')
+                                })
+        except Exception as e:
+            logger.error(f"Polygon API error: {e}")
+        
+        return results
 
 
 class WikidataProvider(FactCheckProvider):
@@ -807,17 +1131,27 @@ class VeritySuperModel:
         self.config = config or {}
         self.security = SecurityManager()
         
-        # Initialize all providers
+        # Initialize all providers (14 total)
         self.providers: List[FactCheckProvider] = [
-            GoogleFactCheckProvider(),
+            # Free APIs (no key required)
             WikipediaProvider(),
             DuckDuckGoProvider(),
+            WikidataProvider(),
+            
+            # Free tier APIs
+            GoogleFactCheckProvider(),
             NewsAPIProvider(),
             ClaimBusterProvider(),
             HuggingFaceProvider(),
-            GroqProvider(),
-            AnthropicProvider(),
-            WikidataProvider()
+            SerperProvider(),
+            PolygonProvider(),
+            
+            # AI/LLM Providers (free tiers + GitHub Education credits)
+            GroqProvider(),           # Free: Llama 3.1 70B
+            AnthropicProvider(),      # GitHub Education: $25/month
+            AzureOpenAIProvider(),    # GitHub Education: $100 Azure credits
+            PerplexityProvider(),     # Research queries with citations
+            OpenRouterProvider(),     # Free: Gemma 2 9B
         ]
         
         # Cache for results (simple in-memory, use Redis in production)

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Verity Systems - Track the geographic spread of misinformation in real-time">
+    <title>Misinformation Map | Verity Systems</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Mapbox GL -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/styles-dark.css">
+    
+    <style>
+        .map-page {
+            min-height: 100vh;
+            background: #050505;
+        }
+        
+        .map-header {
+            padding: 1.5rem 2rem;
+            background: rgba(5, 5, 5, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .map-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .map-title-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #6366f1, #22d3ee);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .back-link {
+            color: #94a3b8;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+        
+        .back-link:hover {
+            color: #22d3ee;
+        }
+        
+        .map-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            height: calc(100vh - 80px);
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .map-sidebar {
+            background: #0a0a0a;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+        
+        .stat-card.false .stat-value { color: #ef4444; }
+        .stat-card.true .stat-value { color: #22c55e; }
+        .stat-card.hotspots .stat-value { color: #f59e0b; }
+        
+        .hotspot-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .hotspot-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .hotspot-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        
+        .hotspot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .hotspot-location {
+            font-weight: 600;
+            color: white;
+        }
+        
+        .hotspot-rate {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #ef4444;
+        }
+        
+        .hotspot-meta {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        .hotspot-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+        
+        .topic-tag {
+            font-size: 0.625rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+        
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .legend-dot.true { background: #22c55e; }
+        .legend-dot.false { background: #ef4444; }
+        .legend-dot.partial { background: #f59e0b; }
+        .legend-dot.misleading { background: #f97316; }
+        
+        .time-filter {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .time-btn {
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .time-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+        
+        .time-btn.active {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: #6366f1;
+            color: #a5b4fc;
+        }
+        
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(5, 5, 5, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(99, 102, 241, 0.2);
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Mapbox popup styling */
+        .mapboxgl-popup-content {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .mapboxgl-popup-close-button {
+            color: #6b7280;
+            font-size: 1.25rem;
+        }
+        
+        .popup-title {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
+        .popup-stat {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin-bottom: 0.25rem;
+        }
+        
+        .popup-stat strong {
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .map-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .map-sidebar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 40vh;
+                border-left: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 20px 20px 0 0;
+            }
+            
+            #map {
+                height: 60vh;
+            }
+        }
+    </style>
+</head>
+<body class="map-page">
+    <!-- Header -->
+    <header class="map-header">
+        <div class="map-title">
+            <div class="map-title-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                    <circle cx="12" cy="10" r="3"/>
+                    <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/>
+                </svg>
+            </div>
+            <span>Misinformation Tracker</span>
+        </div>
+        
+        <a href="index.html" class="back-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back to Verity
+        </a>
+    </header>
+    
+    <!-- Map Container -->
+    <div class="map-container">
+        <!-- Map -->
+        <div id="map" style="position: relative;">
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <aside class="map-sidebar">
+            <!-- Time Filter -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Time Range</div>
+                <div class="time-filter">
+                    <button class="time-btn" data-days="1">24h</button>
+                    <button class="time-btn active" data-days="7">7 days</button>
+                    <button class="time-btn" data-days="30">30 days</button>
+                </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Global Statistics</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalChecks">-</div>
+                        <div class="stat-label">Total Checks</div>
+                    </div>
+                    <div class="stat-card hotspots">
+                        <div class="stat-value" id="hotspotCount">-</div>
+                        <div class="stat-label">Hotspots</div>
+                    </div>
+                    <div class="stat-card false">
+                        <div class="stat-value" id="falseRate">-%</div>
+                        <div class="stat-label">False Claims</div>
+                    </div>
+                    <div class="stat-card true">
+                        <div class="stat-value" id="trueRate">-%</div>
+                        <div class="stat-label">True Claims</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hotspots -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Misinformation Hotspots</div>
+                <div class="hotspot-list" id="hotspotList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Legend -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Legend</div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-dot true"></div>
+                        <span>Verified True</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot false"></div>
+                        <span>Verified False</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot partial"></div>
+                        <span>Partially True</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot misleading"></div>
+                        <span>Misleading</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+    
+    <script>
+        // Mapbox configuration
+        // Replace with your Mapbox token or use Carto basemap
+        mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN';
+        
+        // Initialize map with dark style
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+            center: [0, 20],
+            zoom: 2
+        });
+        
+        // Map state
+        let currentDays = 7;
+        let hotspotsData = [];
+        
+        // Sample data (replace with API calls)
+        const sampleHotspots = [
+            {
+                id: 1,
+                center: { coordinates: [-74.006, 40.7128] },
+                countries: ['United States'],
+                total_claims: 1250,
+                false_claims: 420,
+                misinfo_rate: 33.6,
+                topics: ['politics', 'health', 'economy']
+            },
+            {
+                id: 2,
+                center: { coordinates: [-0.1276, 51.5074] },
+                countries: ['United Kingdom'],
+                total_claims: 890,
+                false_claims: 267,
+                misinfo_rate: 30.0,
+                topics: ['politics', 'science']
+            },
+            {
+                id: 3,
+                center: { coordinates: [2.3522, 48.8566] },
+                countries: ['France'],
+                total_claims: 650,
+                false_claims: 195,
+                misinfo_rate: 30.0,
+                topics: ['health', 'environment']
+            },
+            {
+                id: 4,
+                center: { coordinates: [77.209, 28.6139] },
+                countries: ['India'],
+                total_claims: 1100,
+                false_claims: 385,
+                misinfo_rate: 35.0,
+                topics: ['politics', 'religion', 'health']
+            },
+            {
+                id: 5,
+                center: { coordinates: [-46.6333, -23.5505] },
+                countries: ['Brazil'],
+                total_claims: 780,
+                false_claims: 280,
+                misinfo_rate: 35.9,
+                topics: ['politics', 'health']
+            }
+        ];
+        
+        // Verdict colors
+        const verdictColors = {
+            'TRUE': '#22c55e',
+            'FALSE': '#ef4444',
+            'PARTIALLY_TRUE': '#f59e0b',
+            'MISLEADING': '#f97316'
+        };
+        
+        // Initialize map
+        map.on('load', () => {
+            // Hide loading
+            document.getElementById('loadingOverlay').style.display = 'none';
+            
+            // Add source for verification points
+            map.addSource('verifications', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: []
+                }
+            });
+            
+            // Add heatmap layer
+            map.addLayer({
+                id: 'verifications-heat',
+                type: 'heatmap',
+                source: 'verifications',
+                paint: {
+                    'heatmap-weight': ['interpolate', ['linear'], ['get', 'misinfo_rate'], 0, 0, 100, 1],
+                    'heatmap-intensity': 1,
+                    'heatmap-color': [
+                        'interpolate',
+                        ['linear'],
+                        ['heatmap-density'],
+                        0, 'rgba(0,0,0,0)',
+                        0.2, 'rgba(34, 197, 94, 0.4)',
+                        0.4, 'rgba(245, 158, 11, 0.5)',
+                        0.6, 'rgba(249, 115, 22, 0.6)',
+                        0.8, 'rgba(239, 68, 68, 0.7)',
+                        1, 'rgba(239, 68, 68, 0.9)'
+                    ],
+                    'heatmap-radius': 40,
+                    'heatmap-opacity': 0.8
+                }
+            });
+            
+            // Add circle layer for individual points
+            map.addLayer({
+                id: 'verifications-points',
+                type: 'circle',
+                source: 'verifications',
+                paint: {
+                    'circle-radius': ['interpolate', ['linear'], ['get', 'total_claims'], 100, 8, 1000, 20],
+                    'circle-color': [
+                        'interpolate',
+                        ['linear'],
+                        ['get', 'misinfo_rate'],
+                        0, '#22c55e',
+                        30, '#f59e0b',
+                        50, '#ef4444'
+                    ],
+                    'circle-opacity': 0.8,
+                    'circle-stroke-width': 2,
+                    'circle-stroke-color': 'rgba(255,255,255,0.3)'
+                }
+            });
+            
+            // Load initial data
+            loadHotspots(currentDays);
+            
+            // Click handler for points
+            map.on('click', 'verifications-points', (e) => {
+                const feature = e.features[0];
+                const props = feature.properties;
+                
+                new mapboxgl.Popup()
+                    .setLngLat(feature.geometry.coordinates)
+                    .setHTML(`
+                        <div class="popup-title">${JSON.parse(props.countries)[0]}</div>
+                        <div class="popup-stat">Total checks: <strong>${props.total_claims}</strong></div>
+                        <div class="popup-stat">False claims: <strong>${props.false_claims}</strong></div>
+                        <div class="popup-stat">Misinfo rate: <strong style="color: #ef4444">${props.misinfo_rate}%</strong></div>
+                    `)
+                    .addTo(map);
+            });
+            
+            // Cursor change on hover
+            map.on('mouseenter', 'verifications-points', () => {
+                map.getCanvas().style.cursor = 'pointer';
+            });
+            map.on('mouseleave', 'verifications-points', () => {
+                map.getCanvas().style.cursor = '';
+            });
+        });
+        
+        // Load hotspots data
+        async function loadHotspots(days) {
+            try {
+                // In production, replace with actual API call:
+                // const response = await fetch(`/api/v1/misinformation-hotspots?days=${days}`);
+                // const data = await response.json();
+                
+                // Using sample data for demo
+                hotspotsData = sampleHotspots;
+                
+                // Update map
+                updateMapData(hotspotsData);
+                
+                // Update sidebar
+                updateStats(hotspotsData);
+                updateHotspotList(hotspotsData);
+                
+            } catch (error) {
+                console.error('Failed to load hotspots:', error);
+            }
+        }
+        
+        // Update map with hotspot data
+        function updateMapData(hotspots) {
+            const features = hotspots.map(h => ({
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: h.center.coordinates
+                },
+                properties: {
+                    id: h.id,
+                    countries: JSON.stringify(h.countries),
+                    total_claims: h.total_claims,
+                    false_claims: h.false_claims,
+                    misinfo_rate: h.misinfo_rate,
+                    topics: JSON.stringify(h.topics)
+                }
+            }));
+            
+            map.getSource('verifications').setData({
+                type: 'FeatureCollection',
+                features
+            });
+        }
+        
+        // Update statistics
+        function updateStats(hotspots) {
+            const totalChecks = hotspots.reduce((sum, h) => sum + h.total_claims, 0);
+            const totalFalse = hotspots.reduce((sum, h) => sum + h.false_claims, 0);
+            const avgFalseRate = totalChecks > 0 ? (totalFalse / totalChecks * 100).toFixed(1) : 0;
+            const trueRate = (100 - avgFalseRate).toFixed(1);
+            
+            document.getElementById('totalChecks').textContent = totalChecks.toLocaleString();
+            document.getElementById('hotspotCount').textContent = hotspots.length;
+            document.getElementById('falseRate').textContent = avgFalseRate + '%';
+            document.getElementById('trueRate').textContent = trueRate + '%';
+        }
+        
+        // Update hotspot list
+        function updateHotspotList(hotspots) {
+            const list = document.getElementById('hotspotList');
+            
+            // Sort by misinfo rate
+            const sorted = [...hotspots].sort((a, b) => b.misinfo_rate - a.misinfo_rate);
+            
+            list.innerHTML = sorted.slice(0, 5).map(h => `
+                <div class="hotspot-item" onclick="flyToHotspot(${h.center.coordinates[0]}, ${h.center.coordinates[1]})">
+                    <div class="hotspot-header">
+                        <span class="hotspot-location">${h.countries[0]}</span>
+                        <span class="hotspot-rate">${h.misinfo_rate}% false</span>
+                    </div>
+                    <div class="hotspot-meta">${h.total_claims.toLocaleString()} verifications</div>
+                    <div class="hotspot-topics">
+                        ${h.topics.slice(0, 3).map(t => `<span class="topic-tag">${t}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Fly to hotspot on click
+        function flyToHotspot(lng, lat) {
+            map.flyTo({
+                center: [lng, lat],
+                zoom: 5,
+                duration: 1500
+            });
+        }
+        
+        // Time filter buttons
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentDays = parseInt(btn.dataset.days);
+                loadHotspots(currentDays);
+            });
+        });
+    </script>
+    
+    <!-- Simple Analytics -->
+    <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+</body>
+</html>

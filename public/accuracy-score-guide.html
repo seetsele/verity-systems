@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Verity Systems - Understanding Accuracy Scores and Confidence Metrics">
+    <meta name="theme-color" content="#050505">
+    <title>Accuracy Score Guide | Verity Systems</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="assets/css/styles-dark.css">
+    
+    <style>
+        /* Accuracy Score Documentation Styles */
+        .accuracy-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #6366f1, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            color: #a0a0a0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #ffffff;
+            margin-bottom: 30px;
+            border-left: 4px solid #6366f1;
+            padding-left: 20px;
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: #22d3ee;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+
+        .confidence-scale {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .confidence-band {
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            background: rgba(99, 102, 241, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .confidence-band:hover {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .confidence-band.high {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .confidence-band.high:hover {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .confidence-band.medium {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .confidence-band.medium:hover {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .confidence-band.low {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .confidence-band.low:hover {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .confidence-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .confidence-range {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffffff;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .confidence-label {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            margin-top: 10px;
+        }
+
+        .methodology-formula {
+            background: rgba(34, 211, 238, 0.05);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            color: #22d3ee;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .source-tiers {
+            display: grid;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .tier-card {
+            border-left: 4px solid #6366f1;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .tier-card.tier-1 {
+            border-left-color: #10b981;
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .tier-card.tier-2 {
+            border-left-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .tier-card.tier-3 {
+            border-left-color: #6366f1;
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .tier-card.tier-4 {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .tier-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .tier-description {
+            color: #a0a0a0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .source-examples {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .source-item {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 4px;
+            margin: 4px 8px 4px 0;
+            font-size: 0.85rem;
+            color: #e0e0e0;
+        }
+
+        .example-verification {
+            background: rgba(22, 163, 74, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .example-title {
+            color: #22c55e;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .example-claim {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid #22c55e;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-style: italic;
+        }
+
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .breakdown-item {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .breakdown-label {
+            color: #a0a0a0;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+
+        .breakdown-value {
+            color: #22d3ee;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .faq-item {
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 20px;
+        }
+
+        .faq-question {
+            color: #22d3ee;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .faq-answer {
+            color: #a0a0a0;
+            line-height: 1.8;
+        }
+
+        .highlight {
+            background: rgba(34, 211, 238, 0.2);
+            color: #22d3ee;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        .warning-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #fca5a5;
+        }
+
+        .info-box {
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #a5f3fc;
+        }
+
+        .back-to-home {
+            display: inline-block;
+            margin-bottom: 40px;
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-home:hover {
+            color: #22d3ee;
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .confidence-scale {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    <div class="grid-background"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon" viewBox="0 0 40 40" width="32" height="32">
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#6366f1"/>
+                            <stop offset="100%" stop-color="#22d3ee"/>
+                        </linearGradient>
+                    </defs>
+                    <path fill="none" stroke="url(#logoGradient)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M8 20 L14 26 L32 8"/>
+                </svg>
+                <span class="logo-text">Verity</span>
+            </a>
+            
+            <div class="nav-links">
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="index.html#api" class="nav-link">API</a>
+                <a href="index.html#providers" class="nav-link">Providers</a>
+                <a href="index.html#security" class="nav-link">Security</a>
+                <a href="API_DOCUMENTATION.md" class="nav-link">Docs</a>
+            </div>
+            
+            <div class="nav-actions">
+                <a href="index.html#demo" class="btn btn-ghost">Try Demo</a>
+                <a href="index.html#start" class="btn btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="accuracy-container">
+        <a href="index.html" class="back-to-home">← Back to Home</a>
+
+        <div class="page-header">
+            <h1>Understanding Accuracy Scores</h1>
+            <p>Learn how Verity calculates confidence scores and what they mean for your fact-checking results</p>
+        </div>
+
+        <!-- Section 1: Confidence Scale -->
+        <div class="section">
+            <h2 class="section-title">📊 Confidence Scale Explained</h2>
+            
+            <p style="color: #a0a0a0; margin-bottom: 30px;">
+                Our confidence scores range from 0% to 100% and indicate how strongly evidence supports or contradicts a claim.
+                Here's what each range means:
+            </p>
+
+            <div class="confidence-scale">
+                <div class="confidence-band high">
+                    <div class="confidence-header">
+                        <span class="confidence-range">80-100%</span>
+                    </div>
+                    <div class="confidence-label">
+                        <strong>Highly Verified</strong>
+                        <p style="margin-top: 8px; font-size: 0.9rem;">Strong agreement across all sources and AI providers. Multiple independent confirmations.</p>
+                    </div>
+                </div>
+
+                <div class="confidence-band medium">
+                    <div class="confidence-header">
+                        <span class="confidence-range">60-80%</span>
+                    </div>
+                    <div class="confidence-label">
+                        <strong>Likely True</strong>
+                        <p style="margin-top: 8px; font-size: 0.9rem;">Good evidence supporting the claim with minimal dissenting sources.</p>
+                    </div>
+                </div>
+
+                <div class="confidence-band medium">
+                    <div class="confidence-header">
+                        <span class="confidence-range">40-60%</span>
+                    </div>
+                    <div class="confidence-label">
+                        <strong>Disputed/Unclear</strong>
+                        <p style="margin-top: 8px; font-size: 0.9rem;">Mixed evidence or conflicting sources. Requires additional context.</p>
+                    </div>
+                </div>
+
+                <div class="confidence-band low">
+                    <div class="confidence-header">
+                        <span class="confidence-range">0-40%</span>
+                    </div>
+                    <div class="confidence-label">
+                        <strong>Likely False</strong>
+                        <p style="margin-top: 8px; font-size: 0.9rem;">Strong evidence contradicting the claim or unable to be verified.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>💡 Important:</strong> A confidence score is <strong>NOT</strong> the same as accuracy. 
+                It reflects consensus strength from our sources and AI providers, not absolute truth.
+            </div>
+        </div>
+
+        <!-- Section 2: Scoring Methodology -->
+        <div class="section">
+            <h2 class="section-title">⚙️ How We Calculate Scores</h2>
+            
+            <p style="color: #a0a0a0; margin-bottom: 20px;">
+                Our confidence score is calculated using a weighted combination of four key factors:
+            </p>
+
+            <div class="methodology-formula">
+Confidence Score = 
+  (AI Provider Agreement × 0.35)
+  + (Source Credibility × 0.30)
+  + (Evidence Strength × 0.20)
+  + (Consensus Score × 0.15)
+            </div>
+
+            <h3 class="section-subtitle">Component Breakdown</h3>
+
+            <div class="tier-card tier-1">
+                <div class="tier-title">1. AI Provider Agreement (35% weight)</div>
+                <div class="tier-description">
+                    We query 14+ AI models (Claude, GPT-4, Llama, Mistral, etc.) with the same claim.
+                    This factor measures how many agree on the verdict.
+                    <div class="source-examples">
+                        <strong>Example:</strong> If 12 out of 14 models agree it's true = 85.7% agreement
+                    </div>
+                </div>
+            </div>
+
+            <div class="tier-card tier-2">
+                <div class="tier-title">2. Source Credibility (30% weight)</div>
+                <div class="tier-description">
+                    Not all sources are equal. We rank sources by authority and reliability.
+                    Peer-reviewed journals carry more weight than blog posts.
+                    <div class="source-examples">
+                        <strong>Example:</strong> Finding the claim in USGS, Nature, and NASA = high credibility (95%)
+                    </div>
+                </div>
+            </div>
+
+            <div class="tier-card tier-3">
+                <div class="tier-title">3. Evidence Strength (20% weight)</div>
+                <div class="tier-description">
+                    Measures the quantity and quality of supporting or contradicting evidence.
+                    More sources and stronger evidence = higher strength.
+                    <div class="source-examples">
+                        <strong>Example:</strong> One source vs. ten converging sources = Different strength scores
+                    </div>
+                </div>
+            </div>
+
+            <div class="tier-card tier-4">
+                <div class="tier-title">4. Consensus Score (15% weight)</div>
+                <div class="tier-description">
+                    General agreement across the fact-checking community (academic, journalistic, scientific).
+                    Strong consensus boosts confidence; major disagreements lower it.
+                    <div class="source-examples">
+                        <strong>Example:</strong> "Earth orbits the Sun" has near-universal consensus = 99%+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Source Credibility Tiers -->
+        <div class="section">
+            <h2 class="section-title">🏛️ Source Credibility Hierarchy</h2>
+            
+            <p style="color: #a0a0a0; margin-bottom: 20px;">
+                Different sources carry different weight in our calculations based on their reliability:
+            </p>
+
+            <div class="source-tiers">
+                <div class="tier-card tier-1">
+                    <div class="tier-title">Tier 1 - Authoritative (40 points each)</div>
+                    <div class="tier-description">
+                        The most reliable sources for verification
+                    </div>
+                    <div class="source-examples">
+                        <span class="source-item">Peer-reviewed journals</span>
+                        <span class="source-item">USGS, NOAA, NASA</span>
+                        <span class="source-item">Government agencies</span>
+                        <span class="source-item">University research</span>
+                        <span class="source-item">FactCheck.org</span>
+                        <span class="source-item">Snopes.com</span>
+                    </div>
+                </div>
+
+                <div class="tier-card tier-2">
+                    <div class="tier-title">Tier 2 - Reputable (20 points each)</div>
+                    <div class="tier-description">
+                        Well-established sources with good track records
+                    </div>
+                    <div class="source-examples">
+                        <span class="source-item">AP, Reuters, BBC</span>
+                        <span class="source-item">Khan Academy</span>
+                        <span class="source-item">Professional associations</span>
+                        <span class="source-item">Encyclopedias</span>
+                        <span class="source-item">Academic institutions</span>
+                    </div>
+                </div>
+
+                <div class="tier-card tier-3">
+                    <div class="tier-title">Tier 3 - General (10 points each)</div>
+                    <div class="tier-description">
+                        Useful but require verification
+                    </div>
+                    <div class="source-examples">
+                        <span class="source-item">Wikipedia</span>
+                        <span class="source-item">Wikidata</span>
+                        <span class="source-item">Major news sites</span>
+                        <span class="source-item">Educational websites</span>
+                        <span class="source-item">Industry reports</span>
+                    </div>
+                </div>
+
+                <div class="tier-card tier-4">
+                    <div class="tier-title">Tier 4 - Uncertain (5 points each)</div>
+                    <div class="tier-description">
+                        Lower reliability, used with caution
+                    </div>
+                    <div class="source-examples">
+                        <span class="source-item">Social media</span>
+                        <span class="source-item">User-generated content</span>
+                        <span class="source-item">Blogs (unless cited)</span>
+                        <span class="source-item">Forums & comments</span>
+                        <span class="source-item">Unverified claims</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Real Examples -->
+        <div class="section">
+            <h2 class="section-title">📚 Real-World Examples</h2>
+
+            <!-- Example 1 -->
+            <div class="example-verification">
+                <div class="example-title">✓ Example 1: "Earth is approximately 4.5 billion years old"</div>
+                
+                <div class="example-claim">
+                    The Earth is approximately 4.54 billion years old.
+                </div>
+
+                <p style="color: #a0a0a0; margin: 15px 0;">Final Confidence Score: <span class="highlight">98.7%</span></p>
+
+                <div class="score-breakdown">
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">AI Agreement</div>
+                        <div class="breakdown-value">14/14 = 100%</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Source Credibility</div>
+                        <div class="breakdown-value">98%</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Evidence Strength</div>
+                        <div class="breakdown-value">99%</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Consensus Score</div>
+                        <div class="breakdown-value">97%</div>
+                    </div>
+                </div>
+
+                <p style="color: #a0a0a0; margin-top: 15px;">
+                    <strong>Why this is so high:</strong> This claim is supported by overwhelming scientific consensus. 
+                    Multiple radiometric dating methods (U-Pb zircon dating), meteorite analysis, and lunar samples 
+                    all converge on this age. Zero reputable scientists dispute it.
+                </p>
+            </div>
+
+            <!-- Example 2 -->
+            <div class="example-verification" style="background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3);">
+                <div class="example-title" style="color: #fbbf24;">⚠ Example 2: "Red wine has health benefits"</div>
+                
+                <div class="example-claim">
+                    Drinking red wine in moderation has cardiovascular health benefits.
+                </div>
+
+                <p style="color: #a0a0a0; margin: 15px 0;">Final Confidence Score: <span class="highlight">58%</span></p>
+
+                <div class="score-breakdown">
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">AI Agreement</div>
+                        <div class="breakdown-value">9/14 = 64%</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Source Credibility</div>
+                        <div class="breakdown-value">72%</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Evidence Strength</div>
+                        <div class="breakdown-value">45%</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Consensus Score</div>
+                        <div class="breakdown-value">51%</div>
+                    </div>
+                </div>
+
+                <p style="color: #a0a0a0; margin-top: 15px;">
+                    <strong>Why this is disputed:</strong> Some studies suggest resveratrol in red wine has cardioprotective effects, 
+                    but recent meta-analyses challenge this. The potential risks of alcohol may outweigh benefits. 
+                    Major health organizations disagree on recommendations. Context matters: "moderation" is poorly defined.
+                </p>
+            </div>
+
+            <!-- Example 3 -->
+            <div class="example-verification" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3);">
+                <div class="example-title" style="color: #fca5a5;">✗ Example 3: "Humans only use 10% of their brain"</div>
+                
+                <div class="example-claim">
+                    We only use 10% of our brain capacity.
+                </div>
+
+                <p style="color: #a0a0a0; margin: 15px 0;">Final Confidence Score: <span class="highlight">15%</span></p>
+
+                <div class="score-breakdown">
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">AI Agreement</div>
+                        <div class="breakdown-value">1/14 = 7%</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Source Credibility</div>
+                        <div class="breakdown-value">8%</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Evidence Strength</div>
+                        <div class="breakdown-value">22%</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Consensus Score</div>
+                        <div class="breakdown-value">12%</div>
+                    </div>
+                </div>
+
+                <p style="color: #a0a0a0; margin-top: 15px;">
+                    <strong>Why this is false:</strong> Neuroscience confirms we use virtually all parts of our brain, 
+                    and even "unused" brain regions perform important functions. This myth has been repeatedly debunked 
+                    by brain imaging (fMRI), neurological studies, and major institutions (NIH, Mayo Clinic, Snopes).
+                </p>
+            </div>
+        </div>
+
+        <!-- Section 5: FAQ -->
+        <div class="section">
+            <h2 class="section-title">❓ Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">What does a 75% confidence score mean?</div>
+                <div class="faq-answer">
+                    It means there's good evidence supporting the claim, with strong agreement from sources and AI models.
+                    Most likely true, but there may be some dissenting sources or edge cases to consider. 
+                    In the "Likely True" category (60-80%).
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Why do similar claims have different scores?</div>
+                <div class="faq-answer">
+                    Context matters. "Vitamin C prevents colds" might score differently than "Vitamin C helps immune function."
+                    The exact wording, available sources, and scientific consensus affect the score. 
+                    Our system analyzes the specific claim as written.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Can a 50% confidence claim become true or false?</div>
+                <div class="faq-answer">
+                    Yes. As new evidence emerges, scores can change. For disputed claims, additional context 
+                    (time period, location, circumstances) can shift the verdict. We update scores as new research appears.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Why should I trust these scores?</div>
+                <div class="faq-answer">
+                    Our scores are calculated transparently using multiple independent AI providers and credible sources.
+                    We show you <span class="highlight">why</span> we reached each conclusion with specific citations. 
+                    You can verify our reasoning yourself using the provided sources.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What if I disagree with the score?</div>
+                <div class="faq-answer">
+                    You should! Please review the sources and reasoning we provide. 
+                    If you find better evidence, contact us. Fact-checking is collaborative, 
+                    and new information should update the consensus.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Are older claims scored differently?</div>
+                <div class="faq-answer">
+                    Potentially, yes. Claims about recent events or new research may have lower confidence 
+                    (limited evidence) while historical facts may have higher confidence (established record). 
+                    The temporal context is factored into our analysis.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do you handle opinions vs. facts?</div>
+                <div class="faq-answer">
+                    We focus on <strong>factual claims</strong>. Opinions ("The best pizza is Neapolitan") are inherently subjective 
+                    and cannot be fact-checked. We'll flag subjective claims and explain why they're not verifiable.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What does "Unverifiable" mean?</div>
+                <div class="faq-answer">
+                    A claim that cannot be proven true or false with available evidence. 
+                    Example: "I had eggs for breakfast yesterday" - we have no way to verify this. 
+                    It's not false, just not verifiable by our system.
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: Important Notes -->
+        <div class="section">
+            <h2 class="section-title">⚡ Important Notes</h2>
+
+            <div class="warning-box">
+                <strong>⚠️ Limitations:</strong> Our confidence scores represent consensus from available sources, 
+                not absolute truth. Edge cases, future discoveries, or context we're unaware of may change verdicts. 
+                Always consider multiple sources and expert opinion for critical decisions.
+            </div>
+
+            <div class="info-box">
+                <strong>💡 Best Practices:</strong> 
+                <ul style="margin-top: 10px;">
+                    <li>Review the sources and reasoning we provide</li>
+                    <li>Check the dates on sources (recent? outdated?)</li>
+                    <li>Consider context (when? where? who says?)</li>
+                    <li>Cross-reference with other fact-checkers</li>
+                    <li>Contact us if you find errors or new evidence</li>
+                </ul>
+            </div>
+
+            <div class="info-box" style="border-color: rgba(99, 102, 241, 0.3); background: rgba(99, 102, 241, 0.05);">
+                <strong>🔬 Our Approach:</strong> 
+                <p style="margin-top: 10px; color: #a0aabb;">
+                    We believe in <strong>transparency over speed</strong>. Rather than giving you quick answers, 
+                    we show you detailed reasoning, actual sources, and AI provider consensus. 
+                    You can verify our work and understand how we reached each conclusion.
+                </p>
+            </div>
+        </div>
+
+        <!-- Section 7: API Integration -->
+        <div class="section">
+            <h2 class="section-title">🔌 Using Scores in Your Application</h2>
+            
+            <p style="color: #a0a0a0; margin-bottom: 20px;">
+                When integrating Verity into your application, use these score ranges for decision-making:
+            </p>
+
+            <div class="methodology-formula">
+{
+  "claim": "The Earth is round",
+  "status": "VERIFIED_TRUE",
+  "confidence_score": 98.7,
+  "breakdown": {
+    "ai_agreement": 100,
+    "source_credibility": 98,
+    "evidence_strength": 99,
+    "consensus_score": 97
+  },
+  "sources": [...],
+  "reasoning": "..."
+}
+
+// In your app:
+if (confidence_score >= 80) {
+  // Display as "Verified" - safe to trust
+} else if (confidence_score >= 60) {
+  // Display as "Likely True" - probably accurate
+} else if (confidence_score >= 40) {
+  // Display as "Disputed" - conflicting evidence
+} else {
+  // Display as "Likely False" - strong evidence against
+}
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 80px; padding-top: 40px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+            <p style="color: #a0a0a0; margin-bottom: 20px;">Have more questions about accuracy scoring?</p>
+            <a href="API_DOCUMENTATION.md" class="btn btn-primary">View API Documentation</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" style="margin-top: 100px;">
+        <div class="footer-container">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <svg class="logo-icon" viewBox="0 0 40 40" width="32" height="32">
+                            <defs>
+                                <linearGradient id="footerLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#6366f1"/>
+                                    <stop offset="100%" stop-color="#22d3ee"/>
+                                </linearGradient>
+                            </defs>
+                            <path fill="none" stroke="url(#footerLogoGradient)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M8 20 L14 26 L32 8"/>
+                        </svg>
+                        <span class="logo-text">Verity</span>
+                    </a>
+                    <p class="footer-tagline">AI-powered truth verification for the modern web.</p>
+                </div>
+
+                <div class="footer-links-grid">
+                    <div class="footer-link-group">
+                        <h4>Product</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="index.html#demo">Demo</a></li>
+                            <li><a href="index.html#pricing">Pricing</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-link-group">
+                        <h4>Docs</h4>
+                        <ul>
+                            <li><a href="API_DOCUMENTATION.md">API Docs</a></li>
+                            <li><a href="accuracy-score-guide.html">Accuracy Guide</a></li>
+                            <li><a href="API_DOCUMENTATION.md">Integration</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-link-group">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-divider"></div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Verity Systems. All rights reserved.</p>
+                <div class="footer-links-horizontal">
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Security</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,10 +1,189 @@
-anthropic==0.28.0
+# Verity Systems - Python Dependencies v3.0
+# Industry-Leading AI-Powered Fact-Checking Platform
+# 28+ AI Models & Data Sources
+
+# ===========================================
+# CORE AI/ML PROVIDERS
+# ===========================================
+
+# Anthropic Claude API (GitHub Education: $25/month credit)
+anthropic==0.40.0
+
+# Hugging Face Transformers and Hub (Free tier + GitHub Education credits)
+transformers==4.36.0
+huggingface-hub==0.20.0
+
+# OpenAI-compatible APIs (Groq, Together, OpenRouter, etc.)
+openai==1.12.0
+
+# Google AI / Gemini
+google-generativeai==0.3.2
+
+# Mistral AI
+mistralai==0.1.8
+
+# Cohere
+cohere==4.47
+
+# ===========================================
+# ENHANCED SEARCH & DATA PROVIDERS
+# ===========================================
+
+# Tavily Search (AI-optimized)
+tavily-python==0.3.0
+
+# Exa (Neural Search)
+exa-py==1.0.9
+
+# SerpAPI
+google-search-results==2.4.2
+
+# ===========================================
+# WEB FRAMEWORK & API
+# ===========================================
+
+# FastAPI - Modern async web framework
+fastapi==0.109.0
+uvicorn[standard]==0.25.0
+starlette==0.35.0
+
+# HTTP client for async API calls
+aiohttp==3.9.1
+httpx==0.26.0
+
+# Request validation
+pydantic==2.5.3
+email-validator==2.1.0
+
+# ===========================================
+# SECURITY & ENCRYPTION
+# ===========================================
+
+# Cryptography library for AES-256, PBKDF2
+cryptography==41.0.7
+
+# JWT token handling
+PyJWT==2.8.0
+
+# Password hashing (alternative to cryptography for passwords)
+bcrypt==4.1.2
+
+# Secrets management
 python-dotenv==1.0.0
+
+# ===========================================
+# DATA PROCESSING
+# ===========================================
+
+# HTTP requests
 requests==2.31.0
+
+# JSON processing (faster than stdlib)
+orjson==3.9.10
+
+# Date/time handling
+python-dateutil==2.8.2
+
+# Progress bars
 tqdm==4.66.4
-typing-extensions==4.15.0
 
+# ===========================================
+# NLP & TEXT PROCESSING
+# ===========================================
 
-# email module is part of the Python standard library; no need to install
-# but if you need to install a backport or specific version, you can uncomment the line below
-# email==6.0.0
+# Language detection
+langdetect==1.0.9
+
+# Text cleaning
+beautifulsoup4==4.12.2
+lxml==5.1.0
+
+# ===========================================
+# CACHING & PERFORMANCE
+# ===========================================
+
+# In-memory caching
+cachetools==5.3.2
+
+# Redis client (for production distributed caching)
+redis==5.0.1
+
+# ===========================================
+# MONITORING & LOGGING
+# ===========================================
+
+# Structured logging
+structlog==24.1.0
+
+# Sentry error tracking (GitHub Education: free tier)
+sentry-sdk==1.39.1
+
+# Honeybadger error tracking (Pro trial from GitHub Education)
+honeybadger==0.13.0
+
+# New Relic APM monitoring (Free tier from GitHub Education)
+newrelic==9.6.0
+
+# ConfigCat feature flags (Free tier for gradual rollouts)
+configcat-client==9.0.3
+
+# ===========================================
+# DATABASE (Optional - for persistent storage)
+# ===========================================
+
+# SQLAlchemy for database ORM
+sqlalchemy==2.0.25
+
+# PostgreSQL adapter
+psycopg2-binary==2.9.9
+
+# MongoDB driver (GitHub Education: MongoDB Atlas free tier)
+pymongo==4.6.1
+
+# Payment Processing
+stripe==5.13.0
+
+# ===========================================
+# TESTING
+# ===========================================
+
+pytest==7.4.4
+pytest-asyncio==0.23.3
+pytest-cov==4.1.0
+
+# ===========================================
+# TYPE CHECKING
+# ===========================================
+
+typing-extensions==4.9.0
+
+# ===========================================
+# UTILITIES
+# ===========================================
+
+# Rate limiting
+slowapi==0.1.9
+
+# Retry logic
+tenacity==8.2.3
+
+# Environment variable parsing
+environs==10.3.0
+
+# ===========================================
+# AWS SERVICES (LocalStack for local dev)
+# ===========================================
+
+# AWS SDK
+boto3==1.34.0
+botocore==1.34.0
+
+# ===========================================
+# GEOGRAPHIC & VISUALIZATION
+# ===========================================
+
+# Carto integration (Location Intelligence)
+# Uses REST API - no specific package needed, using aiohttp
+
+# IP Geolocation
+# Uses ipinfo.io API via aiohttp

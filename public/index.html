@@ -3,376 +3,1522 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Enterprise-grade AI fact-checking - Verify truth in real-time">
-    <title>Verity Systems - AI Fact Checking</title>
+    <meta name="description" content="Verity Systems - Industry-leading AI-powered fact-checking platform. Verify truth with 50+ AI models, 15+ search engines, and academic databases for multi-source consensus.">
+    <meta name="theme-color" content="#050505">
+    <title>Verity Systems | AI Fact-Checking Platform</title>
     
-    <!-- Fonts - Uprock style -->
+    <!-- Fonts - Space Grotesk + JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@100;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- Dark Mode Only Stylesheet -->
+    <link rel="stylesheet" href="assets/css/styles-dark.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23050505' width='100' height='100' rx='20'/%3E%3Cpath fill='none' stroke='%2322d3ee' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' d='M25 50 L40 65 L75 30'/%3E%3C/svg%3E">
+    
+    <!-- Simple Analytics - Privacy-first, GDPR compliant (no cookies) -->
+    <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+    <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
+    
+    <!-- Honeybadger Error Tracking - Replace YOUR_API_KEY with actual key -->
+    <script src="https://js.honeybadger.io/v6.8/honeybadger.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        Honeybadger.configure({
+            apiKey: 'YOUR_HONEYBADGER_API_KEY', // Get from app.honeybadger.io
+            environment: window.location.hostname === 'localhost' ? 'development' : 'production',
+            revision: 'v1.0.0'
+        });
+    </script>
 </head>
 <body>
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+    
+    <!-- Grid Background -->
+    <div class="grid-background"></div>
+
+    <!-- Cursor Glow (Optional - JS controlled) -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="nav-content">
-            <a href="#" class="logo-link">
-                <div class="logo">
-                    <span class="logo-text">Verity</span>
-                    <svg class="logo-icon" viewBox="0 0 100 100" width="32" height="32">
-                        <defs>
-                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#00D9FF;stop-opacity:0.4" />
-                                <stop offset="100%" style="stop-color:#0066FF;stop-opacity:0.6" />
-                            </linearGradient>
-                        </defs>
-                        <rect x="20" y="20" width="60" height="60" rx="8" fill="url(#grad1)" opacity="0.3"/>
-                        <path d="M 35 50 L 45 60 L 65 35" stroke="#00D9FF" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <svg class="logo-icon-svg" width="28" height="28" viewBox="-26 -28 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,-24 L-22,-20 L-22,0 Q-22,16 0,20 Q22,16 22,0 L22,-20 Z" stroke="url(#shieldGradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M-6,0 L-2,4 L6,-5" stroke="url(#checkGradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <defs>
+                        <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#22D3EE"/>
+                            <stop offset="100%" stop-color="#6366F1"/>
+                        </linearGradient>
+                        <linearGradient id="checkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#22D3EE"/>
+                            <stop offset="100%" stop-color="#6366F1"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="logo-text">verity<span class="logo-dot">.</span></span>
             </a>
             
-            <ul class="nav-links">
-                <li><a href="#services">Services</a></li>
-                <li><a href="#process">Process</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-            </ul>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#api" class="nav-link">API</a>
+                <a href="#providers" class="nav-link">Providers</a>
+                <a href="#security" class="nav-link">Security</a>
+                <a href="misinformation-map.html" class="nav-link">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: -2px;">
+                        <circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/>
+                    </svg>
+                    Map
+                </a>
+                <a href="accuracy-score-guide.html" class="nav-link">Accuracy Guide</a>
+                <a href="API_DOCUMENTATION.md" class="nav-link">Docs</a>
+            </div>
             
-            <a href="#contact" class="nav-cta">Start Free Trial</a>
+            <div class="nav-actions">
+                <a href="#demo" class="btn btn-ghost">Try Demo</a>
+                <a href="#start" class="btn btn-primary">
+                    Get Started
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-text">
-                <div class="hero-label">AI-Powered Fact Checking</div>
+    <section class="hero" id="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    <span>50+ AI Models • 15+ Search Engines • Academic Sources</span>
+                </div>
+                
                 <h1 class="hero-title">
-                    <span class="line-wrapper"><span class="line">Verify Truth</span></span>
-                    <span class="line-wrapper"><span class="line">in Real-Time</span></span>
+                    <span class="title-line">Verify Truth</span>
+                    <span class="title-line gradient-text">with AI Precision</span>
                 </h1>
-                <p class="hero-description">Enterprise-grade AI fact-checking platform for media organizations, corporations, and institutions</p>
-                <div class="hero-buttons">
-                    <button class="btn btn-primary">Get Started</button>
-                    <button class="btn btn-secondary">Learn More</button>
+                
+                <p class="hero-description">
+                    Enterprise-grade fact-checking powered by 50+ AI models including Claude, GPT-4, Gemini, 
+                    Mistral, and Llama. Cross-reference claims against academic databases, news archives, and real-time search.
+                </p>
+                
+                <div class="hero-actions">
+                    <a href="#demo" class="btn btn-primary btn-lg">
+                        <span>Start Verifying</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="#api" class="btn btn-outline btn-lg">
+                        <span>View API Docs</span>
+                    </a>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-value">50+</span>
+                        <span class="stat-label">AI Models</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-value">15+</span>
+                        <span class="stat-label">Data Sources</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-value">99.2%</span>
+                        <span class="stat-label">Accuracy Rate</span>
+                    </div>
                 </div>
             </div>
             
             <div class="hero-visual">
-                <div class="verification-demo">
-                    <div class="demo-card">
-                        <div class="card-header">
-                            <span class="processing">Processing...</span>
+                <div class="demo-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
                         </div>
-                        <p>Analyzing claim against 1M+ sources</p>
-                        <div class="progress-bar">
-                            <div class="progress-fill"></div>
+                        <span class="terminal-title">verity-cli</span>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="terminal-line">
+                            <span class="prompt">$</span>
+                            <span class="command">verity verify "The Earth is approximately 4.5 billion years old"</span>
+                        </div>
+                        <div class="terminal-output">
+                            <div class="output-line">
+                                <span class="label">Analyzing...</span>
+                                <span class="spinner"></span>
+                            </div>
+                            <div class="output-result">
+                                <div class="result-header">
+                                    <span class="verdict true">✓ VERIFIED TRUE</span>
+                                    <span class="confidence">98.7% confidence</span>
+                                </div>
+                                <div class="result-sources">
+                                    <span class="source-count">Sources: 847</span>
+                                    <span class="providers">Claude • GPT-4 • Llama • Wikipedia</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                
+                <!-- Floating Elements -->
+                <div class="floating-card card-1">
+                    <span class="card-icon">🧠</span>
+                    <span class="card-text">AI Analysis</span>
+                </div>
+                <div class="floating-card card-2">
+                    <span class="card-icon">🔒</span>
+                    <span class="card-text">AES-256</span>
+                </div>
+                <div class="floating-card card-3">
+                    <span class="card-icon">⚡</span>
+                    <span class="card-text">Real-time</span>
+                </div>
+                
+                <!-- Verity Shield Logo -->
+                <svg class="verity-shield logo-float" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00d9ff"/>
+                            <stop offset="100%" stop-color="#6366f1"/>
+                        </linearGradient>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <path fill="none" stroke="url(#shieldGrad)" stroke-width="3" d="M100 20 L180 60 L180 130 Q100 200 100 200 Q20 200 20 130 L20 60 Z" filter="url(#glow)"/>
+                    <g opacity="0.8">
+                        <polyline fill="none" stroke="url(#shieldGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="85,120 100,140 130,100"/>
+                    </g>
+                </svg>
             </div>
         </div>
-
-        <!-- Transparent Logo Background -->
-        <div class="hero-bg-logos">
-            <span class="logo-bg">V</span>
-            <span class="logo-bg">✓</span>
-            <span class="logo-bg">V</span>
-        </div>
+        
+        <!-- Gradient Orbs -->
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
     </section>
 
-    <!-- Services Section -->
-    <section class="services" id="services">
-        <div class="container">
+    <!-- Providers Section -->
+    <section class="providers" id="providers">
+        <div class="section-container">
             <div class="section-header">
-                <h2>Core Capabilities</h2>
-                <p>Everything you need to combat misinformation</p>
+                <span class="section-badge">
+                    <svg class="shield-icon logo-glow" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg" width="28" height="28" style="display: inline-block; margin-right: 8px; vertical-align: middle;">
+                        <defs>
+                            <linearGradient id="badgeShieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00d9ff"/>
+                                <stop offset="100%" stop-color="#6366f1"/>
+                            </linearGradient>
+                        </defs>
+                        <path fill="none" stroke="url(#badgeShieldGrad)" stroke-width="2.5" d="M100 20 L180 60 L180 130 Q100 200 100 200 Q20 200 20 130 L20 60 Z"/>
+                        <g opacity="0.8">
+                            <polyline fill="none" stroke="url(#badgeShieldGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="85,120 100,140 130,100"/>
+                        </g>
+                    </svg>
+                    Powered By
+                </span>
+                <h2 class="section-title">50+ AI Models & Data Sources</h2>
+                <p class="section-description">
+                    We aggregate results from the world's leading AI models, academic databases, fact-checking 
+                    organizations, and real-time search engines to deliver consensus-based verification with unmatched accuracy.
+                </p>
             </div>
             
-            <div class="services-grid">
-                <div class="service-item">
-                    <div class="service-icon">01</div>
-                    <h3>Claim Verification</h3>
-                    <p>Verify any claim against millions of reliable sources with AI-powered cross-referencing</p>
+            <div class="providers-grid">
+                <!-- Row 1 - AI/LLM Providers -->
+                <div class="provider-card">
+                    <div class="provider-icon">
+                        <svg viewBox="0 0 100 100" width="64" height="64" class="provider-logo">
+                            <!-- Anthropic official logo style - dark background with letter -->
+                            <rect width="100" height="100" rx="12" fill="#000000"/>
+                            <text x="50" y="62" text-anchor="middle" font-family="Arial, sans-serif" font-size="52" font-weight="bold" fill="#6366F1">A</text>
+                        </svg>
+                    </div>
+                    <h3>Anthropic Claude</h3>
+                    <p>Industry-leading AI reasoning and analysis</p>
                 </div>
-                <div class="service-item">
-                    <div class="service-icon">02</div>
-                    <h3>Source Analysis</h3>
-                    <p>Assess credibility and bias of sources with advanced NLP and pattern recognition</p>
+                
+                <div class="provider-card">
+                    <div class="provider-icon">
+                        <svg viewBox="0 0 100 100" width="64" height="64" class="provider-logo">
+                            <!-- OpenAI official brand color -->
+                            <circle cx="50" cy="50" r="48" fill="#10A37F"/>
+                            <!-- OpenAI symbol -->
+                            <g transform="translate(50, 50)">
+                                <path d="M -15 -8 Q -15 -15 -8 -15 Q -1 -15 -1 -8 M -1 8 Q -1 15 -8 15 Q -15 15 -15 8" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+                                <path d="M 8 -15 Q 15 -15 15 -8 Q 15 -1 8 -1 M -8 1 Q -1 1 -1 8 Q -1 15 -8 15" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <h3>OpenAI GPT-4</h3>
+                    <p>Advanced AI-powered text understanding</p>
                 </div>
-                <div class="service-item">
-                    <div class="service-icon">03</div>
-                    <h3>Real-Time Monitoring</h3>
-                    <p>Monitor content across web, social media, and news for misinformation in real-time</p>
+                
+                <div class="provider-card">
+                    <div class="provider-icon">
+                        <svg viewBox="0 0 100 100" width="64" height="64" class="provider-logo">
+                            <!-- Groq official brand colors -->
+                            <rect width="100" height="100" rx="12" fill="#000000"/>
+                            <circle cx="30" cy="30" r="12" fill="#00D9FF"/>
+                            <circle cx="70" cy="30" r="12" fill="#00D9FF"/>
+                            <circle cx="50" cy="65" r="15" fill="#0066FF"/>
+                        </svg>
+                    </div>
+                    <h3>Groq</h3>
+                    <p>Ultra-high-performance inference engine</p>
                 </div>
-                <div class="service-item">
-                    <div class="service-icon">04</div>
-                    <h3>Custom Reports</h3>
-                    <p>Get detailed verification reports with confidence scores and source citations</p>
+                
+                <div class="provider-card">
+                    <div class="provider-icon">
+                        <svg viewBox="0 0 100 100" width="64" height="64" class="provider-logo">
+                            <!-- Perplexity official logo - circular pattern -->
+                            <defs>
+                                <radialGradient id="perplexityGrad" cx="50%" cy="50%">
+                                    <stop offset="0%" style="stop-color:#FF6B35;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#F7931E;stop-opacity:1" />
+                                </radialGradient>
+                            </defs>
+                            <circle cx="50" cy="50" r="48" fill="url(#perplexityGrad)"/>
+                            <circle cx="50" cy="50" r="28" fill="none" stroke="white" stroke-width="3"/>
+                            <circle cx="50" cy="50" r="18" fill="none" stroke="white" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>Perplexity AI</h3>
+                    <p>Advanced research with real-time web integration</p>
                 </div>
-            </div>
-        </div>
-
-        <!-- Background logos -->
-        <div class="services-bg-logos">
-            <span class="logo-bg">✓</span>
-            <span class="logo-bg">V</span>
-        </div>
-    </section>
-
-    <!-- Process Section -->
-    <section class="process" id="process">
-        <div class="container">
-            <div class="section-header">
-                <h2>How It Works</h2>
-                <p>4-step verification process</p>
+                
+                <div class="provider-card">
+                    <div class="provider-icon">
+                        <svg viewBox="0 0 100 100" width="64" height="64" class="provider-logo">
+                            <!-- Hugging Face official logo style -->
+                            <rect width="100" height="100" rx="12" fill="#FFD60A"/>
+                            <!-- Simplified hugging emoji style -->
+                            <circle cx="35" cy="45" r="12" fill="#000000"/>
+                            <circle cx="65" cy="45" r="12" fill="#000000"/>
+                            <ellipse cx="50" cy="65" rx="18" ry="12" fill="#000000"/>
+                        </svg>
+                    </div>
+                    <h3>Hugging Face</h3>
+                    <p>State-of-the-art NLP models and tools</p>
+                </div>
+                
+                <div class="provider-card">
+                    <div class="provider-icon">
+                        <svg viewBox="0 0 100 100" width="64" height="64" class="provider-logo">
+                            <!-- OpenRouter gradient -->
+                            <defs>
+                                <linearGradient id="openrouterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#6366F1;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#22D3EE;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <rect width="100" height="100" rx="12" fill="url(#openrouterGrad)"/>
+                            <!-- Router symbol -->
+                            <g transform="translate(50, 50)">
+                                <circle cx="0" cy="0" r="8" fill="white"/>
+                                <line x1="0" y1="-20" x2="0" y2="-12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="14" y1="-14" x2="10" y2="-8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="20" y1="0" x2="12" y2="0" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="14" y1="14" x2="10" y2="8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <h3>OpenRouter</h3>
+                    <p>Leading multi-model AI aggregation platform</p>
+                </div>
+                
+                <!-- Row 2 - Data Providers -->
+                <div class="provider-card">
+                    <div class="provider-icon">
+                        <svg viewBox="0 0 100 100" width="64" height="64" class="provider-logo">
+                            <!-- Google official colors -->
+                            <circle cx="50" cy="50" r="48" fill="#4285F4"/>
+                            <!-- Stylized G -->
+                            <path d="M 35 50 Q 35 65 50 65 Q 60 65 65 55 L 55 55 L 55 45 Q 55 35 50 35 Q 40 35 35 42" fill="white" stroke="white" stroke-width="1"/>
+                        </svg>
+                    </div>
+                    <h3>Google Fact Check</h3>
+                    <p>Global fact verification database</p>
+                </div>
+                
+                <div class="provider-card">
+                    <div class="provider-icon">
+                        <svg viewBox="0 0 100 100" width="64" height="64" class="provider-logo">
+                            <!-- Wikipedia official colors -->
+                            <rect width="100" height="100" rx="8" fill="white" stroke="#003366" stroke-width="2"/>
+                            <!-- Wikipedia puzzle piece style -->
+                            <g transform="translate(50, 50)">
+                                <rect x="-18" y="-18" width="36" height="36" fill="#003366"/>
+                                <circle cx="-8" cy="-8" r="4" fill="white"/>
+                                <circle cx="8" cy="-8" r="4" fill="white"/>
+                                <circle cx="-8" cy="8" r="4" fill="white"/>
+                                <circle cx="8" cy="8" r="4" fill="white"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <h3>Wikipedia</h3>
+                    <p>Comprehensive knowledge repository</p>
+                </div>
+                
+                <div class="provider-card">
+                    <div class="provider-icon">
+                        <svg viewBox="0 0 100 100" width="64" height="64" class="provider-logo">
+                            <!-- Wikidata official colors -->
+                            <rect width="100" height="100" rx="12" fill="#003366"/>
+                            <!-- Simplified data structure -->
+                            <g transform="translate(50, 50)">
+                                <rect x="-12" y="-12" width="8" height="8" fill="#FFD700"/>
+                                <rect x="4" y="-12" width="8" height="8" fill="#FFD700"/>
+                                <rect x="-12" y="4" width="8" height="8" fill="#FFD700"/>
+                                <rect x="4" y="4" width="8" height="8" fill="#FFD700"/>
+                                <line x1="-8" y1="-4" x2="8" y2="-4" stroke="#FFD700" stroke-width="1"/>
+                                <line x1="-8" y1="4" x2="8" y2="4" stroke="#FFD700" stroke-width="1"/>
+                                <line x1="-4" y1="-12" x2="-4" y2="12" stroke="#FFD700" stroke-width="1"/>
+                                <line x1="4" y1="-12" x2="4" y2="12" stroke="#FFD700" stroke-width="1"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <h3>Wikidata</h3>
+                    <p>Structured knowledge base platform</p>
+                </div>
+                
+                <div class="provider-card">
+                    <div class="provider-icon">
+                        <svg viewBox="0 0 100 100" width="64" height="64" class="provider-logo">
+                            <!-- DuckDuckGo official brand -->
+                            <rect width="100" height="100" rx="12" fill="#DE5833"/>
+                            <!-- Stylized duck head -->
+                            <g transform="translate(50, 50)">
+                                <circle cx="0" cy="-8" r="10" fill="white"/>
+                                <circle cx="8" cy="-6" r="5" fill="#DE5833"/>
+                                <ellipse cx="0" cy="8" rx="12" ry="10" fill="white"/>
+                                <path d="M -6 0 Q -12 4 -8 10" stroke="white" stroke-width="2" fill="none"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <h3>DuckDuckGo</h3>
+                    <p>Privacy-first search intelligence</p>
+                </div>
+                
+                <div class="provider-card">
+                    <div class="provider-icon">
+                        <svg viewBox="0 0 100 100" width="64" height="64" class="provider-logo">
+                            <!-- NewsAPI brand colors -->
+                            <rect width="100" height="100" rx="12" fill="#0066CC"/>
+                            <!-- Newspaper icon -->
+                            <g transform="translate(50, 50)">
+                                <rect x="-18" y="-15" width="36" height="30" fill="none" stroke="white" stroke-width="2"/>
+                                <line x1="-14" y1="-9" x2="14" y2="-9" stroke="white" stroke-width="1.5"/>
+                                <line x1="-14" y1="-4" x2="14" y2="-4" stroke="white" stroke-width="1.5"/>
+                                <line x1="-14" y1="0" x2="14" y2="0" stroke="white" stroke-width="1.5"/>
+                                <line x1="-14" y1="5" x2="14" y2="5" stroke="white" stroke-width="1.5"/>
+                                <line x1="-14" y1="10" x2="8" y2="10" stroke="white" stroke-width="1.5"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <h3>NewsAPI</h3>
+                    <p>Comprehensive news and media intelligence</p>
+                </div>
+                
+                <div class="provider-card">
+                    <div class="provider-icon">
+                        <svg viewBox="0 0 100 100" width="64" height="64" class="provider-logo">
+                            <!-- ClaimBuster university colors -->
+                            <circle cx="50" cy="50" r="48" fill="#1E40AF"/>
+                            <!-- Shield with checkmark -->
+                            <g transform="translate(50, 50)">
+                                <path d="M -12 -15 L 0 -20 L 12 -15 L 12 -2 Q 0 8 -12 -2 Z" fill="white"/>
+                                <path d="M -4 -2 L -2 2 L 6 -6" stroke="#1E40AF" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <h3>ClaimBuster</h3>
+                    <p>Advanced claim detection and scoring</p>
+                </div>
+                
+                <div class="provider-card">
+                    <div class="provider-icon">
+                        <svg viewBox="0 0 100 100" width="64" height="64" class="provider-logo">
+                            <!-- Serper Search brand -->
+                            <defs>
+                                <linearGradient id="serperGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#0066FF;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#00D9FF;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <rect width="100" height="100" rx="12" fill="url(#serperGrad)"/>
+                            <!-- Magnifying glass -->
+                            <g transform="translate(50, 50)">
+                                <circle cx="-4" cy="-4" r="12" fill="none" stroke="white" stroke-width="2.5"/>
+                                <line x1="6" y1="6" x2="14" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <h3>Serper</h3>
+                    <p>High-performance search API infrastructure</p>
+                </div>
+                
+                <div class="provider-card">
+                    <div class="provider-icon">
+                        <svg viewBox="0 0 100 100" width="64" height="64" class="provider-logo">
+                            <!-- Polygon.io trading/financial -->
+                            <defs>
+                                <linearGradient id="polygonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#00A4EF;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#0066CC;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <rect width="100" height="100" rx="12" fill="url(#polygonGrad)"/>
+                            <!-- Chart/polygon symbol -->
+                            <g transform="translate(50, 50)">
+                                <polyline points="-12,8 -4,-4 4,2 12,-8" fill="none" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
+                                <circle cx="-12" cy="8" r="2.5" fill="white"/>
+                                <circle cx="-4" cy="-4" r="2.5" fill="white"/>
+                                <circle cx="4" cy="2" r="2.5" fill="white"/>
+                                <circle cx="12" cy="-8" r="2.5" fill="white"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <h3>Polygon.io</h3>
+                    <p>Enterprise financial data verification</p>
+                </div>
             </div>
             
-            <div class="process-grid">
-                <div class="process-card">
-                    <div class="process-number">01</div>
-                    <div class="process-icon">📝</div>
-                    <h3>Submit</h3>
-                    <p>Input a claim or upload content</p>
+            <!-- Provider Categories Summary -->
+            <div class="provider-categories">
+                <div class="category-grid">
+                    <div class="category-item">
+                        <div class="category-icon">🤖</div>
+                        <div class="category-content">
+                            <span class="category-count">15+</span>
+                            <span class="category-label">AI Language Models</span>
+                        </div>
+                        <p class="category-list">Claude, GPT-4, Gemini, Mistral, Llama 3, DeepSeek, Cohere, Qwen, Yi, Mixtral</p>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-icon">🔍</div>
+                        <div class="category-content">
+                            <span class="category-count">10+</span>
+                            <span class="category-label">Search Engines</span>
+                        </div>
+                        <p class="category-list">Google, Bing, DuckDuckGo, Brave, Tavily, Exa, You.com, Serper, Jina</p>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-icon">📚</div>
+                        <div class="category-content">
+                            <span class="category-count">8+</span>
+                            <span class="category-label">Academic Sources</span>
+                        </div>
+                        <p class="category-list">Semantic Scholar, CrossRef, PubMed, arXiv, Wikipedia, Wikidata, Google Scholar</p>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-icon">✓</div>
+                        <div class="category-content">
+                            <span class="category-count">12+</span>
+                            <span class="category-label">Fact-Check Organizations</span>
+                        </div>
+                        <p class="category-list">Snopes, PolitiFact, FactCheck.org, Full Fact, AFP, Reuters, AP, ClaimBuster</p>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-icon">📰</div>
+                        <div class="category-content">
+                            <span class="category-count">5+</span>
+                            <span class="category-label">News APIs</span>
+                        </div>
+                        <p class="category-list">NewsAPI, MediaStack, NewsGuard, Google News, Associated Press</p>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-icon">💹</div>
+                        <div class="category-content">
+                            <span class="category-count">3+</span>
+                            <span class="category-label">Financial Data</span>
+                        </div>
+                        <p class="category-list">Polygon.io, Alpha Vantage, Yahoo Finance</p>
+                    </div>
                 </div>
-                <div class="process-arrow">→</div>
-                <div class="process-card">
-                    <div class="process-number">02</div>
-                    <div class="process-icon">🔍</div>
-                    <h3>Analyze</h3>
-                    <p>AI analyzes against sources</p>
-                </div>
-                <div class="process-arrow">→</div>
-                <div class="process-card">
-                    <div class="process-number">03</div>
-                    <div class="process-icon">✓</div>
-                    <h3>Verify</h3>
-                    <p>Cross-reference and validate</p>
-                </div>
-                <div class="process-arrow">→</div>
-                <div class="process-card">
-                    <div class="process-number">04</div>
-                    <div class="process-icon">📊</div>
-                    <h3>Report</h3>
-                    <p>Get comprehensive insights</p>
-                </div>
+                <p class="provider-total">
+                    <strong>Total Integration Capability:</strong> 50+ AI models and data sources working together for consensus-based fact verification
+                </p>
             </div>
-        </div>
-
-        <!-- Background logos -->
-        <div class="process-bg-logos">
-            <span class="logo-bg">V</span>
-            <span class="logo-bg">✓</span>
         </div>
     </section>
 
     <!-- Features Section -->
     <section class="features" id="features">
-        <div class="container">
+        <div class="section-container">
             <div class="section-header">
-                <h2>Powerful Features</h2>
-                <p>Advanced technology for enterprise needs</p>
+                <span class="section-badge">Capabilities</span>
+                <h2 class="section-title">Enterprise-Grade Features</h2>
+                <p class="section-description">
+                    Built for scale with comprehensive security, real-time processing, 
+                    and seamless integration capabilities.
+                </p>
             </div>
             
             <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Sub-Second Analysis</h3>
-                    <p>Real-time claim verification with parallel processing</p>
+                <div class="feature-card large">
+                    <div class="feature-icon-wrapper">
+                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="M9 12l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <h3>Military-Grade Security</h3>
+                    <p>AES-256-GCM encryption with PBKDF2 key derivation (600K iterations), 
+                       JWT authentication, HMAC request signing, and GDPR-compliant data anonymization.</p>
+                    <div class="feature-tags">
+                        <span class="tag">AES-256</span>
+                        <span class="tag">PBKDF2</span>
+                        <span class="tag">HMAC</span>
+                        <span class="tag">GDPR</span>
+                    </div>
                 </div>
+                
                 <div class="feature-card">
-                    <div class="feature-icon">🧠</div>
-                    <h3>AI Models</h3>
-                    <p>Continuously learning models that improve accuracy</p>
+                    <div class="feature-icon-wrapper small">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                    <h3>Real-Time Verification</h3>
+                    <p>Parallel processing across all providers with sub-2-second response times.</p>
                 </div>
+                
                 <div class="feature-card">
-                    <div class="feature-icon">🌍</div>
-                    <h3>Global Coverage</h3>
-                    <p>50+ languages and international source support</p>
+                    <div class="feature-icon-wrapper small">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                    </div>
+                    <h3>Batch Processing</h3>
+                    <p>Verify up to 100 claims per request with efficient queue management.</p>
                 </div>
+                
                 <div class="feature-card">
-                    <div class="feature-icon">🔐</div>
-                    <h3>Enterprise Security</h3>
-                    <p>Bank-grade encryption and compliance standards</p>
+                    <div class="feature-icon-wrapper small">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <line x1="9" y1="3" x2="9" y2="21"/>
+                        </svg>
+                    </div>
+                    <h3>Smart Caching</h3>
+                    <p>Intelligent result caching with configurable TTL for optimal performance.</p>
                 </div>
+                
                 <div class="feature-card">
-                    <div class="feature-icon">📱</div>
-                    <h3>API & Integrations</h3>
-                    <p>Easy integration with existing systems</p>
+                    <div class="feature-icon-wrapper small">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3>Consensus Algorithm</h3>
+                    <p>Weighted voting from multiple AI models for accurate verdicts.</p>
                 </div>
+                
                 <div class="feature-card">
-                    <div class="feature-icon">👥</div>
-                    <h3>Team Collaboration</h3>
-                    <p>Shared workflows and team management</p>
+                    <div class="feature-icon-wrapper small">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                    </div>
+                    <h3>Audit Logging</h3>
+                    <p>Tamper-proof audit trails with cryptographic integrity verification.</p>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Background logos -->
-        <div class="features-bg-logos">
-            <span class="logo-bg">✓</span>
-            <span class="logo-bg">V</span>
-            <span class="logo-bg">✓</span>
+    <!-- Demo Section -->
+    <section class="demo" id="demo">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-badge">
+                    <svg class="shield-icon" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="display: inline-block; margin-right: 6px; vertical-align: middle;">
+                        <defs>
+                            <linearGradient id="demoBadgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00d9ff"/>
+                                <stop offset="100%" stop-color="#6366f1"/>
+                            </linearGradient>
+                        </defs>
+                        <path fill="none" stroke="url(#demoBadgeGrad)" stroke-width="3" d="M100 20 L180 60 L180 130 Q100 200 100 200 Q20 200 20 130 L20 60 Z"/>
+                        <g opacity="0.8">
+                            <polyline fill="none" stroke="url(#demoBadgeGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="85,120 100,140 130,100"/>
+                        </g>
+                    </svg>
+                    Try It Now
+                </span>
+                <h2 class="section-title">Live Fact-Check Demo</h2>
+                <p class="section-description">
+                    Enter any claim below to see Verity in action. Our AI will analyze it
+                    against multiple sources, explain why it's true or false, and provide references.
+                    <a href="accuracy-score-guide.html" style="color: #22d3ee; text-decoration: none;">Learn how we calculate accuracy scores →</a>
+                </p>
+            </div>
+            
+            <div class="demo-container">
+                <form class="demo-form" id="demoForm">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="claimInput" 
+                            placeholder="Enter a claim to verify... e.g., 'The Great Wall of China is visible from space'"
+                            rows="3"
+                        ></textarea>
+                        <button type="submit" class="btn btn-primary">
+                            <span>Verify Claim</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="demo-examples">
+                        <span class="examples-label">Try:</span>
+                        <button type="button" class="example-btn" data-claim="The Earth is approximately 4.5 billion years old">Earth's age</button>
+                        <button type="button" class="example-btn" data-claim="Humans only use 10% of their brain">10% brain myth</button>
+                        <button type="button" class="example-btn" data-claim="Lightning never strikes the same place twice">Lightning myth</button>
+                    </div>
+                    
+                    <!-- Demo Attempts Display -->
+                    <div id="demoAttemptsDisplay" class="demo-attempts-display"></div>
+                </form>
+                
+                <div class="demo-results" id="demoResults">
+                    <div class="results-placeholder">
+                        <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <p>Enter a claim above to see verification results</p>
+                        <p class="demo-hint">5 free verifications • Connects to real API when available</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Pricing Section -->
-    <section class="pricing" id="pricing">
-        <div class="container">
+    <!-- API Section -->
+    <section class="api-section" id="api">
+        <div class="section-container">
             <div class="section-header">
-                <h2>Simple Pricing</h2>
-                <p>Plans for every organization size</p>
+                <span class="section-badge">
+                    <svg class="shield-icon" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="display: inline-block; margin-right: 6px; vertical-align: middle;">
+                        <defs>
+                            <linearGradient id="apiBadgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00d9ff"/>
+                                <stop offset="100%" stop-color="#6366f1"/>
+                            </linearGradient>
+                        </defs>
+                        <path fill="none" stroke="url(#apiBadgeGrad)" stroke-width="3" d="M100 20 L180 60 L180 130 Q100 200 100 200 Q20 200 20 130 L20 60 Z"/>
+                        <g opacity="0.8">
+                            <polyline fill="none" stroke="url(#apiBadgeGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="85,120 100,140 130,100"/>
+                        </g>
+                    </svg>
+                    Developer API
+                </span>
+                <h2 class="section-title">Simple, Powerful REST API</h2>
+                <p class="section-description">
+                    Integrate fact-checking into your applications with our intuitive API.
+                    Choose your preferred language and get started in minutes.
+                </p>
+            </div>
+            
+            <div class="api-demo">
+                <div class="api-tabs-container">
+                    <div class="api-tabs">
+                        <button class="api-tab active" data-tab="curl">
+                            <span class="tab-icon">$</span>
+                            <span class="tab-label">cURL</span>
+                        </button>
+                        <button class="api-tab" data-tab="python">
+                            <span class="tab-icon">🐍</span>
+                            <span class="tab-label">Python</span>
+                        </button>
+                        <button class="api-tab" data-tab="javascript">
+                            <span class="tab-icon">⚡</span>
+                            <span class="tab-label">JavaScript</span>
+                        </button>
+                        <button class="api-tab" data-tab="nodejs">
+                            <span class="tab-icon">📦</span>
+                            <span class="tab-label">Node.js</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="code-container">
+                    <div class="code-block active" id="curl">
+                        <div class="code-header">
+                            <div class="code-header-left">
+                                <span class="code-lang">bash</span>
+                                <span class="code-desc">cURL Command</span>
+                            </div>
+                            <button class="copy-btn" data-code="curl">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                                </svg>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                                                <pre><code>curl -X POST http://localhost:8000/v1/verify \
+    -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "claim": "The Earth is approximately 4.5 billion years old",
+    "providers": ["anthropic", "groq", "wikipedia"],
+  }'</code></pre>
+                    </div>
+                    
+                    <div class="code-block" id="python">
+                        <div class="code-header">
+                            <div class="code-header-left">
+                                <span class="code-lang">python</span>
+                                <span class="code-desc">Python Script</span>
+                            </div>
+                            <button class="copy-btn" data-code="python">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                                </svg>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                        <pre><code>import requests
+
+response = requests.post(
+    "http://localhost:8000/v1/verify",
+    headers={"X-API-Key": "YOUR_API_KEY"},
+    json={
+        "claim": "The Earth is approximately 4.5 billion years old",
+        "providers": ["anthropic", "groq", "wikipedia"]
+    }
+)
+
+result = response.json()
+print(f"Status: {result['status']} (confidence {result['confidence_score']})")</code></pre>
+                    </div>
+                    
+                    <div class="code-block" id="javascript">
+                        <div class="code-header">
+                            <div class="code-header-left">
+                                <span class="code-lang">javascript</span>
+                                <span class="code-desc">JavaScript / Fetch API</span>
+                            </div>
+                            <button class="copy-btn" data-code="javascript">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                                </svg>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                                                <pre><code>const response = await fetch('http://localhost:8000/v1/verify', {
+  method: 'POST',
+  headers: {
+        'X-API-Key': 'YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    claim: 'The Earth is approximately 4.5 billion years old',
+        providers: ['anthropic', 'groq', 'wikipedia']
+  })
+});
+
+const result = await response.json();
+console.log(`Status: ${result.status} (confidence ${result.confidence_score})`);</code></pre>
+                    </div>
+                    
+                    <div class="code-block" id="nodejs">
+                        <div class="code-header">
+                            <div class="code-header-left">
+                                <span class="code-lang">javascript</span>
+                                <span class="code-desc">Node.js with Axios</span>
+                            </div>
+                            <button class="copy-btn" data-code="nodejs">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                                </svg>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                                                <pre><code>const axios = require('axios');
+
+async function verifyClaim() {
+    const response = await axios.post(
+        'http://localhost:8000/v1/verify',
+        {
+            claim: 'The Earth is approximately 4.5 billion years old',
+            providers: ['anthropic', 'groq', 'wikipedia']
+        },
+        {
+            headers: {
+                'X-API-Key': 'YOUR_API_KEY'
+            }
+        }
+    );
+  
+    console.log(`Status: ${response.data.status} (confidence ${response.data.confidence_score})`);
+}
+
+verifyClaim();</code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="api-features">
+                <div class="api-feature">
+                    <h4>RESTful Design</h4>
+                    <p>Clean, intuitive endpoints following REST conventions</p>
+                </div>
+                <div class="api-feature">
+                    <h4>JWT Authentication</h4>
+                    <p>Secure token-based authentication with refresh support</p>
+                </div>
+                <div class="api-feature">
+                    <h4>Rate Limiting</h4>
+                    <p>Configurable limits with clear response headers</p>
+                </div>
+                <div class="api-feature">
+                    <h4>Webhooks</h4>
+                    <p>Real-time notifications for async operations</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Section -->
+    <section class="security" id="security">
+        <div class="security-bg-pattern"></div>
+        <div class="section-container">
+            <div class="section-header security-header">
+                <div class="security-badge-wrapper">
+                    <span class="section-badge security-pulse">🛡️ Security First</span>
+                </div>
+                <h2 class="section-title security-title">
+                    <span class="title-accent">Your Data Security</span> is Our 
+                    <span class="title-highlight">Top Priority</span>
+                </h2>
+                <p class="section-description security-description">
+                    We understand that your data is invaluable. That's why we've built Verity with 
+                    <strong>enterprise-grade security</strong> at its core — not as an afterthought. 
+                    Every piece of information you trust us with is protected by multiple layers of 
+                    cutting-edge security measures.
+                </p>
+                <div class="security-trust-badges">
+                    <div class="trust-badge">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <polyline points="9 12 11 14 15 10"/>
+                        </svg>
+                        <span>GDPR Compliant</span>
+                    </div>
+                    <div class="trust-badge">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <polyline points="9 12 11 14 15 10"/>
+                        </svg>
+                        <span>SOC 2 Ready</span>
+                    </div>
+                    <div class="trust-badge">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <polyline points="9 12 11 14 15 10"/>
+                        </svg>
+                        <span>Enterprise Grade</span>
+                    </div>
+                    <div class="trust-badge">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <polyline points="9 12 11 14 15 10"/>
+                        </svg>
+                        <span>Zero Data Selling</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="security-grid-4col">
+                <div class="security-card-enhanced" data-security="encryption">
+                    <div class="card-glow"></div>
+                    <div class="security-icon-wrapper">
+                        <div class="icon-ring"></div>
+                        <div class="security-icon">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                <circle cx="12" cy="16" r="1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="security-card-content">
+                        <h3>AES-256-GCM Encryption</h3>
+                        <p>Military-grade encryption protects all sensitive data at rest and in transit. Your information is completely unreadable to anyone without authorization.</p>
+                        <div class="security-stat">
+                            <span class="stat-value">256-bit</span>
+                            <span class="stat-label">Key Strength</span>
+                        </div>
+                    </div>
+                    <div class="card-hover-indicator"></div>
+                </div>
+                
+                <div class="security-card-enhanced" data-security="derivation">
+                    <div class="card-glow"></div>
+                    <div class="security-icon-wrapper">
+                        <div class="icon-ring"></div>
+                        <div class="security-icon">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <path d="M12 8v4l2 2"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="security-card-content">
+                        <h3>PBKDF2 Key Derivation</h3>
+                        <p>600,000 iterations with SHA-256 makes brute force attacks computationally infeasible. Your credentials are protected by time itself.</p>
+                        <div class="security-stat">
+                            <span class="stat-value">600K</span>
+                            <span class="stat-label">Iterations</span>
+                        </div>
+                    </div>
+                    <div class="card-hover-indicator"></div>
+                </div>
+                
+                <div class="security-card-enhanced" data-security="anonymization">
+                    <div class="card-glow"></div>
+                    <div class="security-icon-wrapper">
+                        <div class="icon-ring"></div>
+                        <div class="security-icon">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="7" r="4"/>
+                                <path d="M5.5 21a8.5 8.5 0 0 1 13 0"/>
+                                <line x1="2" y1="2" x2="22" y2="22" stroke-width="2"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="security-card-content">
+                        <h3>PII Anonymization</h3>
+                        <p>Automatic detection and irreversible anonymization of personally identifiable information. Your identity stays protected at all times.</p>
+                        <div class="security-stat">
+                            <span class="stat-value">100%</span>
+                            <span class="stat-label">Auto-Detection</span>
+                        </div>
+                    </div>
+                    <div class="card-hover-indicator"></div>
+                </div>
+                
+                <div class="security-card-enhanced" data-security="audit">
+                    <div class="card-glow"></div>
+                    <div class="security-icon-wrapper">
+                        <div class="icon-ring"></div>
+                        <div class="security-icon">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <circle cx="10" cy="13" r="0.5" fill="currentColor"/>
+                                <circle cx="10" cy="17" r="0.5" fill="currentColor"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="security-card-content">
+                        <h3>Audit Logging</h3>
+                        <p>Comprehensive, tamper-proof audit trails with cryptographic integrity verification. Every action is recorded and verifiable.</p>
+                        <div class="security-stat">
+                            <span class="stat-value">24/7</span>
+                            <span class="stat-label">Monitoring</span>
+                        </div>
+                    </div>
+                    <div class="card-hover-indicator"></div>
+                </div>
+            </div>
+            
+            <div class="security-commitment">
+                <div class="commitment-icon">
+                    <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <div class="commitment-content">
+                    <h4>Our Security Commitment</h4>
+                    <p>We will <strong>never sell your data</strong>. We will <strong>never share your information</strong> without explicit consent. Your trust is the foundation of everything we build.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GitHub Education Section -->
+    <section class="pricing" id="pricing">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-badge">Flexible Plans</span>
+                <h2 class="section-title">Simple, Transparent Pricing</h2>
+                <p class="section-description">
+                    Choose the plan that fits your needs. All plans include access to our full suite of 14 AI providers and fact-checking sources.
+                </p>
             </div>
             
             <div class="pricing-grid">
                 <div class="pricing-card">
                     <h3>Starter</h3>
-                    <div class="price">$299<span>/mo</span></div>
-                    <p class="price-desc">For small teams</p>
-                    <ul class="price-list">
-                        <li>✓ 10K verifications/month</li>
-                        <li>✓ API access</li>
-                        <li>✓ Email support</li>
+                    <div class="pricing-amount"><span class="price">Free</span></div>
+                    <p>Perfect for personal use and testing</p>
+                    <ul class="pricing-features">
+                        <li>100 verifications/month</li>
+                        <li>All 14 AI providers</li>
+                        <li>Basic support</li>
+                        <li>API access</li>
                     </ul>
-                    <button class="btn btn-secondary">Get Started</button>
+                    <button class="btn btn-outline">Get Started</button>
                 </div>
                 
                 <div class="pricing-card featured">
-                    <div class="badge">Popular</div>
+                    <div class="pricing-badge">Most Popular</div>
                     <h3>Professional</h3>
-                    <div class="price">$999<span>/mo</span></div>
-                    <p class="price-desc">For enterprises</p>
-                    <ul class="price-list">
-                        <li>✓ Unlimited verifications</li>
-                        <li>✓ Priority support</li>
-                        <li>✓ Advanced API</li>
-                        <li>✓ Custom integrations</li>
+                    <div class="pricing-amount"><span class="price">$29</span><span class="period">/month</span></div>
+                    <p>For researchers and small teams</p>
+                    <ul class="pricing-features">
+                        <li>10,000 verifications/month</li>
+                        <li>All 14 AI providers</li>
+                        <li>Priority support</li>
+                        <li>API access</li>
+                        <li>Batch processing</li>
+                        <li>Advanced analytics</li>
                     </ul>
-                    <button class="btn btn-primary">Start Trial</button>
+                    <button class="btn btn-primary">Start Free Trial</button>
                 </div>
                 
                 <div class="pricing-card">
                     <h3>Enterprise</h3>
-                    <div class="price">Custom</div>
-                    <p class="price-desc">For large-scale</p>
-                    <ul class="price-list">
-                        <li>✓ Everything in Pro</li>
-                        <li>✓ Dedicated support</li>
-                        <li>✓ Custom models</li>
-                        <li>✓ White-label</li>
+                    <div class="pricing-amount"><span class="price">Custom</span></div>
+                    <p>For organizations at scale</p>
+                    <ul class="pricing-features">
+                        <li>Unlimited verifications</li>
+                        <li>All 14 AI providers</li>
+                        <li>24/7 dedicated support</li>
+                        <li>Custom integrations</li>
+                        <li>SLA guarantee</li>
+                        <li>Private deployment</li>
                     </ul>
-                    <button class="btn btn-secondary">Contact Sales</button>
+                    <button class="btn btn-outline">Contact Sales</button>
                 </div>
             </div>
-        </div>
-
-        <!-- Background logos -->
-        <div class="pricing-bg-logos">
-            <span class="logo-bg">V</span>
-            <span class="logo-bg">✓</span>
+            
+            <div class="pricing-note">
+                <p>All plans can be paid with credit card via Stripe. Cancel anytime, no questions asked.</p>
+            </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section class="contact" id="contact">
-        <div class="container">
-            <div class="contact-wrapper">
-                <div class="contact-info">
-                    <h2>Get in Touch</h2>
-                    <p>Ready to get started? We're here to help.</p>
-                    
-                    <div class="contact-items">
-                        <div class="contact-item">
-                            <span class="label">Email</span>
-                            <a href="mailto:hello@veritysystems.com">hello@veritysystems.com</a>
-                        </div>
-                        <div class="contact-item">
-                            <span class="label">Phone</span>
-                            <a href="tel:+1234567890">+1 (234) 567-8900</a>
-                        </div>
-                        <div class="contact-item">
-                            <span class="label">Location</span>
-                            <p>San Francisco, CA</p>
-                        </div>
-                    </div>
+    <!-- CTA Section -->
+    <section class="cta" id="start">
+        <div class="section-container">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Fight Misinformation?</h2>
+                <p class="cta-description">
+                    Start verifying claims today with our powerful AI platform.
+                    Free tier available for developers and researchers.
+                </p>
+                <div class="cta-actions">
+                    <a href="#" class="btn btn-primary btn-lg">
+                        <span>Get API Key</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="API_DOCUMENTATION.md" class="btn btn-outline btn-lg">
+                        <span>Read Documentation</span>
+                    </a>
                 </div>
-
-                <form class="contact-form">
-                    <input type="text" placeholder="Name" required>
-                    <input type="email" placeholder="Email" required>
-                    <input type="text" placeholder="Company" required>
-                    <textarea placeholder="Message" rows="5" required></textarea>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
-                </form>
             </div>
         </div>
-
-        <!-- Background logos -->
-        <div class="contact-bg-logos">
-            <span class="logo-bg">✓</span>
-            <span class="logo-bg">V</span>
-        </div>
+        
+        <!-- Background Effects -->
+        <div class="cta-gradient"></div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
+        <div class="footer-container">
+            <div class="footer-main">
                 <div class="footer-brand">
-                    <a href="#" class="logo">
-                        <span class="logo-text">Verity</span>
+                    <a href="#" class="logo footer-logo">
+                        <svg class="footer-logo-svg" width="200" height="75" viewBox="0 0 800 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <text x="80" y="190" font-family="Arial Black, Arial Bold, sans-serif" font-size="160" font-weight="900" letter-spacing="-3">
+                                <tspan fill="#22D3EE">v</tspan><tspan fill="#06B6D4">e</tspan><tspan fill="#0EA5E9">r</tspan><tspan fill="#3B82F6">i</tspan><tspan fill="#4F46E5">t</tspan><tspan fill="#6366F1">y</tspan><tspan fill="#6366F1">.</tspan>
+                            </text>
+                            <g transform="translate(360, 255) scale(1.4)">
+                                <path d="M0,-24 L-22,-20 L-22,0 Q-22,16 0,20 Q22,16 22,0 L22,-20 Z" stroke="#6366F1" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                <path d="M-6,0 L-2,4 L6,-5" stroke="#6366F1" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            </g>
+                        </svg>
                     </a>
-                    <p>Enterprise AI fact-checking</p>
+                    <p class="footer-tagline">AI-powered truth verification for the modern web.</p>
                 </div>
                 
                 <div class="footer-links">
-                    <div>
+                    <div class="footer-column">
                         <h4>Product</h4>
                         <ul>
-                            <li><a href="#services">Services</a></li>
-                            <li><a href="#pricing">Pricing</a></li>
-                            <li><a href="#">API</a></li>
-                            <li><a href="#">Docs</a></li>
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="#api">API</a></li>
+                            <li><a href="#providers">Providers</a></li>
+                            <li><a href="#demo">Demo</a></li>
                         </ul>
                     </div>
-                    <div>
-                        <h4>Company</h4>
+                    <div class="footer-column">
+                        <h4>Resources</h4>
                         <ul>
-                            <li><a href="#">About</a></li>
-                            <li><a href="#">Blog</a></li>
-                            <li><a href="#">Careers</a></li>
-                            <li><a href="#">Contact</a></li>
+                            <li><a href="API_DOCUMENTATION.md">Documentation</a></li>
+                            <li><a href="accuracy-score-guide.html">Accuracy Guide</a></li>
+                            <li><a href="#">Status</a></li>
+                            <li><a href="#">Support</a></li>
                         </ul>
                     </div>
-                    <div>
+                    <div class="footer-column">
                         <h4>Legal</h4>
                         <ul>
-                            <li><a href="#">Privacy</a></li>
-                            <li><a href="#">Terms</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
                             <li><a href="#">Security</a></li>
+                            <li><a href="#">GDPR</a></li>
                         </ul>
                     </div>
-                </div>
-
-                <div class="footer-social">
-                    <a href="#">Twitter</a>
-                    <a href="#">LinkedIn</a>
-                    <a href="#">GitHub</a>
+                    <div class="footer-column">
+                        <h4>Connect</h4>
+                        <ul>
+                            <li><a href="https://github.com">GitHub</a></li>
+                            <li><a href="https://twitter.com">Twitter</a></li>
+                            <li><a href="https://linkedin.com">LinkedIn</a></li>
+                            <li><a href="mailto:support@verity.ai">Contact</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2024 Verity Systems. All rights reserved.</p>
+                <p>&copy; 2025 Verity Systems. All rights reserved.</p>
+                <div class="footer-social">
+                    <a href="https://github.com" aria-label="GitHub">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </a>
+                    <a href="https://twitter.com" aria-label="Twitter">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                    </a>
+                    <a href="https://linkedin.com" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                    </a>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- GSAP for animations -->
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    <script src="assets/js/verity-client.js"></script>
+    <script src="assets/js/verity-api-client.js"></script>
+    <script src="assets/js/main-v2.js"></script>
     
-    <script src="assets/js/main.js"></script>
+    <script>
+        // Initialize GSAP
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Navbar scroll effect
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.querySelector('.nav-links');
+        mobileMenuBtn?.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.classList.toggle('active');
+        });
+        
+        // Cursor glow effect
+        const cursorGlow = document.getElementById('cursorGlow');
+        if (cursorGlow && window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => {
+                cursorGlow.style.left = e.clientX + 'px';
+                cursorGlow.style.top = e.clientY + 'px';
+            });
+        }
+        
+        // Hero animations
+        gsap.from('.hero-badge', {
+            opacity: 0,
+            y: 20,
+            duration: 0.8,
+            delay: 0.2
+        });
+        
+        gsap.from('.title-line', {
+            opacity: 0,
+            y: 40,
+            duration: 1,
+            stagger: 0.15,
+            delay: 0.4
+        });
+        
+        gsap.from('.hero-description', {
+            opacity: 0,
+            y: 20,
+            duration: 0.8,
+            delay: 0.8
+        });
+        
+        gsap.from('.hero-actions', {
+            opacity: 0,
+            y: 20,
+            duration: 0.8,
+            delay: 1
+        });
+        
+        gsap.from('.hero-stats', {
+            opacity: 0,
+            y: 20,
+            duration: 0.8,
+            delay: 1.2
+        });
+        
+        gsap.from('.demo-terminal', {
+            opacity: 0,
+            x: 50,
+            duration: 1,
+            delay: 0.6
+        });
+        
+        gsap.from('.floating-card', {
+            opacity: 0,
+            scale: 0.8,
+            duration: 0.8,
+            stagger: 0.2,
+            delay: 1.2
+        });
+        
+        // Section animations - Headers
+        const headers = gsap.utils.toArray('.section-header');
+        headers.forEach(header => {
+            gsap.set(header, { opacity: 1, y: 0 }); // Ensure visible by default
+            gsap.from(header, {
+                scrollTrigger: {
+                    trigger: header,
+                    start: 'top 80%',
+                    once: true
+                },
+                opacity: 0,
+                y: 30,
+                duration: 0.8
+            });
+        });
+        
+        // Section animations - Cards
+        const cards = gsap.utils.toArray('.provider-card, .feature-card, .security-card, .security-card-enhanced, .education-card');
+        cards.forEach(card => {
+            gsap.set(card, { opacity: 1, y: 0 }); // Ensure visible by default
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 85%',
+                    once: true
+                },
+                opacity: 0,
+                y: 30,
+                duration: 0.6
+            });
+        });
+        
+        // API tabs (use 'active' class to toggle blocks)
+        const apiTabs = document.querySelectorAll('.api-tab');
+        const codeBlocks = document.querySelectorAll('.code-block');
+        
+        // Typewriter animation function
+        async function typewriteCode(codeElement, text, speed = 30) {
+            const codeBlock = codeElement.closest('.code-block');
+            codeBlock?.classList.add('typing');
+            
+            // Create a span for the cursor
+            const cursor = document.createElement('span');
+            cursor.className = 'typewriter-cursor';
+            
+            codeElement.textContent = '';
+            codeElement.appendChild(cursor);
+            
+            // Type out the text character by character
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const textNode = document.createTextNode(char);
+                codeElement.insertBefore(textNode, cursor);
+                await new Promise(resolve => setTimeout(resolve, speed));
+            }
+            
+            // Remove cursor after typing is complete
+            cursor.remove();
+            codeBlock?.classList.remove('typing');
+        }
+        
+        // Store original code content
+        const codeContent = {
+            curl: `curl -X POST http://localhost:8000/v1/verify \\
+  -H "X-API-Key: YOUR_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "claim": "The Earth is approximately 4.5 billion years old",
+    "providers": ["anthropic", "groq", "wikipedia"]
+  }'`,
+            python: `import requests
+
+response = requests.post(
+    "http://localhost:8000/v1/verify",
+    headers={"X-API-Key": "YOUR_API_KEY"},
+    json={
+        "claim": "The Earth is approximately 4.5 billion years old",
+        "providers": ["anthropic", "groq", "wikipedia"]
+    }
+)
+
+result = response.json()
+print(f"Status: {result['status']} (confidence {result['confidence_score']})")`,
+            javascript: `const response = await fetch('http://localhost:8000/v1/verify', {
+  method: 'POST',
+  headers: {
+    'X-API-Key': 'YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    claim: 'The Earth is approximately 4.5 billion years old',
+    providers: ['anthropic', 'groq', 'wikipedia']
+  })
+});
+
+const result = await response.json();
+console.log(\`Status: \${result.status} (confidence \${result.confidence_score})\`);`,
+            nodejs: `const axios = require('axios');
+
+async function verifyClaim() {
+  const response = await axios.post(
+    'http://localhost:8000/v1/verify',
+    {
+      claim: 'The Earth is approximately 4.5 billion years old',
+      providers: ['anthropic', 'groq', 'wikipedia']
+    },
+    {
+      headers: {
+        'X-API-Key': 'YOUR_API_KEY'
+      }
+    }
+  );
+  
+  console.log(\`Status: \${response.data.status} (confidence \${response.data.confidence_score})\`);
+}
+
+verifyClaim();`
+        };
+        
+        // Animate code on tab switch
+        apiTabs.forEach(tab => {
+            tab.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const tabId = tab.dataset.tab;
+                
+                apiTabs.forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.code-block').forEach(b => b.classList.remove('active'));
+                
+                tab.classList.add('active');
+                const target = document.getElementById(tabId);
+                if (target) {
+                    target.classList.add('active');
+                    
+                    // Start typewriter animation
+                    const codeElement = target.querySelector('code');
+                    if (codeElement && codeContent[tabId]) {
+                        await typewriteCode(codeElement, codeContent[tabId], 20);
+                    }
+                }
+            });
+        });
+        
+        // Animate first tab (curl) on load
+        window.addEventListener('load', async () => {
+            const curlBlock = document.getElementById('curl');
+            const curlCode = curlBlock?.querySelector('code');
+            if (curlCode && codeContent.curl) {
+                await typewriteCode(curlCode, codeContent.curl, 20);
+            }
+        });
+        
+        // Copy button (preserve SVG, update label only)
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const codeId = btn.dataset.code;
+                const code = document.querySelector(`#${codeId} code`)?.textContent;
+                const label = btn.querySelector('span');
+                if (code && label) {
+                    try {
+                        await navigator.clipboard.writeText(code);
+                        const original = label.textContent;
+                        label.textContent = 'Copied!';
+                        setTimeout(() => label.textContent = original, 2000);
+                    } catch (err) {
+                        console.error('Copy failed:', err);
+                    }
+                }
+            });
+        });
+        
+        // Demo form handling is done in main-v2.js - no duplicate needed here
+        
+        // Terminal typing animation
+        const terminalOutput = document.querySelector('.terminal-output');
+        if (terminalOutput) {
+            setTimeout(() => {
+                terminalOutput.classList.add('show');
+            }, 1500);
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,36 @@
+<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg" class="shield-icon">
+    <defs>
+        <style>
+            .shield-border {
+                stroke: #6366f1;
+                stroke-width: 8;
+                fill: none;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+            .checkmark {
+                stroke: #6366f1;
+                stroke-width: 12;
+                fill: none;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+        </style>
+        <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#00d9ff;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+    
+    <!-- Shield outline -->
+    <path class="shield-border" 
+          d="M 30 20 L 170 20 L 170 110 C 170 170 100 220 100 220 C 100 220 30 170 30 110 Z"
+          style="stroke: url(#shieldGradient);">
+    </path>
+    
+    <!-- Checkmark -->
+    <path class="checkmark" 
+          d="M 60 115 L 85 140 L 140 75"
+          style="stroke: url(#shieldGradient);">
+    </path>
+</svg>

@@ -11,11 +11,11 @@ def check_facts(content):
     """
     Simple fact-checking function
     """
-    print("\n🎯 VERITY FACT CHECKER")
+    print("\n[VERITY FACT CHECKER]")
     print("=" * 60)
     api_key = os.getenv('ANTHROPIC_API_KEY')
     client = anthropic.Anthropic(api_key=api_key)
-    print("🔍 Analyzing content...")
+    print("[Analyzing content...]")
     response = client.completions.create(
         model="claude-2",
         max_tokens_to_sample=2000,
@@ -37,11 +37,11 @@ def check_facts(content):
         Begin your analysis below:
         """
     )
-    print("\n📄 RESULTS:")
+    print("\n[ANALYSIS RESULTS]:")
     print("=" * 60)
     print(response.content[0].text)
     print("=" * 60)
-    print("\n✓ Analysis complete!\n")
+    print("\n[✓ Analysis complete!]\n")
 
 
 if __name__ == "__main__":
