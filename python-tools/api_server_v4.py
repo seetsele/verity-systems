@@ -1003,9 +1003,11 @@ async def analyze_numerical_claims(request: NLPAnalysisRequest):
 
 
 @app.post("/api/v4/analyze/temporal", tags=["Advanced Analysis"])
-async def analyze_temporal_claims(request: NLPAnalysisRequest):
+async def analyze_temporal_claims(request: NLPAnalysisRequest, req: Request):
     """
     Analyze time-based claims in text.
+    
+    **Requires Team tier or higher.**
     
     Detects:
     - Date references
@@ -1013,6 +1015,20 @@ async def analyze_temporal_claims(request: NLPAnalysisRequest):
     - Historical sequences
     - Anachronisms
     """
+    # Check feature access
+    user_id, tier = get_user_tier(req)
+    if not check_feature_access(tier, "temporal_geo"):
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "error": "feature_not_available",
+                "message": "Temporal analysis requires Team tier or higher",
+                "current_tier": tier,
+                "required_tier": "team",
+                "upgrade_url": "/pricing.html"
+            }
+        )
+    
     integrator = get_modules_integrator()
     
     result = integrator.analyze_temporal_claims(request.claim)
@@ -1031,9 +1047,11 @@ async def analyze_temporal_claims(request: NLPAnalysisRequest):
 
 
 @app.post("/api/v4/analyze/geospatial", tags=["Advanced Analysis"])
-async def analyze_geospatial_claims(request: NLPAnalysisRequest):
+async def analyze_geospatial_claims(request: NLPAnalysisRequest, req: Request):
     """
     Analyze location-based claims in text.
+    
+    **Requires Team tier or higher.**
     
     Detects:
     - Place names
@@ -1041,6 +1059,20 @@ async def analyze_geospatial_claims(request: NLPAnalysisRequest):
     - Distance claims
     - Location inconsistencies
     """
+    # Check feature access
+    user_id, tier = get_user_tier(req)
+    if not check_feature_access(tier, "temporal_geo"):
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "error": "feature_not_available",
+                "message": "Geospatial analysis requires Team tier or higher",
+                "current_tier": tier,
+                "required_tier": "team",
+                "upgrade_url": "/pricing.html"
+            }
+        )
+    
     integrator = get_modules_integrator()
     
     result = integrator.analyze_geospatial_claims(request.claim)
