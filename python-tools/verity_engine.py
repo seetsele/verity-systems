@@ -780,7 +780,8 @@ class VerityEngine:
         self,
         claim: str,
         provider_results: List[Dict],
-        client_id: str = "anonymous"
+        client_id: str = "anonymous",
+        deep_mode: bool = False
     ) -> EnhancedVerificationResult:
         """
         Main verification method
@@ -789,6 +790,7 @@ class VerityEngine:
             claim: The claim to verify
             provider_results: Results from all providers
             client_id: Client identifier for caching
+            deep_mode: Enable thorough multi-pass verification
         
         Returns:
             EnhancedVerificationResult with comprehensive analysis
@@ -799,8 +801,8 @@ class VerityEngine:
         claim_hash = self._hash_claim(claim)
         request_id = f"vrt_{claim_hash}_{int(start_time.timestamp())}"
         
-        # Check cache
-        if claim_hash in self.cache:
+        # Skip cache in deep mode
+        if not deep_mode and claim_hash in self.cache:
             cached, cached_time = self.cache[claim_hash]
             if datetime.now() - cached_time < self.cache_ttl:
                 logger.info(f"Cache hit for claim: {claim[:50]}...")
@@ -811,6 +813,17 @@ class VerityEngine:
         sub_claims_raw = self.analyzer.decompose_claim(claim)
         bias_indicators = self.analyzer.detect_bias(claim)
         entities = self.analyzer.extract_entities(claim)
+        
+        # Deep mode: More thorough sub-claim decomposition
+        if deep_mode:
+            logger.info("Deep mode: Performing thorough claim decomposition")
+            # Get more granular sub-claims
+            additional_sub_claims = self._deep_decompose_claim(claim, entities)
+            sub_claims_raw.extend(additional_sub_claims)
+            
+            # Additional bias checks
+            deep_bias = self._deep_bias_analysis(claim, entities)
+            bias_indicators.extend(deep_bias)
         
         # Process provider results
         ai_verdicts = {}
@@ -1082,6 +1095,102 @@ class VerityEngine:
         max_score = len(evidence) * 1.0  # Maximum if all tier 1
         
         return total_score / max_score if max_score > 0 else 0.0
+    
+    def _deep_decompose_claim(self, claim: str, entities: List[str]) -> List[Tuple[str, float]]:
+        """
+        Deep mode: More thorough claim decomposition
+        Breaks down claims into verifiable atomic facts
+        """
+        sub_claims = []
+        
+        # Extract temporal claims
+        temporal_patterns = [
+            (r'in (\d{4})', 'Year-specific claim'),
+            (r'since (\d{4})', 'Timeline claim'),
+            (r'before (\d{4})', 'Historical claim'),
+            (r'(first|last|only)', 'Uniqueness claim'),
+        ]
+        
+        for pattern, claim_type in temporal_patterns:
+            if re.search(pattern, claim, re.IGNORECASE):
+                sub_claims.append((f"Temporal aspect: {claim_type}", 0.8))
+        
+        # Extract quantitative claims
+        if re.search(r'\d+%|\d+\s*(million|billion|thousand)', claim, re.IGNORECASE):
+            sub_claims.append(("Quantitative claim requiring statistical verification", 0.9))
+        
+        # Entity-specific verification
+        for entity in entities[:5]:  # Top 5 entities
+            sub_claims.append((f"Entity verification: {entity}", 0.7))
+        
+        # Causal claims
+        causal_words = ['because', 'causes', 'leads to', 'results in', 'due to']
+        if any(word in claim.lower() for word in causal_words):
+            sub_claims.append(("Causal relationship claim requiring evidence", 0.9))
+        
+        # Comparative claims
+        comparative_words = ['more than', 'less than', 'better', 'worse', 'largest', 'smallest']
+        if any(word in claim.lower() for word in comparative_words):
+            sub_claims.append(("Comparative claim requiring benchmark data", 0.8))
+        
+        return sub_claims
+    
+    def _deep_bias_analysis(self, claim: str, entities: List[str]) -> List['BiasIndicator']:
+        """
+        Deep mode: Enhanced bias detection
+        Looks for subtle manipulation patterns
+        """
+        bias_indicators = []
+        
+        # Emotional manipulation
+        emotional_words = [
+            'shocking', 'unbelievable', 'terrifying', 'amazing', 'outrageous',
+            'devastating', 'incredible', 'explosive', 'bombshell'
+        ]
+        for word in emotional_words:
+            if word in claim.lower():
+                bias_indicators.append(BiasIndicator(
+                    bias_type='emotional_manipulation',
+                    indicator=f'Emotionally charged word: "{word}"',
+                    severity=0.6,
+                    location=claim.lower().find(word)
+                ))
+        
+        # Appeal to authority without citation
+        authority_phrases = ['experts say', 'scientists believe', 'studies show', 'research proves']
+        for phrase in authority_phrases:
+            if phrase in claim.lower() and 'according to' not in claim.lower():
+                bias_indicators.append(BiasIndicator(
+                    bias_type='uncited_authority',
+                    indicator=f'Uncited authority claim: "{phrase}"',
+                    severity=0.7,
+                    location=claim.lower().find(phrase)
+                ))
+        
+        # Absolutist language
+        absolutist = ['always', 'never', 'everyone', 'no one', 'all', 'none', 'impossible']
+        for word in absolutist:
+            # Check for whole word match
+            if re.search(r'\b' + word + r'\b', claim.lower()):
+                bias_indicators.append(BiasIndicator(
+                    bias_type='absolutist_language',
+                    indicator=f'Absolutist term: "{word}" (often an oversimplification)',
+                    severity=0.5,
+                    location=claim.lower().find(word)
+                ))
+        
+        # Strawman indicators
+        strawman_phrases = ['wants to', 'plans to destroy', 'secretly', 'agenda']
+        for phrase in strawman_phrases:
+            if phrase in claim.lower():
+                bias_indicators.append(BiasIndicator(
+                    bias_type='potential_strawman',
+                    indicator=f'Potential strawman/attribution: "{phrase}"',
+                    severity=0.6,
+                    location=claim.lower().find(phrase)
+                ))
+        
+        return bias_indicators
 
 
 # Export main engine
