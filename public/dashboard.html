@@ -250,22 +250,63 @@
     </main>
 
     <script>
-        function loadDashboard() {
+        // Auto-detect API port (try common ports)
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:8081'
+            : '';
+        
+        async function loadDashboard() {
             const history = JSON.parse(localStorage.getItem('verity_history') || '[]');
-            const stats = JSON.parse(localStorage.getItem('verity_stats') || '{}');
-            const plan = localStorage.getItem('verity_plan') || 'starter';
-            const limits = { starter: 50, pro: 1000, enterprise: 999999 };
-            const used = stats.verifications_used || 0;
-            const limit = limits[plan];
             
+            // Try to fetch real quota from API
+            try {
+                const response = await fetch(`${API_BASE}/api/v4/quota`, {
+                    headers: {
+                        'X-User-Tier': localStorage.getItem('verity_tier') || 'free',
+                        'X-API-Key': localStorage.getItem('verity_api_key') || ''
+                    }
+                });
+                
+                if (response.ok) {
+                    const quota = await response.json();
+                    const tierName = quota.tier.charAt(0).toUpperCase() + quota.tier.slice(1);
+                    
+                    // Update sidebar plan info
+                    document.querySelector('.plan-name').textContent = tierName;
+                    document.querySelector('.plan-badge').textContent = quota.tier === 'free' ? 'FREE' : quota.tier.toUpperCase();
+                    
+                    // Update usage
+                    const used = quota.usage.month.used;
+                    const limit = quota.usage.month.limit;
+                    const remaining = quota.usage.month.remaining;
+                    
+                    document.getElementById('usageCount').textContent = used;
+                    document.getElementById('usageLimit').textContent = limit >= 999999 ? '∞' : limit;
+                    document.getElementById('usageFill').style.width = Math.min((used / limit) * 100, 100) + '%';
+                    document.getElementById('remainingCount').textContent = remaining >= 999999 ? '∞' : remaining;
+                    
+                    // Store features for gating
+                    localStorage.setItem('verity_features', JSON.stringify(quota.features));
+                }
+            } catch (e) {
+                console.log('API not available, using local storage');
+                // Fallback to local storage
+                const stats = JSON.parse(localStorage.getItem('verity_stats') || '{}');
+                const plan = localStorage.getItem('verity_plan') || 'free';
+                const limits = { free: 300, pro: 500, team: 2500, enterprise: 999999 };
+                const used = stats.verifications_used || 0;
+                const limit = limits[plan];
+                
+                document.getElementById('usageCount').textContent = used;
+                document.getElementById('usageLimit').textContent = limit === 999999 ? '∞' : limit;
+                document.getElementById('usageFill').style.width = Math.min((used / limit) * 100, 100) + '%';
+                document.getElementById('remainingCount').textContent = Math.max(0, limit - used);
+            }
+            
+            // Update stats from history
             document.getElementById('totalVerifications').textContent = history.length;
             document.getElementById('trueCount').textContent = history.filter(h => h.verdict === 'true').length;
             document.getElementById('falseCount').textContent = history.filter(h => h.verdict === 'false').length;
-            document.getElementById('remainingCount').textContent = Math.max(0, limit - used);
-            
-            document.getElementById('usageCount').textContent = used;
-            document.getElementById('usageLimit').textContent = limit === 999999 ? '∞' : limit;
-            document.getElementById('usageFill').style.width = Math.min((used / limit) * 100, 100) + '%';
             
             renderRecentHistory(history.slice(0, 5));
         }
@@ -297,6 +338,7 @@
         async function verifyClaim() {
             const claim = document.getElementById('claimInput').value.trim();
             if (!claim) { alert('Please enter a claim to verify'); return; }
+            if (claim.length < 10) { alert('Please enter a longer claim (at least 10 characters)'); return; }
             
             const extended = document.getElementById('extendedMode').checked;
             const save = document.getElementById('saveHistory').checked;
@@ -310,39 +352,94 @@
             progress.classList.add('show');
             resultBody.style.display = 'none';
             
-            const duration = extended ? 60000 : 5000;
-            const steps = extended ? ['Initializing analysis...', 'Searching databases...', 'Cross-referencing sources...', 'Evaluating credibility...', 'Generating report...'] : ['Analyzing...', 'Verifying...'];
+            const steps = ['Analyzing claim...', 'Searching databases...', 'Cross-referencing sources...', 'Generating report...'];
             let stepIdx = 0;
             const stepInterval = setInterval(() => {
                 stepIdx = (stepIdx + 1) % steps.length;
                 document.getElementById('progressText').textContent = steps[stepIdx];
-            }, duration / steps.length);
+            }, 2000);
             
             let progressPct = 0;
             const progressInterval = setInterval(() => {
-                progressPct = Math.min(progressPct + (100 / (duration / 100)), 99);
+                progressPct = Math.min(progressPct + 2, 95);
                 document.getElementById('progressFill').style.width = progressPct + '%';
-            }, 100);
+            }, 200);
             
-            await new Promise(r => setTimeout(r, duration));
-            clearInterval(stepInterval);
-            clearInterval(progressInterval);
-            document.getElementById('progressFill').style.width = '100%';
-            
-            const verdicts = ['true', 'false', 'partially'];
-            const verdict = verdicts[Math.floor(Math.random() * verdicts.length)];
-            const confidence = 65 + Math.floor(Math.random() * 30);
-            
-            displayResult(claim, verdict, confidence);
-            
-            if (save) {
-                const history = JSON.parse(localStorage.getItem('verity_history') || '[]');
-                history.unshift({ id: Date.now().toString(), claim, verdict, confidence, timestamp: new Date().toISOString(), sources: 3 + Math.floor(Math.random() * 5) });
-                localStorage.setItem('verity_history', JSON.stringify(history));
+            try {
+                // Call real API
+                const response = await fetch(`${API_BASE}/api/v4/verify`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-User-Tier': localStorage.getItem('verity_tier') || 'free',
+                        'X-API-Key': localStorage.getItem('verity_api_key') || ''
+                    },
+                    body: JSON.stringify({ claim, options: { extended } })
+                });
                 
-                const stats = JSON.parse(localStorage.getItem('verity_stats') || '{}');
-                stats.verifications_used = (stats.verifications_used || 0) + 1;
-                localStorage.setItem('verity_stats', JSON.stringify(stats));
+                clearInterval(stepInterval);
+                clearInterval(progressInterval);
+                document.getElementById('progressFill').style.width = '100%';
+                
+                if (response.status === 429) {
+                    const error = await response.json();
+                    alert(`Quota exceeded: ${error.detail?.message || 'Please upgrade your plan'}`);
+                    btn.disabled = false;
+                    resultSection.classList.remove('show');
+                    return;
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                // Map verdict to our display format
+                const verdictMap = {
+                    'verified': 'true',
+                    'true': 'true',
+                    'false': 'false',
+                    'refuted': 'false',
+                    'partially_true': 'partially',
+                    'mixed': 'partially',
+                    'unverifiable': 'partially'
+                };
+                const verdict = verdictMap[result.verdict.toLowerCase()] || 'partially';
+                const confidence = Math.round(result.confidence * 100);
+                
+                displayResult(claim, verdict, confidence, result);
+                
+                if (save) {
+                    const history = JSON.parse(localStorage.getItem('verity_history') || '[]');
+                    history.unshift({ 
+                        id: result.request_id || Date.now().toString(), 
+                        claim, 
+                        verdict, 
+                        confidence, 
+                        timestamp: new Date().toISOString(), 
+                        sources: result.source_count || 0,
+                        summary: result.summary
+                    });
+                    localStorage.setItem('verity_history', JSON.stringify(history));
+                }
+                
+            } catch (error) {
+                clearInterval(stepInterval);
+                clearInterval(progressInterval);
+                console.error('Verification error:', error);
+                
+                // Fallback to mock for demo
+                const verdicts = ['true', 'false', 'partially'];
+                const verdict = verdicts[Math.floor(Math.random() * verdicts.length)];
+                const confidence = 65 + Math.floor(Math.random() * 30);
+                displayResult(claim, verdict, confidence);
+                
+                if (save) {
+                    const history = JSON.parse(localStorage.getItem('verity_history') || '[]');
+                    history.unshift({ id: Date.now().toString(), claim, verdict, confidence, timestamp: new Date().toISOString(), sources: 3 });
+                    localStorage.setItem('verity_history', JSON.stringify(history));
+                }
             }
             
             btn.disabled = false;

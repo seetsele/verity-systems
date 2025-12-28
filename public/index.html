@@ -73,11 +73,10 @@
             <div class="nav-links">
                 <a href="#features" class="nav-link">Features</a>
                 <a href="verify.html" class="nav-link">Verify</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
                 <a href="#api" class="nav-link">API</a>
                 <a href="#providers" class="nav-link">Providers</a>
-                <a href="#security" class="nav-link">Security</a>
                 <a href="misinformation-map.html" class="nav-link">Map</a>
-                <a href="accuracy-score-guide.html" class="nav-link">Accuracy Guide</a>
                 <a href="API_DOCUMENTATION.md" class="nav-link">Docs</a>
             </div>
             
@@ -131,13 +130,13 @@
                 
                 <div class="hero-actions">
                     <a href="#demo" class="btn btn-primary btn-lg">
-                        <span>Start Verifying</span>
+                        <span>Start Verifying Free</span>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12h14M12 5l7 7-7 7"/>
                         </svg>
                     </a>
-                    <a href="#api" class="btn btn-outline btn-lg">
-                        <span>View API Docs</span>
+                    <a href="pricing.html" class="btn btn-outline btn-lg">
+                        <span>View Plans</span>
                     </a>
                 </div>
                 
@@ -1191,93 +1190,74 @@ verifyClaim();</code></pre>
                 <span class="section-badge">Flexible Plans</span>
                 <h2 class="section-title">Simple, Transparent Pricing</h2>
                 <p class="section-description">
-                    Choose the plan that fits your content volume. All plans include access to our full suite of 14 AI providers and fact-checking sources.
+                    Start free, scale as you grow. All plans include access to our full AI verification engine.
                 </p>
             </div>
             
-            <div class="pricing-grid pricing-grid-5">
+            <div class="pricing-grid pricing-grid-4">
                 <!-- Free Tier -->
                 <div class="pricing-card">
                     <h3>Free</h3>
                     <div class="pricing-amount"><span class="price">$0</span></div>
-                    <p class="pricing-desc">For developers & testing</p>
-                    <div class="pricing-volume">50 verifications/mo</div>
+                    <p class="pricing-desc">Perfect for trying out Verity</p>
+                    <div class="pricing-volume">10 verifications/day</div>
                     <ul class="pricing-features">
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>All 14 AI providers</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>API access</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Community support</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>~2 posts/month</li>
+                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Basic fact-checking</li>
+                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>5 data sources</li>
+                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Web dashboard</li>
                     </ul>
-                    <button data-tier="free" onclick="VerityPayments.handlePricingClick('free')" class="btn btn-outline">Get Started</button>
+                    <a href="auth.html?plan=free" class="btn btn-outline">Get Started Free</a>
                 </div>
                 
-                <!-- Starter Tier -->
-                <div class="pricing-card">
-                    <h3>Starter</h3>
-                    <div class="pricing-amount"><span class="price">$79</span><span class="period">/mo</span></div>
-                    <p class="pricing-desc">For bloggers & freelancers</p>
-                    <div class="pricing-volume">2,500 verifications/mo</div>
-                    <div class="pricing-per-check">$0.032 per check</div>
-                    <ul class="pricing-features">
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>All 14 AI providers</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>API + batch processing</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Email support</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>~10-15 posts/month</li>
-                    </ul>
-                    <button data-tier="starter" onclick="VerityPayments.handlePricingClick('starter')" class="btn btn-outline">Start Free Trial</button>
-                </div>
-                
-                <!-- Professional Tier (Featured) -->
+                <!-- Pro Tier (Featured) -->
                 <div class="pricing-card featured">
                     <div class="pricing-badge">Most Popular</div>
-                    <h3>Professional</h3>
-                    <div class="pricing-amount"><span class="price">$199</span><span class="period">/mo</span></div>
-                    <p class="pricing-desc">For teams & agencies</p>
-                    <div class="pricing-volume">15,000 verifications/mo</div>
-                    <div class="pricing-per-check">$0.013 per check</div>
+                    <h3>Pro</h3>
+                    <div class="pricing-amount"><span class="price">$29</span><span class="period">/mo</span></div>
+                    <p class="pricing-desc">For journalists & researchers</p>
+                    <div class="pricing-volume">500 verifications/month</div>
                     <ul class="pricing-features">
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>All 14 AI providers</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Priority API access</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Priority support</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Advanced analytics</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>~50-100 posts/month</li>
+                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>27 data sources</li>
+                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>API access</li>
+                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>NLP & bias detection</li>
+                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Source credibility</li>
                     </ul>
-                    <button data-tier="professional" onclick="VerityPayments.handlePricingClick('professional')" class="btn btn-primary">Start Free Trial</button>
+                    <a href="pricing.html" class="btn btn-primary">Start 7-Day Trial</a>
                 </div>
                 
-                <!-- Business Tier -->
+                <!-- Team Tier -->
                 <div class="pricing-card">
-                    <h3>Business</h3>
-                    <div class="pricing-amount"><span class="price">$799</span><span class="period">/mo</span></div>
-                    <p class="pricing-desc">For publishers & enterprises</p>
-                    <div class="pricing-volume">75,000 verifications/mo</div>
-                    <div class="pricing-per-check">$0.011 per check</div>
+                    <h3>Team</h3>
+                    <div class="pricing-amount"><span class="price">$99</span><span class="period">/mo</span></div>
+                    <p class="pricing-desc">For newsrooms & agencies</p>
+                    <div class="pricing-volume">2,500 verifications/month</div>
                     <ul class="pricing-features">
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Everything in Pro</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Dedicated CSM</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>99.9% SLA</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Custom integrations</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>~200-500 posts/month</li>
+                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>5 team members</li>
+                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Monte Carlo confidence</li>
+                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Temporal & geo analysis</li>
+                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Priority support</li>
                     </ul>
-                    <button data-tier="business" onclick="VerityPayments.handlePricingClick('business')" class="btn btn-outline">Start Free Trial</button>
+                    <a href="pricing.html" class="btn btn-outline">Start Free Trial</a>
                 </div>
                 
                 <!-- Enterprise Tier -->
                 <div class="pricing-card">
                     <h3>Enterprise</h3>
                     <div class="pricing-amount"><span class="price">Custom</span></div>
-                    <p class="pricing-desc">For platforms at scale</p>
-                    <div class="pricing-volume">300,000+ verifications/mo</div>
-                    <div class="pricing-per-check">Starting at $0.01/check</div>
+                    <p class="pricing-desc">For large organizations</p>
+                    <div class="pricing-volume">Unlimited verifications</div>
                     <ul class="pricing-features">
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Everything in Business</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>24/7 dedicated support</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Private deployment</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Volume discounts</li>
-                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Unlimited scale</li>
+                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Unlimited team members</li>
+                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Custom integrations</li>
+                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>SLA & uptime guarantee</li>
+                        <li><svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Dedicated support</li>
                     </ul>
-                    <button data-tier="enterprise" onclick="VerityPayments.handlePricingClick('enterprise')" class="btn btn-outline">Contact Sales</button>
+                    <a href="mailto:enterprise@verity.ai" class="btn btn-outline">Contact Sales</a>
                 </div>
+            </div>
+            
+            <div class="pricing-cta" style="text-align: center; margin-top: 3rem;">
+                <a href="pricing.html" class="btn btn-ghost">View Full Pricing Details →</a>
             </div>
             
             <div class="pricing-note">

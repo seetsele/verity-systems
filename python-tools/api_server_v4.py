@@ -56,6 +56,14 @@ from verity_modules_integration import (
     IntegratedAnalysis
 )
 
+# Import quota manager
+from verity_quota_manager import (
+    get_quota_manager,
+    PlanTier,
+    PlanLimits,
+    QuotaManager
+)
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -284,6 +292,61 @@ class HealthResponse(BaseModel):
 
 
 # ============================================================
+# QUOTA & TIER HELPERS
+# ============================================================
+
+def get_user_tier(request: Request) -> tuple:
+    """
+    Extract user ID and tier from request.
+    In production, this would validate JWT or API key against database.
+    """
+    # Check for API key header
+    api_key = request.headers.get("X-API-Key", "")
+    
+    # Check for Authorization header (JWT)
+    auth_header = request.headers.get("Authorization", "")
+    
+    # For demo: parse tier from header or default to free
+    tier = request.headers.get("X-User-Tier", "free").lower()
+    
+    # Get user ID from various sources
+    if api_key:
+        # Hash API key to create user ID
+        user_id = hashlib.md5(api_key.encode()).hexdigest()
+    elif auth_header.startswith("Bearer "):
+        # In production, decode JWT to get user ID
+        token = auth_header[7:]
+        user_id = hashlib.md5(token.encode()).hexdigest()
+    else:
+        # Use IP as fallback for anonymous users
+        user_id = f"anon_{request.client.host if request.client else 'unknown'}"
+        tier = "free"  # Anonymous users are always free tier
+    
+    return user_id, tier
+
+
+def check_feature_access(tier: str, feature: str) -> bool:
+    """Check if a tier has access to a feature"""
+    try:
+        plan_tier = PlanTier(tier.lower())
+    except ValueError:
+        plan_tier = PlanTier.FREE
+    
+    limits = PlanLimits.get_limits(plan_tier)
+    
+    feature_map = {
+        "api_access": limits.api_access,
+        "nlp_analysis": limits.nlp_analysis,
+        "source_credibility": limits.source_credibility,
+        "monte_carlo": limits.monte_carlo,
+        "temporal_geo": limits.temporal_geo,
+        "similar_claims": limits.similar_claims,
+    }
+    
+    return feature_map.get(feature, True)  # Default allow for basic features
+
+
+# ============================================================
 # API ENDPOINTS
 # ============================================================
 
@@ -378,6 +441,77 @@ async def api_status():
     }
 
 
+# ============================================================
+# QUOTA ENDPOINTS
+# ============================================================
+
+@app.get("/api/v4/quota", tags=["Quota"])
+async def get_quota_status(req: Request):
+    """
+    Get current usage quota status for the authenticated user.
+    
+    Returns daily and monthly usage limits and remaining quota.
+    """
+    user_id, tier = get_user_tier(req)
+    quota_manager = get_quota_manager()
+    
+    usage = quota_manager.get_usage(user_id, tier)
+    
+    return {
+        "user_id": usage["user_id"],
+        "tier": tier,
+        "usage": usage["usage"],
+        "features": usage["features"],
+        "upgrade_url": "/pricing.html" if tier == "free" else None,
+        "timestamp": datetime.now().isoformat()
+    }
+
+
+@app.get("/api/v4/plans", tags=["Quota"])
+async def get_available_plans():
+    """
+    Get all available subscription plans and their features.
+    """
+    plans = []
+    
+    for plan_tier in PlanTier:
+        limits = PlanLimits.get_limits(plan_tier)
+        
+        pricing = {
+            "free": {"monthly": 0, "annual": 0},
+            "pro": {"monthly": 29, "annual": 23},
+            "team": {"monthly": 99, "annual": 79},
+            "enterprise": {"monthly": None, "annual": None}
+        }
+        
+        plans.append({
+            "tier": plan_tier.value,
+            "name": plan_tier.value.title(),
+            "pricing": pricing.get(plan_tier.value, {}),
+            "limits": {
+                "verifications_per_month": limits.verifications_per_month if limits.verifications_per_month < 999999 else "unlimited",
+                "verifications_per_day": limits.verifications_per_day if limits.verifications_per_day < 999999 else "unlimited",
+                "data_sources": limits.data_sources,
+                "team_members": limits.team_members if limits.team_members < 999999 else "unlimited"
+            },
+            "features": {
+                "api_access": limits.api_access,
+                "nlp_analysis": limits.nlp_analysis,
+                "source_credibility": limits.source_credibility,
+                "monte_carlo": limits.monte_carlo,
+                "temporal_geo": limits.temporal_geo,
+                "similar_claims": limits.similar_claims,
+                "priority_support": limits.priority_support
+            }
+        })
+    
+    return {
+        "plans": plans,
+        "current_promotion": None,
+        "timestamp": datetime.now().isoformat()
+    }
+
+
 @app.post("/api/v4/verify", response_model=VerifyResponse, tags=["Verification"])
 async def verify_claim(request: VerifyRequest, req: Request):
     """
@@ -397,17 +531,28 @@ async def verify_claim(request: VerifyRequest, req: Request):
     request_id = req.state.request_id
     
     try:
-        verifier: EnhancedVerifier = app.state.verifier
+        # Check quota
+        user_id, tier = get_user_tier(req)
+        quota_manager = get_quota_manager()
         
-        # Get client ID for rate limiting (use IP for now)
-        client_id = req.client.host if req.client else "unknown"
+        allowed, quota_details = quota_manager.check_quota(user_id, tier)
+        if not allowed:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail=quota_details
+            )
+        
+        verifier: EnhancedVerifier = app.state.verifier
         
         # Perform verification
         result = await verifier.verify_claim(
             claim=request.claim,
-            user_id=client_id,
+            user_id=user_id,
             options=request.options
         )
+        
+        # Record usage on success
+        quota_manager.record_usage(user_id, tier)
         
         processing_time = (time.time() - start_time) * 1000
         
@@ -636,9 +781,11 @@ async def list_modules():
 
 
 @app.post("/api/v4/analyze/nlp", tags=["Advanced Analysis"])
-async def analyze_nlp(request: NLPAnalysisRequest):
+async def analyze_nlp(request: NLPAnalysisRequest, req: Request):
     """
     Perform advanced NLP analysis on a claim.
+    
+    **Requires Pro tier or higher.**
     
     Detects:
     - **Logical fallacies** (ad hominem, strawman, etc.)
@@ -651,6 +798,20 @@ async def analyze_nlp(request: NLPAnalysisRequest):
     This is useful for understanding the rhetorical structure of a claim
     before fact-checking it.
     """
+    # Check feature access
+    user_id, tier = get_user_tier(req)
+    if not check_feature_access(tier, "nlp_analysis"):
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "error": "feature_not_available",
+                "message": "NLP analysis requires Pro tier or higher",
+                "current_tier": tier,
+                "required_tier": "pro",
+                "upgrade_url": "/pricing.html"
+            }
+        )
+    
     integrator = get_modules_integrator()
     
     result = integrator.analyze_nlp(request.claim)
@@ -701,9 +862,11 @@ async def find_similar_claims(request: SimilarityRequest):
 
 
 @app.post("/api/v4/analyze/sources", tags=["Advanced Analysis"])
-async def check_source_credibility(request: SourceCredibilityRequest):
+async def check_source_credibility(request: SourceCredibilityRequest, req: Request):
     """
     Check the credibility of news sources and websites.
+    
+    **Requires Pro tier or higher.**
     
     Database includes ratings for:
     - Major news organizations
@@ -717,6 +880,20 @@ async def check_source_credibility(request: SourceCredibilityRequest):
     - Political bias rating
     - Credibility tier (1-5)
     """
+    # Check feature access
+    user_id, tier = get_user_tier(req)
+    if not check_feature_access(tier, "source_credibility"):
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "error": "feature_not_available",
+                "message": "Source credibility requires Pro tier or higher",
+                "current_tier": tier,
+                "required_tier": "pro",
+                "upgrade_url": "/pricing.html"
+            }
+        )
+    
     integrator = get_modules_integrator()
     
     domains = request.get_domains
@@ -741,9 +918,11 @@ async def check_source_credibility(request: SourceCredibilityRequest):
 
 
 @app.post("/api/v4/analyze/confidence", tags=["Advanced Analysis"])
-async def monte_carlo_confidence(request: MonteCarloRequest):
+async def monte_carlo_confidence(request: MonteCarloRequest, req: Request):
     """
     Calculate probabilistic confidence using Monte Carlo simulation.
+    
+    **Requires Team tier or higher.**
     
     Provide evidence from multiple sources, each with:
     - source_name: Name of the source
@@ -759,6 +938,20 @@ async def monte_carlo_confidence(request: MonteCarloRequest):
     - Probability distribution across verdicts
     - Convergence score
     """
+    # Check feature access
+    user_id, tier = get_user_tier(req)
+    if not check_feature_access(tier, "monte_carlo"):
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "error": "feature_not_available",
+                "message": "Monte Carlo confidence requires Team tier or higher",
+                "current_tier": tier,
+                "required_tier": "team",
+                "upgrade_url": "/pricing.html"
+            }
+        )
+    
     integrator = get_modules_integrator()
     
     evidence = request.get_evidence
@@ -975,6 +1168,262 @@ async def v3_batch_verify(claims: List[str], req: Request):
 async def v3_list_providers():
     """List providers for V3 compatibility"""
     return await list_providers()
+
+
+# ============================================================
+# STRIPE SUBSCRIPTION ENDPOINTS
+# ============================================================
+
+# Stripe Price IDs - configure in environment or Stripe dashboard
+STRIPE_PRICE_IDS = {
+    "pro_monthly": os.getenv("STRIPE_PRO_MONTHLY_PRICE_ID", "price_pro_monthly"),
+    "pro_annual": os.getenv("STRIPE_PRO_ANNUAL_PRICE_ID", "price_pro_annual"),
+    "team_monthly": os.getenv("STRIPE_TEAM_MONTHLY_PRICE_ID", "price_team_monthly"),
+    "team_annual": os.getenv("STRIPE_TEAM_ANNUAL_PRICE_ID", "price_team_annual"),
+    "enterprise_monthly": os.getenv("STRIPE_ENTERPRISE_MONTHLY_PRICE_ID", "price_enterprise_monthly"),
+    "enterprise_annual": os.getenv("STRIPE_ENTERPRISE_ANNUAL_PRICE_ID", "price_enterprise_annual"),
+}
+
+
+class CreateCheckoutRequest(BaseModel):
+    """Checkout session request"""
+    plan: str = Field(..., description="Plan name: pro, team, enterprise")
+    billing_cycle: str = Field(default="monthly", description="monthly or annual")
+    email: Optional[str] = Field(None, description="Customer email")
+    success_url: Optional[str] = Field(None, description="Redirect URL on success")
+    cancel_url: Optional[str] = Field(None, description="Redirect URL on cancel")
+
+
+class SubscriptionRequest(BaseModel):
+    """Subscription management request"""
+    subscription_id: str = Field(..., description="Stripe subscription ID")
+
+
+@app.post("/api/v4/checkout", tags=["Subscription"])
+async def create_checkout_session(
+    request: CreateCheckoutRequest,
+    req: Request
+):
+    """
+    Create a Stripe checkout session for subscription.
+    
+    Returns a URL to redirect the user to Stripe checkout.
+    """
+    try:
+        from stripe_handler import StripePaymentHandler
+        
+        # Determine price ID
+        price_key = f"{request.plan}_{request.billing_cycle}"
+        price_id = STRIPE_PRICE_IDS.get(price_key)
+        
+        if not price_id:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid plan/billing combination: {request.plan}/{request.billing_cycle}"
+            )
+        
+        # Get user ID from headers or generate
+        user_id, _ = get_user_tier(req)
+        
+        # Build URLs
+        base_url = str(req.base_url).rstrip("/")
+        success_url = request.success_url or f"{base_url}/dashboard.html?checkout=success"
+        cancel_url = request.cancel_url or f"{base_url}/pricing.html?checkout=cancelled"
+        
+        # Create checkout session
+        result = StripePaymentHandler.create_checkout_session(
+            user_id=user_id,
+            price_id=price_id,
+            success_url=success_url,
+            cancel_url=cancel_url,
+            customer_email=request.email
+        )
+        
+        return {
+            "success": True,
+            "checkout_url": result["url"],
+            "session_id": result["session_id"]
+        }
+        
+    except ImportError:
+        # Stripe not configured - return mock for demo
+        logger.warning("Stripe handler not available, returning demo checkout")
+        return {
+            "success": True,
+            "checkout_url": f"/pricing.html?demo=true&plan={request.plan}",
+            "session_id": f"demo_{request.plan}_{int(time.time())}",
+            "demo_mode": True,
+            "message": "Stripe not configured. Set STRIPE_SECRET_KEY to enable payments."
+        }
+    except Exception as e:
+        logger.error(f"Checkout error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/v4/subscription", tags=["Subscription"])
+async def get_subscription(
+    req: Request,
+    subscription_id: Optional[str] = None
+):
+    """
+    Get current subscription details.
+    
+    If no subscription_id provided, looks up by user.
+    """
+    try:
+        from stripe_handler import StripePaymentHandler
+        
+        if not subscription_id:
+            # In production, look up from database
+            user_id, tier = get_user_tier(req)
+            return {
+                "success": True,
+                "has_subscription": tier != "free",
+                "tier": tier,
+                "message": "Provide subscription_id for full details"
+            }
+        
+        result = StripePaymentHandler.get_subscription(subscription_id)
+        
+        return {
+            "success": True,
+            "subscription": result
+        }
+        
+    except ImportError:
+        user_id, tier = get_user_tier(req)
+        return {
+            "success": True,
+            "has_subscription": tier != "free",
+            "tier": tier,
+            "demo_mode": True
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/v4/subscription/cancel", tags=["Subscription"])
+async def cancel_subscription(
+    request: SubscriptionRequest,
+    req: Request
+):
+    """
+    Cancel a subscription (at period end by default).
+    """
+    try:
+        from stripe_handler import StripePaymentHandler
+        
+        result = StripePaymentHandler.cancel_subscription(
+            request.subscription_id,
+            at_period_end=True
+        )
+        
+        return {
+            "success": True,
+            "subscription": result,
+            "message": "Subscription will be cancelled at end of billing period"
+        }
+        
+    except ImportError:
+        return {
+            "success": True,
+            "demo_mode": True,
+            "message": "Demo mode: Subscription would be cancelled"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/v4/subscription/upgrade", tags=["Subscription"])
+async def upgrade_subscription(
+    request: CreateCheckoutRequest,
+    req: Request,
+    subscription_id: Optional[str] = None
+):
+    """
+    Upgrade or change subscription plan.
+    
+    If no active subscription, creates a new checkout session.
+    """
+    try:
+        from stripe_handler import StripePaymentHandler
+        
+        if not subscription_id:
+            # Create new checkout session for upgrade
+            return await create_checkout_session(request, req)
+        
+        # Update existing subscription
+        price_key = f"{request.plan}_{request.billing_cycle}"
+        price_id = STRIPE_PRICE_IDS.get(price_key)
+        
+        if not price_id:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid plan: {request.plan}"
+            )
+        
+        result = StripePaymentHandler.update_subscription(
+            subscription_id,
+            price_id=price_id
+        )
+        
+        return {
+            "success": True,
+            "subscription": result,
+            "message": f"Upgraded to {request.plan} plan"
+        }
+        
+    except ImportError:
+        return {
+            "success": True,
+            "demo_mode": True,
+            "message": f"Demo mode: Would upgrade to {request.plan}"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/v4/webhook/stripe", tags=["Subscription"])
+async def stripe_webhook(req: Request):
+    """
+    Handle Stripe webhooks for subscription events.
+    
+    This endpoint should be registered in your Stripe dashboard.
+    """
+    try:
+        from stripe_handler import StripePaymentHandler
+        
+        # Get raw body and signature
+        body = await req.body()
+        signature = req.headers.get("stripe-signature", "")
+        
+        # Process webhook
+        event = StripePaymentHandler.handle_webhook(body.decode(), signature)
+        
+        # Handle different event types
+        event_type = event.get("event_type")
+        
+        if event_type == "subscription_created":
+            # Update user's tier in database
+            logger.info(f"New subscription: {event.get('subscription_id')}")
+            # TODO: Update user tier in database
+            
+        elif event_type == "subscription_deleted":
+            # Downgrade user to free tier
+            logger.info(f"Subscription cancelled: {event.get('subscription_id')}")
+            # TODO: Reset user to free tier
+            
+        elif event_type == "payment_failed":
+            # Handle failed payment (send email, etc.)
+            logger.warning(f"Payment failed for: {event.get('customer_id')}")
+            
+        return {"success": True, "event": event_type}
+        
+    except ImportError:
+        return {"success": True, "demo_mode": True, "message": "Webhook received (demo mode)"}
+    except Exception as e:
+        logger.error(f"Webhook error: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 # ============================================================

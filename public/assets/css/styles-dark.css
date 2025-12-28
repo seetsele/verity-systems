@@ -1897,6 +1897,24 @@ section {
     padding: 0 1rem;
 }
 
+/* 4-column pricing layout */
+.pricing-grid.pricing-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+@media (max-width: 1200px) {
+    .pricing-grid.pricing-grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .pricing-grid.pricing-grid-4 {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* 5-column pricing layout for larger screens */
 .pricing-grid.pricing-grid-5 {
     grid-template-columns: repeat(5, 1fr);
