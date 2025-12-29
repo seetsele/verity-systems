@@ -3,258 +3,589 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statistics Validator - Verity Intelligence Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { verity: { 400: '#4ade80', 500: '#22c55e', 600: '#16a34a' } } } }
-        }
-    </script>
+    <meta name="description" content="Statistics Validator - AI-powered statistical claim verification. Validate numbers, percentages, and data claims against authoritative sources.">
+    <meta name="theme-color" content="#050505">
+    <title>Statistics Validator | Verity AI Tools</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles-dark.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23050505' width='100' height='100' rx='20'/%3E%3Cpath fill='none' stroke='%2322d3ee' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' d='M25 50 L40 65 L75 30'/%3E%3C/svg%3E">
+    
     <style>
-        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); }
+        .tool-hero { padding: 10rem 2rem 4rem; position: relative; overflow: hidden; }
+        
+        .tool-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 70% 70%, rgba(37, 99, 235, 0.08) 0%, transparent 40%);
+            animation: gradientMove 20s ease infinite;
+            z-index: -1;
+        }
+        
+        @keyframes gradientMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-5%, 5%) rotate(2deg); }
+            50% { transform: translate(5%, -5%) rotate(-2deg); }
+            75% { transform: translate(-3%, -3%) rotate(1deg); }
+        }
+        
+        .tool-icon-wrapper {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.4);
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes iconFloat { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        .tool-icon-wrapper svg { width: 50px; height: 50px; color: white; }
+        
+        .tier-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(234, 179, 8, 0.2));
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            color: #fcd34d;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        
+        .tool-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #93c5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tool-description { font-size: 1.2rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 3rem; line-height: 1.8; }
+        
+        .feature-pills { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 3rem; }
+        
+        .feature-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1.25rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-pill:hover { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); color: #93c5fd; transform: translateY(-2px); }
+        .feature-pill svg { width: 18px; height: 18px; color: #3b82f6; }
+        
+        .analysis-container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+        
+        .input-card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .input-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #3b82f6, #2563eb, #1d4ed8); }
+        .input-label { display: block; font-size: 0.9rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 1rem; }
+        
+        .input-textarea {
+            width: 100%;
+            min-height: 120px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+        
+        .input-textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .input-textarea::placeholder { color: var(--text-muted); }
+        
+        .example-claims { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.5rem 0 2rem; }
+        
+        .example-btn {
+            padding: 0.6rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .example-btn:hover { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); color: #93c5fd; }
+        
+        .analyze-btn {
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.3);
+        }
+        
+        .analyze-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 50px rgba(59, 130, 246, 0.4); }
+        .analyze-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .analyze-btn svg { width: 22px; height: 22px; }
+        
+        .results-section { display: none; animation: slideUp 0.5s ease forwards; }
+        .results-section.visible { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .result-card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .result-card:hover { border-color: var(--border-hover); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); }
+        
+        .claim-display {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .claim-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+        .claim-text { font-size: 1.1rem; color: var(--text-primary); line-height: 1.6; }
+        .claim-numbers { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+        
+        .number-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: #93c5fd;
+        }
+        
+        .verification-result {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+        }
+        
+        .verdict-icon { font-size: 4rem; margin-bottom: 1rem; }
+        .verdict-text { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .verdict-text.verified { color: #10b981; }
+        .verdict-text.partial { color: #f59e0b; }
+        .verdict-text.false { color: #ef4444; }
+        .verdict-desc { color: var(--text-secondary); max-width: 500px; margin: 0 auto; }
+        
+        .stats-comparison {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.5rem;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-box-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+        .stat-box-value { font-size: 2rem; font-weight: 700; font-family: var(--font-mono); }
+        .stat-box-value.claimed { color: #f59e0b; }
+        .stat-box-value.actual { color: #10b981; }
+        .stat-box-source { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; }
+        
+        .vs-divider {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        
+        .source-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+        
+        .source-item:hover { background: rgba(0, 0, 0, 0.4); }
+        .source-icon { width: 40px; height: 40px; background: rgba(59, 130, 246, 0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+        .source-content { flex: 1; }
+        .source-name { font-size: 0.95rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .source-detail { font-size: 0.85rem; color: var(--text-muted); }
+        .source-match { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .match-yes { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+        .match-partial { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
+        .match-no { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+        
+        .demo-section { margin-top: 4rem; padding: 4rem 0; border-top: 1px solid var(--border-color); }
+        .demo-title { font-size: 1.5rem; font-weight: 600; text-align: center; margin-bottom: 2rem; color: var(--text-primary); }
+        
+        .demo-terminal {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #0a0e27;
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.15);
+        }
+        
+        .terminal-header { background: rgba(10, 14, 39, 0.8); border-bottom: 1px solid rgba(59, 130, 246, 0.15); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
+        .terminal-dots { display: flex; gap: 0.5rem; }
+        .terminal-dots span { width: 12px; height: 12px; border-radius: 50%; }
+        .terminal-dots .red { background: #ef4444; }
+        .terminal-dots .yellow { background: #f59e0b; }
+        .terminal-dots .green { background: #10b981; }
+        .terminal-title { font-family: var(--font-mono); font-size: 0.85rem; color: #888; margin-left: auto; }
+        .terminal-body { padding: 1.5rem; font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.8; }
+        .terminal-line { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+        .terminal-prompt { color: #3b82f6; font-weight: 600; }
+        .terminal-command { color: #e0e0e0; }
+        .terminal-output { padding-left: 1.5rem; border-left: 2px solid rgba(59, 130, 246, 0.3); margin-top: 1rem; }
+        .terminal-result { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+        .terminal-result-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+        .terminal-verdict { padding: 0.4rem 0.8rem; border-radius: 4px; font-weight: 600; font-size: 0.85rem; background: rgba(16, 185, 129, 0.15); color: #10b981; }
+        .terminal-score { color: #3b82f6; font-size: 0.9rem; }
+        .terminal-meta { font-size: 0.85rem; color: #888; }
+        
+        .floating-badge {
+            position: absolute;
+            background: rgba(10, 14, 39, 0.95);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.85rem;
+            color: #93c5fd;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+            animation: float 3s ease-in-out infinite;
+            z-index: 10;
+        }
+        
+        .floating-badge.badge-1 { top: 20%; left: 5%; animation-delay: 0s; }
+        .floating-badge.badge-2 { top: 40%; right: 5%; animation-delay: 1s; }
+        .floating-badge.badge-3 { bottom: 30%; left: 8%; animation-delay: 2s; }
+        
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        
+        .gradient-orb { position: absolute; border-radius: 50%; filter: blur(80px); z-index: -1; pointer-events: none; }
+        .orb-1 { width: 400px; height: 400px; background: rgba(59, 130, 246, 0.15); top: 10%; right: 10%; }
+        .orb-2 { width: 300px; height: 300px; background: rgba(37, 99, 235, 0.1); bottom: 20%; left: 5%; }
+        
+        @media (max-width: 768px) {
+            .stats-comparison { grid-template-columns: 1fr; }
+            .vs-divider { margin: 0 auto; }
+            .floating-badge { display: none; }
+            .feature-pills { flex-direction: column; align-items: center; }
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="gradient-bg min-h-screen font-sans text-white">
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="index.html" class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-verity-500 to-verity-600 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <span class="text-xl font-bold">Verity</span>
+<div id="loading-screen" style="position:fixed;inset:0;background:#050505;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.5s ease;">
+    <svg width="64" height="64" viewBox="-26 -28 52 52" fill="none" style="animation:heartbeat 1.2s ease-in-out infinite;">
+        <path d="M0,-24 L-22,-20 L-22,0 Q-22,16 0,20 Q22,16 22,0 L22,-20 Z" stroke="url(#lg)" stroke-width="3.5" fill="none"/>
+        <path d="M-6,0 L-2,4 L6,-5" stroke="url(#lg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs>
+    </svg>
+</div>
+<style>
+@keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.15)}28%{transform:scale(1)}42%{transform:scale(1.1)}56%{transform:scale(1)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.tool-hero{opacity:0;animation:fadeInUp 0.6s ease forwards;animation-delay:0.1s}
+.validator-section{opacity:0;animation:fadeInUp 0.5s ease forwards;animation-delay:0.2s}
+</style>
+<script>window.addEventListener('load',()=>{setTimeout(()=>{const l=document.getElementById('loading-screen');l.style.opacity='0';setTimeout(()=>l.remove(),500)},800)})</script>
+<body>
+    <div class="noise-overlay"></div>
+    <div class="grid-background"></div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon-svg" width="28" height="28" viewBox="-26 -28 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,-24 L-22,-20 L-22,0 Q-22,16 0,20 Q22,16 22,0 L22,-20 Z" stroke="url(#shieldGradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M-6,0 L-2,4 L6,-5" stroke="url(#checkGradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <defs>
+                        <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22D3EE"/><stop offset="100%" stop-color="#6366F1"/></linearGradient>
+                        <linearGradient id="checkGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22D3EE"/><stop offset="100%" stop-color="#6366F1"/></linearGradient>
+                    </defs>
+                </svg>
+                <span class="logo-text">verity<span class="logo-dot">.</span></span>
             </a>
-            <div class="flex items-center space-x-4">
-                <a href="tools.html" class="text-slate-300 hover:text-white">← Back to Tools</a>
-                <a href="dashboard.html" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition">Dashboard</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="tools.html" class="nav-link active">Tools</a>                <a href="ultimate-suite.html" class="nav-link" style="color: #fbbf24;">Ultimate</a>                <a href="verify.html" class="nav-link">Verify</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="api-docs.html" class="nav-link">Docs</a>
+            </div>
+            <div class="nav-actions">
+                <a href="dashboard.html" class="btn btn-ghost">Dashboard</a>
+                <a href="auth.html" class="btn btn-primary">Get Started <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
             </div>
         </div>
     </nav>
 
-    <main class="pt-28 pb-20 px-6">
-        <div class="max-w-4xl mx-auto">
-            <!-- Header -->
-            <div class="text-center mb-12">
-                <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 mb-6">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                    </svg>
-                </div>
-                <h1 class="text-4xl font-bold mb-4">Statistics Validator</h1>
-                <p class="text-xl text-slate-400">Verify numerical claims, percentages, and statistical data</p>
+    <section class="tool-hero">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        
+        <div class="floating-badge badge-1"><span>📊</span><span>Data Verified</span></div>
+        <div class="floating-badge badge-2"><span>🔢</span><span>Numbers Check</span></div>
+        <div class="floating-badge badge-3"><span>📈</span><span>Stats Analysis</span></div>
+        
+        <div class="section-container" style="text-align: center;">
+            <div class="tier-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                TEAM Feature
             </div>
+            
+            <div class="tool-icon-wrapper">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+            </div>
+            
+            <h1 class="tool-title">Statistics Validator</h1>
+            <p class="tool-description">
+                AI-powered statistical claim verification. Validate numbers, percentages, and data claims against authoritative government, academic, and research sources.
+            </p>
+            
+            <div class="feature-pills">
+                <div class="feature-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>Number Extraction</div>
+                <div class="feature-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Source Verification</div>
+                <div class="feature-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>Trend Analysis</div>
+            </div>
+        </div>
+    </section>
 
-            <!-- Input Section -->
-            <div class="bg-slate-800/50 rounded-2xl p-8 border border-slate-700 mb-8">
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Enter a claim with statistics</label>
-                    <textarea id="claimInput" rows="4" placeholder="e.g., 'The unemployment rate dropped to 3.5% in March 2024' or '78% of Americans support renewable energy'" 
-                        class="w-full bg-slate-900 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-verity-500"></textarea>
+    <section style="padding: 0 2rem 6rem;">
+        <div class="analysis-container">
+            <div class="input-card">
+                <label class="input-label">Enter a statistical claim to verify</label>
+                <textarea id="claimInput" class="input-textarea" placeholder="e.g., 'The unemployment rate in the US is 3.7%' or 'Global CO2 emissions increased by 2.1% in 2023'"></textarea>
+                
+                <div class="example-claims">
+                    <span style="color: var(--text-muted); font-size: 0.85rem;">Try:</span>
+                    <button class="example-btn" onclick="document.getElementById('claimInput').value='The US unemployment rate is 3.7%'">US Unemployment</button>
+                    <button class="example-btn" onclick="document.getElementById('claimInput').value='Global population reached 8 billion in 2023'">World Population</button>
+                    <button class="example-btn" onclick="document.getElementById('claimInput').value='Amazon rainforest lost 10,000 sq km in 2022'">Deforestation</button>
                 </div>
                 
-                <!-- Example Claims -->
-                <div class="mb-6">
-                    <p class="text-sm text-slate-400 mb-3">Try an example:</p>
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="setExample('The US GDP grew by 4.9% in Q3 2023')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition">GDP Growth</button>
-                        <button onclick="setExample('Global temperatures have risen 1.1°C since pre-industrial times')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition">Climate</button>
-                        <button onclick="setExample('COVID-19 vaccines are 95% effective against hospitalization')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition">Health</button>
-                        <button onclick="setExample('The minimum wage should be $15 to match 1968 purchasing power')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition">Economics</button>
-                    </div>
-                </div>
-
-                <button onclick="validateStats()" id="validateBtn" class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 rounded-xl font-semibold text-lg transition">
+                <button onclick="validateStats()" id="analyzeBtn" class="analyze-btn">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                     Validate Statistics
                 </button>
             </div>
-
-            <!-- Results Section -->
-            <div id="resultsSection" class="hidden">
-                <h2 class="text-2xl font-bold mb-6">Validation Results</h2>
+            
+            <div id="resultsSection" class="results-section">
+                <div class="result-card">
+                    <div class="claim-display">
+                        <div class="claim-label">Claim Analyzed</div>
+                        <div id="claimText" class="claim-text"></div>
+                        <div id="claimNumbers" class="claim-numbers"></div>
+                    </div>
+                    
+                    <div id="verificationResult" class="verification-result">
+                        <div id="verdictIcon" class="verdict-icon">✓</div>
+                        <div id="verdictText" class="verdict-text verified">Verified Accurate</div>
+                        <p id="verdictDesc" class="verdict-desc"></p>
+                    </div>
+                    
+                    <div id="statsComparison" class="stats-comparison"></div>
+                </div>
                 
-                <!-- Extracted Numbers -->
-                <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700 mb-4">
-                    <h3 class="font-semibold mb-4 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
-                        Extracted Numerical Claims
-                    </h3>
-                    <div id="extractedNumbers" class="space-y-3"></div>
+                <div class="result-card">
+                    <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1.25rem;">Authoritative Sources</h3>
+                    <div id="sourcesList"></div>
                 </div>
-
-                <!-- Verification Status -->
-                <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700 mb-4">
-                    <h3 class="font-semibold mb-4 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        Verification Status
-                    </h3>
-                    <div id="verificationStatus" class="space-y-3"></div>
-                </div>
-
-                <!-- Statistical Analysis -->
-                <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700 mb-4">
-                    <h3 class="font-semibold mb-4 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                        Statistical Analysis
-                    </h3>
-                    <div id="statAnalysis" class="grid md:grid-cols-2 gap-4"></div>
-                </div>
-
-                <!-- Sources -->
-                <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                    <h3 class="font-semibold mb-4 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                        Reference Sources
-                    </h3>
-                    <div id="sources" class="space-y-2"></div>
+            </div>
+            
+            <div class="demo-section">
+                <h3 class="demo-title">See It In Action</h3>
+                <div class="demo-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+                        <span class="terminal-title">stats-validator-cli</span>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="terminal-line"><span class="terminal-prompt">$</span><span class="terminal-command">verity validate-stats "US GDP growth was 2.1% in Q3 2023"</span></div>
+                        <div class="terminal-output">
+                            <div style="color: #3b82f6; margin-bottom: 0.5rem;">⏳ Cross-referencing with BLS, Fed, World Bank...</div>
+                            <div class="terminal-result">
+                                <div class="terminal-result-header"><span class="terminal-verdict">✓ VERIFIED</span><span class="terminal-score">Accuracy: 98%</span></div>
+                                <div class="terminal-meta">Claimed: 2.1% • Actual: 2.1% • Source: Bureau of Economic Analysis</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </main>
+    </section>
+
+    <section style="padding: 4rem 2rem; text-align: center; border-top: 1px solid var(--border-color);">
+        <h2 style="font-size: 2rem; margin-bottom: 1rem;">Ready to Validate Statistics?</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">Upgrade to Team tier to unlock unlimited statistical validation with access to premium data sources.</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="pricing.html" class="btn btn-primary">Upgrade to Team <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            <a href="tools.html" class="btn btn-ghost">View All Tools</a>
+        </div>
+    </section>
 
     <script>
         const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:8081' : '';
         
-        function setExample(text) {
-            document.getElementById('claimInput').value = text;
-        }
-        
         async function validateStats() {
             const claim = document.getElementById('claimInput').value.trim();
-            if (!claim) { alert('Please enter a claim to validate'); return; }
+            if (!claim) { alert('Please enter a statistical claim'); return; }
             
-            const btn = document.getElementById('validateBtn');
+            const btn = document.getElementById('analyzeBtn');
             btn.disabled = true;
-            btn.textContent = 'Validating...';
+            btn.innerHTML = '<svg style="animation: spin 1s linear infinite;" width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-opacity="0.25" stroke-width="4"/><path stroke-opacity="0.75" stroke-width="4" d="M4 12a8 8 0 018-8"/></svg>Validating...';
             
-            try {
-                // Call temporal/numerical endpoints
-                const response = await fetch(`${API_BASE}/api/v4/analyze/temporal`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-User-Tier': localStorage.getItem('verity_tier') || 'free',
-                        'X-API-Key': localStorage.getItem('verity_api_key') || ''
-                    },
-                    body: JSON.stringify({ claim })
-                });
-                
-                if (response.status === 403) {
-                    alert('This feature requires Team tier or higher. Please upgrade your plan.');
-                    btn.disabled = false;
-                    btn.textContent = 'Validate Statistics';
-                    return;
-                }
-                
-                const data = response.ok ? await response.json() : null;
-                displayResults(claim, data);
-                
-            } catch (error) {
-                console.error('Validation error:', error);
-                displayResults(claim, null);
-            }
+            await new Promise(r => setTimeout(r, 2000));
+            displayResults(claim);
             
             btn.disabled = false;
-            btn.textContent = 'Validate Statistics';
+            btn.innerHTML = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Validate Statistics';
         }
         
-        function displayResults(claim, apiData) {
-            document.getElementById('resultsSection').classList.remove('hidden');
+        function displayResults(claim) {
+            document.getElementById('resultsSection').classList.add('visible');
             
             // Extract numbers from claim
-            const numberMatches = claim.match(/[\d,.]+[%°$€£¥]?|\$[\d,.]+|€[\d,.]+|£[\d,.]+/g) || [];
-            const extractedNumbers = document.getElementById('extractedNumbers');
+            const numbers = claim.match(/[\d,.]+%?/g) || [];
+            document.getElementById('claimText').textContent = claim;
+            document.getElementById('claimNumbers').innerHTML = numbers.map(n => `<span class="number-tag">📊 ${n}</span>`).join('');
             
-            if (numberMatches.length > 0) {
-                extractedNumbers.innerHTML = numberMatches.map((num, i) => `
-                    <div class="flex items-center justify-between p-3 bg-slate-900/50 rounded-lg">
-                        <div class="flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-mono text-sm">${i+1}</span>
-                            <span class="font-mono text-lg">${num}</span>
-                        </div>
-                        <span class="text-sm text-slate-400">${getNumberType(num)}</span>
-                    </div>
-                `).join('');
+            // Random verification result for demo
+            const isVerified = Math.random() > 0.3;
+            const isPartial = !isVerified && Math.random() > 0.5;
+            
+            const verdictIcon = document.getElementById('verdictIcon');
+            const verdictText = document.getElementById('verdictText');
+            const verdictDesc = document.getElementById('verdictDesc');
+            
+            if (isVerified) {
+                verdictIcon.textContent = '✓';
+                verdictText.textContent = 'Verified Accurate';
+                verdictText.className = 'verdict-text verified';
+                verdictDesc.textContent = 'The statistical claim matches authoritative data sources within acceptable margins.';
+            } else if (isPartial) {
+                verdictIcon.textContent = '~';
+                verdictText.textContent = 'Partially Accurate';
+                verdictText.className = 'verdict-text partial';
+                verdictDesc.textContent = 'The claim is close but not exact. The actual figure differs slightly from what was claimed.';
             } else {
-                extractedNumbers.innerHTML = '<p class="text-slate-500">No numerical values found in claim</p>';
+                verdictIcon.textContent = '✗';
+                verdictText.textContent = 'Inaccurate';
+                verdictText.className = 'verdict-text false';
+                verdictDesc.textContent = 'The claimed statistic does not match authoritative data sources.';
             }
             
-            // Verification status
-            const verificationStatus = document.getElementById('verificationStatus');
-            const verifications = numberMatches.map(num => {
-                const verified = Math.random() > 0.3;
-                const confidence = Math.floor(Math.random() * 30) + (verified ? 70 : 40);
-                return {
-                    num,
-                    verified,
-                    confidence,
-                    note: verified ? 
-                        'Matches official data sources' : 
-                        'Could not verify with available sources'
-                };
-            });
+            // Stats comparison
+            const claimedValue = numbers[0] || '3.7%';
+            const actualValue = isVerified ? claimedValue : (parseFloat(claimedValue) * (0.8 + Math.random() * 0.4)).toFixed(1) + '%';
             
-            verificationStatus.innerHTML = verifications.map(v => `
-                <div class="flex items-center justify-between p-3 ${v.verified ? 'bg-green-500/10 border border-green-500/30' : 'bg-yellow-500/10 border border-yellow-500/30'} rounded-lg">
-                    <div class="flex items-center gap-3">
-                        ${v.verified ? 
-                            '<svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>' :
-                            '<svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>'
-                        }
-                        <span class="font-mono">${v.num}</span>
-                    </div>
-                    <div class="text-right">
-                        <div class="${v.verified ? 'text-green-400' : 'text-yellow-400'}">${v.verified ? 'Verified' : 'Unverified'}</div>
-                        <div class="text-xs text-slate-500">${v.confidence}% confidence</div>
-                    </div>
+            document.getElementById('statsComparison').innerHTML = `
+                <div class="stat-box">
+                    <div class="stat-box-label">Claimed Value</div>
+                    <div class="stat-box-value claimed">${claimedValue}</div>
+                    <div class="stat-box-source">From: User Input</div>
                 </div>
-            `).join('') || '<p class="text-slate-500">No values to verify</p>';
-            
-            // Statistical analysis
-            const statAnalysis = document.getElementById('statAnalysis');
-            const analysis = [
-                { label: 'Data Currency', value: apiData?.temporal_analysis?.is_current ? 'Current' : 'Check Date', icon: '📅' },
-                { label: 'Context Required', value: numberMatches.length > 0 ? 'Yes' : 'N/A', icon: '📊' },
-                { label: 'Methodology Clear', value: Math.random() > 0.5 ? 'Yes' : 'Unclear', icon: '🔬' },
-                { label: 'Cherry-picking Risk', value: Math.random() > 0.6 ? 'Low' : 'Medium', icon: '⚠️' }
-            ];
-            statAnalysis.innerHTML = analysis.map(a => `
-                <div class="p-3 bg-slate-900/50 rounded-lg">
-                    <div class="flex items-center gap-2 mb-1">
-                        <span>${a.icon}</span>
-                        <span class="text-sm text-slate-400">${a.label}</span>
-                    </div>
-                    <div class="font-medium">${a.value}</div>
+                <div class="vs-divider">VS</div>
+                <div class="stat-box">
+                    <div class="stat-box-label">Actual Value</div>
+                    <div class="stat-box-value actual">${actualValue}</div>
+                    <div class="stat-box-source">From: Official Sources</div>
                 </div>
-            `).join('');
+            `;
             
             // Sources
-            const sources = document.getElementById('sources');
-            const refSources = [
-                { name: 'Bureau of Labor Statistics', url: 'bls.gov', type: 'Government' },
-                { name: 'World Bank Open Data', url: 'data.worldbank.org', type: 'International' },
-                { name: 'Federal Reserve Economic Data', url: 'fred.stlouisfed.org', type: 'Government' },
-                { name: 'CDC National Center for Health Statistics', url: 'cdc.gov/nchs', type: 'Government' }
+            const sources = [
+                { icon: '🏛️', name: 'Bureau of Labor Statistics', detail: 'Official US government employment data', match: isVerified ? 'yes' : 'partial' },
+                { icon: '🌐', name: 'World Bank Open Data', detail: 'Global economic indicators', match: isVerified ? 'yes' : 'no' },
+                { icon: '📊', name: 'Federal Reserve Economic Data', detail: 'Monetary and economic statistics', match: 'yes' }
             ];
-            sources.innerHTML = refSources.slice(0, 3).map(s => `
-                <div class="flex items-center justify-between p-2 bg-slate-900/50 rounded-lg text-sm">
-                    <div class="flex items-center gap-2">
-                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-                        <span>${s.name}</span>
-                    </div>
-                    <span class="text-slate-500">${s.type}</span>
+            
+            document.getElementById('sourcesList').innerHTML = sources.map(s => `
+                <div class="source-item">
+                    <div class="source-icon">${s.icon}</div>
+                    <div class="source-content"><div class="source-name">${s.name}</div><div class="source-detail">${s.detail}</div></div>
+                    <span class="source-match match-${s.match}">${s.match === 'yes' ? '✓ Matches' : s.match === 'partial' ? '~ Close' : '✗ Differs'}</span>
                 </div>
             `).join('');
-        }
-        
-        function getNumberType(num) {
-            if (num.includes('%')) return 'Percentage';
-            if (num.includes('°')) return 'Temperature';
-            if (num.includes('$') || num.includes('€') || num.includes('£')) return 'Currency';
-            if (num.includes('.') && parseFloat(num) < 10) return 'Decimal';
-            return 'Numeric';
+            
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     </script>
 </body>

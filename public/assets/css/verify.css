@@ -977,6 +977,63 @@
     box-shadow: 0 4px 15px rgba(34, 211, 238, 0.3);
 }
 
+/* Export Dropdown */
+.export-dropdown {
+    position: relative;
+}
+
+.export-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0.5rem;
+    background: rgba(20, 20, 20, 0.98);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    padding: 0.5rem;
+    min-width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 100;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+.export-dropdown:hover .export-menu,
+.export-menu:hover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.export-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: #d4d4d4;
+    font-family: inherit;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+}
+
+.export-option:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+.export-option svg {
+    flex-shrink: 0;
+}
+
 /* Animations */
 @keyframes fadeIn {
     from { opacity: 0; }

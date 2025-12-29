@@ -3,116 +3,852 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Media Monitor - Verity Intelligence Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { verity: { 400: '#4ade80', 500: '#22c55e', 600: '#16a34a' } } } }
-        }
-    </script>
+    <meta name="description" content="Social Media Monitor - Track misinformation, detect bots, and analyze viral content in real-time with AI-powered analysis.">
+    <meta name="theme-color" content="#050505">
+    <title>Social Media Monitor | Verity AI Tools</title>
+    
+    <!-- Fonts - Space Grotesk + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Premium Dark Stylesheet -->
+    <link rel="stylesheet" href="assets/css/styles-dark.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23050505' width='100' height='100' rx='20'/%3E%3Cpath fill='none' stroke='%2322d3ee' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' d='M25 50 L40 65 L75 30'/%3E%3C/svg%3E">
+    
     <style>
-        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); }
-        .result-card { animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Tool-specific enhanced styles */
+        .tool-hero {
+            padding: 10rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(236, 72, 153, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 70% 70%, rgba(219, 39, 119, 0.08) 0%, transparent 40%);
+            animation: gradientMove 20s ease infinite;
+            z-index: -1;
+        }
+        
+        @keyframes gradientMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-5%, 5%) rotate(2deg); }
+            50% { transform: translate(5%, -5%) rotate(-2deg); }
+            75% { transform: translate(-3%, -3%) rotate(1deg); }
+        }
+        
+        .tool-icon-wrapper {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #ec4899, #db2777);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            box-shadow: 0 20px 60px rgba(236, 72, 153, 0.4);
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .tool-icon-wrapper svg {
+            width: 50px;
+            height: 50px;
+            color: white;
+        }
+        
+        .tier-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            color: #a5b4fc;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        
+        .tool-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #f0abfc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tool-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+        
+        /* Feature Pills */
+        .feature-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+        
+        .feature-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1.25rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-pill:hover {
+            background: rgba(236, 72, 153, 0.1);
+            border-color: rgba(236, 72, 153, 0.3);
+            color: #f9a8d4;
+            transform: translateY(-2px);
+        }
+        
+        .feature-pill svg {
+            width: 18px;
+            height: 18px;
+            color: #ec4899;
+        }
+        
+        /* Analysis Container */
+        .analysis-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .input-card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .input-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ec4899, #db2777, #be185d);
+        }
+        
+        .input-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .input-textarea {
+            width: 100%;
+            min-height: 140px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+        
+        .input-textarea:focus {
+            outline: none;
+            border-color: #ec4899;
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+        }
+        
+        .input-textarea::placeholder {
+            color: var(--text-muted);
+        }
+        
+        /* Options Grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0 2rem;
+        }
+        
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option-item:hover {
+            background: rgba(236, 72, 153, 0.05);
+            border-color: rgba(236, 72, 153, 0.3);
+        }
+        
+        .option-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #ec4899;
+            cursor: pointer;
+        }
+        
+        .option-item label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        
+        .analyze-btn {
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: linear-gradient(135deg, #ec4899, #db2777);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 40px rgba(236, 72, 153, 0.3);
+        }
+        
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px rgba(236, 72, 153, 0.4);
+        }
+        
+        .analyze-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .analyze-btn svg {
+            width: 22px;
+            height: 22px;
+        }
+        
+        /* Results Section */
+        .results-section {
+            display: none;
+            animation: slideUp 0.5s ease forwards;
+        }
+        
+        .results-section.visible {
+            display: block;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .result-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+        
+        .result-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .result-score {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .score-low { color: #10b981; }
+        .score-medium { color: #f59e0b; }
+        .score-high { color: #ef4444; }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444);
+            border-radius: 4px;
+            transition: width 0.8s ease;
+        }
+        
+        .result-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Indicator Grid */
+        .indicator-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .indicator-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .indicator-item:hover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .indicator-dot.warning { background: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+        .indicator-dot.safe { background: #10b981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+        
+        .indicator-content { flex: 1; }
+        
+        .indicator-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .indicator-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        
+        /* Technique Item */
+        .technique-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+        
+        .technique-item:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        
+        .technique-item svg {
+            width: 20px;
+            height: 20px;
+            color: #ef4444;
+            flex-shrink: 0;
+        }
+        
+        .technique-name {
+            font-size: 0.95rem;
+            color: #fca5a5;
+        }
+        
+        /* Virality Stats */
+        .virality-stat {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .virality-stat:last-child { border-bottom: none; }
+        
+        .virality-label {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+        
+        .virality-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        /* Demo Terminal */
+        .demo-section {
+            margin-top: 4rem;
+            padding: 4rem 0;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .demo-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+        
+        .demo-terminal {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #0a0e27;
+            border: 2px solid rgba(236, 72, 153, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(236, 72, 153, 0.15);
+        }
+        
+        .terminal-header {
+            background: rgba(10, 14, 39, 0.8);
+            border-bottom: 1px solid rgba(236, 72, 153, 0.15);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .terminal-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .terminal-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .terminal-dots .red { background: #ef4444; }
+        .terminal-dots .yellow { background: #f59e0b; }
+        .terminal-dots .green { background: #10b981; }
+        
+        .terminal-title {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: #888;
+            margin-left: auto;
+        }
+        
+        .terminal-body {
+            padding: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+        
+        .terminal-line {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .terminal-prompt { color: #ec4899; font-weight: 600; }
+        .terminal-command { color: #e0e0e0; }
+        
+        .terminal-output {
+            padding-left: 1.5rem;
+            border-left: 2px solid rgba(236, 72, 153, 0.3);
+            margin-top: 1rem;
+        }
+        
+        .terminal-result {
+            background: rgba(236, 72, 153, 0.1);
+            border: 1px solid rgba(236, 72, 153, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .terminal-result-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .terminal-verdict {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .terminal-score { color: #ec4899; font-size: 0.9rem; }
+        .terminal-meta { font-size: 0.85rem; color: #888; }
+        
+        /* Floating Elements */
+        .floating-badge {
+            position: absolute;
+            background: rgba(10, 14, 39, 0.95);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            border-radius: 12px;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.85rem;
+            color: #f9a8d4;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+            animation: float 3s ease-in-out infinite;
+            z-index: 10;
+        }
+        
+        .floating-badge.badge-1 { top: 20%; left: 5%; animation-delay: 0s; }
+        .floating-badge.badge-2 { top: 40%; right: 5%; animation-delay: 1s; }
+        .floating-badge.badge-3 { bottom: 30%; left: 8%; animation-delay: 2s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        /* Gradient Orbs */
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: rgba(236, 72, 153, 0.15);
+            top: 10%;
+            right: 10%;
+        }
+        
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: rgba(219, 39, 119, 0.1);
+            bottom: 20%;
+            left: 5%;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .options-grid { grid-template-columns: 1fr; }
+            .indicator-grid { grid-template-columns: 1fr; }
+            .floating-badge { display: none; }
+            .feature-pills { flex-direction: column; align-items: center; }
+        }
+        
+        /* Spin animation */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
-<body class="gradient-bg min-h-screen font-sans text-white">
+<div id="loading-screen" style="position:fixed;inset:0;background:#050505;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.5s ease;">
+    <svg width="64" height="64" viewBox="-26 -28 52 52" fill="none" style="animation:heartbeat 1.2s ease-in-out infinite;">
+        <path d="M0,-24 L-22,-20 L-22,0 Q-22,16 0,20 Q22,16 22,0 L22,-20 Z" stroke="url(#lg)" stroke-width="3.5" fill="none"/>
+        <path d="M-6,0 L-2,4 L6,-5" stroke="url(#lg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs>
+    </svg>
+</div>
+<style>
+@keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.15)}28%{transform:scale(1)}42%{transform:scale(1.1)}56%{transform:scale(1)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.tool-hero{opacity:0;animation:fadeInUp 0.6s ease forwards;animation-delay:0.1s}
+.monitor-section{opacity:0;animation:fadeInUp 0.5s ease forwards;animation-delay:0.2s}
+</style>
+<script>window.addEventListener('load',()=>{setTimeout(()=>{const l=document.getElementById('loading-screen');l.style.opacity='0';setTimeout(()=>l.remove(),500)},800)})</script>
+<body>
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+    
+    <!-- Grid Background -->
+    <div class="grid-background"></div>
+
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="index.html" class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-verity-500 to-verity-600 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <span class="text-xl font-bold">Verity</span>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon-svg" width="28" height="28" viewBox="-26 -28 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,-24 L-22,-20 L-22,0 Q-22,16 0,20 Q22,16 22,0 L22,-20 Z" stroke="url(#shieldGradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M-6,0 L-2,4 L6,-5" stroke="url(#checkGradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <defs>
+                        <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#22D3EE"/>
+                            <stop offset="100%" stop-color="#6366F1"/>
+                        </linearGradient>
+                        <linearGradient id="checkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#22D3EE"/>
+                            <stop offset="100%" stop-color="#6366F1"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="logo-text">verity<span class="logo-dot">.</span></span>
             </a>
-            <div class="flex items-center space-x-4">
-                <a href="tools.html" class="text-slate-300 hover:text-white">← Back to Tools</a>
-                <a href="dashboard.html" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition">Dashboard</a>
+            
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="tools.html" class="nav-link active">Tools</a>                <a href="ultimate-suite.html" class="nav-link" style="color: #fbbf24;">Ultimate</a>                <a href="verify.html" class="nav-link">Verify</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="api-docs.html" class="nav-link">Docs</a>
+            </div>
+            
+            <div class="nav-actions">
+                <a href="dashboard.html" class="btn btn-ghost">Dashboard</a>
+                <a href="auth.html" class="btn btn-primary">
+                    Get Started
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
             </div>
         </div>
     </nav>
 
-    <main class="pt-28 pb-20 px-6">
-        <div class="max-w-4xl mx-auto">
-            <!-- Header -->
-            <div class="text-center mb-12">
-                <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 mb-6">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+    <!-- Hero Section -->
+    <section class="tool-hero">
+        <!-- Gradient Orbs -->
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        
+        <!-- Floating Badges -->
+        <div class="floating-badge badge-1">
+            <span>🤖</span>
+            <span>Bot Detection</span>
+        </div>
+        <div class="floating-badge badge-2">
+            <span>📊</span>
+            <span>Virality Analysis</span>
+        </div>
+        <div class="floating-badge badge-3">
+            <span>🛡️</span>
+            <span>Propaganda Check</span>
+        </div>
+        
+        <div class="section-container" style="text-align: center;">
+            <div class="tier-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                PRO Feature
+            </div>
+            
+            <div class="tool-icon-wrapper">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                </svg>
+            </div>
+            
+            <h1 class="tool-title">Social Media Monitor</h1>
+            <p class="tool-description">
+                Track misinformation, detect bot networks, and analyze viral content spreading across social platforms with advanced AI-powered analysis.
+            </p>
+            
+            <div class="feature-pills">
+                <div class="feature-pill">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
+                    Real-time Monitoring
                 </div>
-                <h1 class="text-4xl font-bold mb-4">Social Media Monitor</h1>
-                <p class="text-xl text-slate-400">Track misinformation, detect bots, and analyze viral content</p>
-            </div>
-
-            <!-- Input Section -->
-            <div class="bg-slate-800/50 rounded-2xl p-8 border border-slate-700 mb-8">
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Enter social media content or URL</label>
-                    <textarea id="contentInput" rows="4" placeholder="Paste a tweet, Facebook post, TikTok caption, or URL to analyze..." 
-                        class="w-full bg-slate-900 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-verity-500"></textarea>
+                <div class="feature-pill">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Instant Analysis
                 </div>
-                
-                <div class="flex flex-wrap gap-4 mb-6">
-                    <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
-                        <input type="checkbox" id="checkBots" checked class="w-4 h-4 rounded accent-verity-500">
-                        Bot Detection
-                    </label>
-                    <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
-                        <input type="checkbox" id="checkVirality" checked class="w-4 h-4 rounded accent-verity-500">
-                        Virality Analysis
-                    </label>
-                    <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
-                        <input type="checkbox" id="checkPropaganda" checked class="w-4 h-4 rounded accent-verity-500">
-                        Propaganda Detection
-                    </label>
-                </div>
-
-                <button onclick="analyzeContent()" id="analyzeBtn" class="w-full py-4 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-400 hover:to-rose-500 rounded-xl font-semibold text-lg transition">
-                    Analyze Content
-                </button>
-            </div>
-
-            <!-- Results Section -->
-            <div id="resultsSection" class="hidden">
-                <h2 class="text-2xl font-bold mb-6">Analysis Results</h2>
-                
-                <!-- Manipulation Score -->
-                <div class="result-card bg-slate-800/50 rounded-xl p-6 border border-slate-700 mb-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold">Manipulation Risk Score</h3>
-                        <span id="manipulationScore" class="text-3xl font-bold text-rose-400">0%</span>
-                    </div>
-                    <div class="h-3 bg-slate-700 rounded-full overflow-hidden">
-                        <div id="manipulationBar" class="h-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 transition-all duration-500" style="width: 0%"></div>
-                    </div>
-                    <p id="manipulationDesc" class="text-sm text-slate-400 mt-2"></p>
-                </div>
-
-                <!-- Bot Indicators -->
-                <div class="result-card bg-slate-800/50 rounded-xl p-6 border border-slate-700 mb-4">
-                    <h3 class="text-lg font-semibold mb-4">Bot Indicators</h3>
-                    <div id="botIndicators" class="grid grid-cols-2 gap-4"></div>
-                </div>
-
-                <!-- Propaganda Techniques -->
-                <div class="result-card bg-slate-800/50 rounded-xl p-6 border border-slate-700 mb-4">
-                    <h3 class="text-lg font-semibold mb-4">Propaganda Techniques Detected</h3>
-                    <div id="propagandaList" class="space-y-3"></div>
-                </div>
-
-                <!-- Virality Prediction -->
-                <div class="result-card bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                    <h3 class="text-lg font-semibold mb-4">Virality Prediction</h3>
-                    <div id="viralityInfo" class="space-y-3"></div>
+                <div class="feature-pill">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    Detailed Reports
                 </div>
             </div>
         </div>
-    </main>
+    </section>
+
+    <!-- Analysis Section -->
+    <section style="padding: 0 2rem 6rem;">
+        <div class="analysis-container">
+            <!-- Input Card -->
+            <div class="input-card">
+                <label class="input-label">Enter social media content, URL, or paste text to analyze</label>
+                <textarea 
+                    id="contentInput" 
+                    class="input-textarea"
+                    placeholder="Paste a tweet, Facebook post, TikTok caption, Instagram comment, or any social media URL to analyze for manipulation, bot activity, and virality potential..."
+                ></textarea>
+                
+                <div class="options-grid">
+                    <div class="option-item">
+                        <input type="checkbox" id="checkBots" checked>
+                        <label for="checkBots">Bot Detection</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="checkbox" id="checkVirality" checked>
+                        <label for="checkVirality">Virality Analysis</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="checkbox" id="checkPropaganda" checked>
+                        <label for="checkPropaganda">Propaganda Detection</label>
+                    </div>
+                </div>
+                
+                <button onclick="analyzeContent()" id="analyzeBtn" class="analyze-btn">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    Analyze Content
+                </button>
+            </div>
+            
+            <!-- Results Section -->
+            <div id="resultsSection" class="results-section">
+                <div class="result-card">
+                    <div class="result-header">
+                        <h3 class="result-title">Manipulation Risk Score</h3>
+                        <span id="manipulationScore" class="result-score score-medium">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="manipulationBar" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <p id="manipulationDesc" class="result-description"></p>
+                </div>
+                
+                <div class="result-card">
+                    <h3 class="result-title" style="margin-bottom: 1.25rem;">Bot Indicators</h3>
+                    <div id="botIndicators" class="indicator-grid"></div>
+                </div>
+                
+                <div class="result-card">
+                    <h3 class="result-title" style="margin-bottom: 1.25rem;">Propaganda Techniques Detected</h3>
+                    <div id="propagandaList"></div>
+                </div>
+                
+                <div class="result-card">
+                    <h3 class="result-title" style="margin-bottom: 1rem;">Virality Prediction</h3>
+                    <div id="viralityInfo"></div>
+                </div>
+            </div>
+            
+            <!-- Demo Section -->
+            <div class="demo-section">
+                <h3 class="demo-title">See It In Action</h3>
+                <div class="demo-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <span class="red"></span>
+                            <span class="yellow"></span>
+                            <span class="green"></span>
+                        </div>
+                        <span class="terminal-title">social-monitor-cli</span>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">$</span>
+                            <span class="terminal-command">verity social-monitor "Breaking: Scientists confirm water is NOT wet!"</span>
+                        </div>
+                        <div class="terminal-output">
+                            <div style="color: #f59e0b; margin-bottom: 0.5rem;">⏳ Analyzing content patterns...</div>
+                            <div class="terminal-result">
+                                <div class="terminal-result-header">
+                                    <span class="terminal-verdict">⚠️ HIGH RISK</span>
+                                    <span class="terminal-score">Manipulation Score: 73%</span>
+                                </div>
+                                <div class="terminal-meta">
+                                    Bot Probability: 42% • Propaganda: 2 techniques • Viral Potential: High
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <section style="padding: 4rem 2rem; text-align: center; border-top: 1px solid var(--border-color);">
+        <h2 style="font-size: 2rem; margin-bottom: 1rem;">Ready to Monitor Social Media?</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+            Upgrade to Pro to unlock unlimited social media monitoring and protect your audience from misinformation.
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="pricing.html" class="btn btn-primary">
+                Upgrade to Pro
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            <a href="tools.html" class="btn btn-ghost">View All Tools</a>
+        </div>
+    </section>
 
     <script>
         const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:8081' : '';
@@ -123,68 +859,49 @@
             
             const btn = document.getElementById('analyzeBtn');
             btn.disabled = true;
-            btn.textContent = 'Analyzing...';
+            btn.innerHTML = '<svg style="animation: spin 1s linear infinite;" width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-opacity="0.25" stroke-width="4"/><path stroke-opacity="0.75" stroke-width="4" d="M4 12a8 8 0 018-8"/></svg>Analyzing...';
             
             try {
-                // Call NLP analysis endpoint for propaganda/bias
                 const nlpResponse = await fetch(`${API_BASE}/api/v4/analyze/nlp`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-User-Tier': localStorage.getItem('verity_tier') || 'free',
-                        'X-API-Key': localStorage.getItem('verity_api_key') || ''
-                    },
+                    headers: { 'Content-Type': 'application/json', 'X-User-Tier': localStorage.getItem('verity_tier') || 'free', 'X-API-Key': localStorage.getItem('verity_api_key') || '' },
                     body: JSON.stringify({ claim: content })
                 });
                 
-                if (nlpResponse.status === 403) {
-                    alert('This feature requires Pro tier or higher. Please upgrade your plan.');
-                    btn.disabled = false;
-                    btn.textContent = 'Analyze Content';
-                    return;
-                }
-                
+                if (nlpResponse.status === 403) { alert('This feature requires Pro tier or higher. Please upgrade your plan.'); resetButton(); return; }
                 const nlpData = nlpResponse.ok ? await nlpResponse.json() : null;
-                
-                // Display results
                 displayResults(content, nlpData);
-                
-            } catch (error) {
-                console.error('Analysis error:', error);
-                // Show demo results
-                displayDemoResults(content);
-            }
-            
+            } catch (error) { console.error('Analysis error:', error); displayResults(content, null); }
+            resetButton();
+        }
+        
+        function resetButton() {
+            const btn = document.getElementById('analyzeBtn');
             btn.disabled = false;
-            btn.textContent = 'Analyze Content';
+            btn.innerHTML = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>Analyze Content';
         }
         
         function displayResults(content, nlpData) {
-            document.getElementById('resultsSection').classList.remove('hidden');
+            const resultsSection = document.getElementById('resultsSection');
+            resultsSection.classList.add('visible');
             
-            // Calculate manipulation score from NLP data
-            let manipScore = 0;
-            let techniques = [];
-            
+            let manipScore = 0, techniques = [];
             if (nlpData?.analysis) {
                 const a = nlpData.analysis;
                 manipScore = Math.round(((a.subjectivity || 0) * 30) + ((a.propaganda_techniques?.length || 0) * 10) + ((a.bias_indicators?.length || 0) * 10));
                 manipScore = Math.min(manipScore, 100);
                 techniques = a.propaganda_techniques || [];
             } else {
-                // Demo data
                 manipScore = Math.floor(Math.random() * 60) + 20;
-                techniques = ['Emotional Appeal', 'Loaded Language'];
+                techniques = ['Emotional Appeal', 'Loaded Language', 'Appeal to Authority'];
             }
             
-            document.getElementById('manipulationScore').textContent = manipScore + '%';
+            const scoreEl = document.getElementById('manipulationScore');
+            scoreEl.textContent = manipScore + '%';
+            scoreEl.className = 'result-score ' + (manipScore < 30 ? 'score-low' : manipScore < 60 ? 'score-medium' : 'score-high');
             document.getElementById('manipulationBar').style.width = manipScore + '%';
-            document.getElementById('manipulationDesc').textContent = 
-                manipScore < 30 ? 'Low risk - Content appears authentic' :
-                manipScore < 60 ? 'Medium risk - Some manipulation indicators detected' :
-                'High risk - Multiple manipulation patterns detected';
+            document.getElementById('manipulationDesc').textContent = manipScore < 30 ? 'Low risk - Content appears authentic and organic' : manipScore < 60 ? 'Medium risk - Some manipulation indicators detected' : 'High risk - Multiple manipulation patterns detected, exercise caution';
             
-            // Bot indicators
             const botIndicators = document.getElementById('botIndicators');
             const botChecks = [
                 { name: 'Account Age', status: Math.random() > 0.3, desc: 'Account created recently' },
@@ -192,50 +909,16 @@
                 { name: 'Content Originality', status: Math.random() > 0.4, desc: 'Mostly reposts/shares' },
                 { name: 'Network Analysis', status: Math.random() > 0.6, desc: 'Coordinated behavior' }
             ];
-            botIndicators.innerHTML = botChecks.map(b => `
-                <div class="flex items-center gap-3 p-3 bg-slate-900/50 rounded-lg">
-                    <div class="w-3 h-3 rounded-full ${b.status ? 'bg-yellow-500' : 'bg-green-500'}"></div>
-                    <div>
-                        <div class="font-medium text-sm">${b.name}</div>
-                        <div class="text-xs text-slate-500">${b.status ? '⚠️ ' + b.desc : '✓ Normal'}</div>
-                    </div>
-                </div>
-            `).join('');
+            botIndicators.innerHTML = botChecks.map(b => `<div class="indicator-item"><div class="indicator-dot ${b.status ? 'warning' : 'safe'}"></div><div class="indicator-content"><div class="indicator-name">${b.name}</div><div class="indicator-desc">${b.status ? '⚠️ ' + b.desc : '✓ Normal behavior'}</div></div></div>`).join('');
             
-            // Propaganda techniques
             const propagandaList = document.getElementById('propagandaList');
-            if (techniques.length > 0) {
-                propagandaList.innerHTML = techniques.map(t => `
-                    <div class="flex items-center gap-3 p-3 bg-rose-500/10 border border-rose-500/30 rounded-lg">
-                        <svg class="w-5 h-5 text-rose-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
-                        <span class="text-rose-300">${t}</span>
-                    </div>
-                `).join('');
-            } else {
-                propagandaList.innerHTML = '<div class="text-slate-500">No propaganda techniques detected</div>';
-            }
+            propagandaList.innerHTML = techniques.length > 0 ? techniques.map(t => `<div class="technique-item"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg><span class="technique-name">${t}</span></div>`).join('') : '<p style="color: var(--text-muted);">No propaganda techniques detected</p>';
             
-            // Virality prediction
             const viralityInfo = document.getElementById('viralityInfo');
             const viralScore = Math.floor(Math.random() * 100);
-            viralityInfo.innerHTML = `
-                <div class="flex items-center justify-between">
-                    <span class="text-slate-300">Viral Potential</span>
-                    <span class="font-bold ${viralScore > 70 ? 'text-red-400' : viralScore > 40 ? 'text-yellow-400' : 'text-green-400'}">${viralScore}%</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="text-slate-300">Estimated Reach</span>
-                    <span class="font-bold">${(viralScore * 1000).toLocaleString()}+ views</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="text-slate-300">Spread Risk</span>
-                    <span class="font-bold">${viralScore > 70 ? 'High' : viralScore > 40 ? 'Medium' : 'Low'}</span>
-                </div>
-            `;
-        }
-        
-        function displayDemoResults(content) {
-            displayResults(content, null);
+            viralityInfo.innerHTML = `<div class="virality-stat"><span class="virality-label">Viral Potential</span><span class="virality-value ${viralScore > 70 ? 'score-high' : viralScore > 40 ? 'score-medium' : 'score-low'}">${viralScore}%</span></div><div class="virality-stat"><span class="virality-label">Estimated Reach</span><span class="virality-value" style="color: var(--text-primary);">${(viralScore * 1000).toLocaleString()}+ views</span></div><div class="virality-stat"><span class="virality-label">Spread Risk</span><span class="virality-value ${viralScore > 70 ? 'score-high' : viralScore > 40 ? 'score-medium' : 'score-low'}">${viralScore > 70 ? 'High' : viralScore > 40 ? 'Medium' : 'Low'}</span></div>`;
+            
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     </script>
 </body>

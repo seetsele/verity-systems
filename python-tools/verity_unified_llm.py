@@ -58,9 +58,9 @@ class ModelConfig:
     
 # Model catalog with pricing and capabilities
 MODEL_CATALOG: Dict[str, ModelConfig] = {
-    # ========== FREE TIER ==========
-    "groq/llama-3.1-70b-versatile": ModelConfig(
-        name="Llama 3.1 70B", provider="groq", tier=ModelTier.FREE,
+    # ========== FREE TIER (GROQ) ==========
+    "groq/llama-3.3-70b-versatile": ModelConfig(
+        name="Llama 3.3 70B", provider="groq", tier=ModelTier.FREE,
         context_window=131072, cost_per_1k_input=0.0, cost_per_1k_output=0.0,
         supports_function_calling=True
     ),
@@ -76,11 +76,15 @@ MODEL_CATALOG: Dict[str, ModelConfig] = {
         name="Mixtral 8x7B", provider="groq", tier=ModelTier.FREE,
         context_window=32768, cost_per_1k_input=0.0, cost_per_1k_output=0.0
     ),
-    
-    # OpenRouter free models
-    "openrouter/google/gemma-2-9b-it:free": ModelConfig(
-        name="Gemma 2 9B (OpenRouter)", provider="openrouter", tier=ModelTier.FREE,
+    "groq/llama-guard-3-8b": ModelConfig(
+        name="Llama Guard 3 8B", provider="groq", tier=ModelTier.FREE,
         context_window=8192, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    
+    # ========== FREE TIER (OPENROUTER) ==========
+    "openrouter/meta-llama/llama-3.2-3b-instruct:free": ModelConfig(
+        name="Llama 3.2 3B (OpenRouter)", provider="openrouter", tier=ModelTier.FREE,
+        context_window=131072, cost_per_1k_input=0.0, cost_per_1k_output=0.0
     ),
     "openrouter/mistralai/mistral-7b-instruct:free": ModelConfig(
         name="Mistral 7B (OpenRouter)", provider="openrouter", tier=ModelTier.FREE,
@@ -90,10 +94,42 @@ MODEL_CATALOG: Dict[str, ModelConfig] = {
         name="Llama 3.1 8B (OpenRouter)", provider="openrouter", tier=ModelTier.FREE,
         context_window=131072, cost_per_1k_input=0.0, cost_per_1k_output=0.0
     ),
+    "openrouter/google/gemma-2-9b-it:free": ModelConfig(
+        name="Gemma 2 9B (OpenRouter)", provider="openrouter", tier=ModelTier.FREE,
+        context_window=8192, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    "openrouter/microsoft/phi-3-mini-128k-instruct:free": ModelConfig(
+        name="Phi-3 Mini 128K (OpenRouter)", provider="openrouter", tier=ModelTier.FREE,
+        context_window=128000, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    "openrouter/huggingfaceh4/zephyr-7b-beta:free": ModelConfig(
+        name="Zephyr 7B (OpenRouter)", provider="openrouter", tier=ModelTier.FREE,
+        context_window=32768, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    "openrouter/openchat/openchat-7b:free": ModelConfig(
+        name="OpenChat 7B (OpenRouter)", provider="openrouter", tier=ModelTier.FREE,
+        context_window=8192, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    "openrouter/teknium/openhermes-2.5-mistral-7b:free": ModelConfig(
+        name="OpenHermes 2.5 (OpenRouter)", provider="openrouter", tier=ModelTier.FREE,
+        context_window=8192, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    "openrouter/nousresearch/nous-capybara-7b:free": ModelConfig(
+        name="Nous Capybara 7B (OpenRouter)", provider="openrouter", tier=ModelTier.FREE,
+        context_window=8192, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    "openrouter/gryphe/mythomist-7b:free": ModelConfig(
+        name="MythoMist 7B (OpenRouter)", provider="openrouter", tier=ModelTier.FREE,
+        context_window=32768, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
     
-    # ========== LOCAL (OLLAMA) ==========
+    # ========== LOCAL (OLLAMA - ALWAYS FREE) ==========
     "ollama/llama3.1": ModelConfig(
         name="Llama 3.1 (Local)", provider="ollama", tier=ModelTier.LOCAL,
+        context_window=131072, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    "ollama/llama3.2": ModelConfig(
+        name="Llama 3.2 (Local)", provider="ollama", tier=ModelTier.LOCAL,
         context_window=131072, cost_per_1k_input=0.0, cost_per_1k_output=0.0
     ),
     "ollama/mistral": ModelConfig(
@@ -111,6 +147,22 @@ MODEL_CATALOG: Dict[str, ModelConfig] = {
     "ollama/qwen2.5": ModelConfig(
         name="Qwen 2.5 (Local)", provider="ollama", tier=ModelTier.LOCAL,
         context_window=32768, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    "ollama/codellama": ModelConfig(
+        name="Code Llama (Local)", provider="ollama", tier=ModelTier.LOCAL,
+        context_window=16384, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    "ollama/deepseek-coder": ModelConfig(
+        name="DeepSeek Coder (Local)", provider="ollama", tier=ModelTier.LOCAL,
+        context_window=16384, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    "ollama/llava": ModelConfig(
+        name="LLaVA (Local)", provider="ollama", tier=ModelTier.LOCAL,
+        context_window=4096, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    "ollama/neural-chat": ModelConfig(
+        name="Neural Chat (Local)", provider="ollama", tier=ModelTier.LOCAL,
+        context_window=8192, cost_per_1k_input=0.0, cost_per_1k_output=0.0
     ),
     
     # ========== CHEAP TIER ==========
@@ -130,6 +182,66 @@ MODEL_CATALOG: Dict[str, ModelConfig] = {
     "deepseek/deepseek-reasoner": ModelConfig(
         name="DeepSeek R1", provider="deepseek", tier=ModelTier.CHEAP,
         context_window=64000, cost_per_1k_input=0.00055, cost_per_1k_output=0.00219
+    ),
+    
+    # ========== CEREBRAS (FREE - 3000+ tok/sec) ==========
+    "cerebras/llama-3.3-70b": ModelConfig(
+        name="Llama 3.3 70B (Cerebras)", provider="cerebras", tier=ModelTier.FREE,
+        context_window=131072, cost_per_1k_input=0.0, cost_per_1k_output=0.0,
+        supports_function_calling=True
+    ),
+    "cerebras/llama-3.1-8b": ModelConfig(
+        name="Llama 3.1 8B (Cerebras)", provider="cerebras", tier=ModelTier.FREE,
+        context_window=131072, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    "cerebras/qwen-3-32b": ModelConfig(
+        name="Qwen 3 32B (Cerebras)", provider="cerebras", tier=ModelTier.FREE,
+        context_window=40960, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    
+    # ========== SAMBANOVA (FREE) ==========
+    "sambanova/Meta-Llama-3.1-405B-Instruct": ModelConfig(
+        name="Llama 3.1 405B (SambaNova)", provider="sambanova", tier=ModelTier.FREE,
+        context_window=131072, cost_per_1k_input=0.0, cost_per_1k_output=0.0,
+        supports_function_calling=True
+    ),
+    "sambanova/Meta-Llama-3.1-70B-Instruct": ModelConfig(
+        name="Llama 3.1 70B (SambaNova)", provider="sambanova", tier=ModelTier.FREE,
+        context_window=131072, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    "sambanova/DeepSeek-V3": ModelConfig(
+        name="DeepSeek V3 (SambaNova)", provider="sambanova", tier=ModelTier.FREE,
+        context_window=163840, cost_per_1k_input=0.0, cost_per_1k_output=0.0
+    ),
+    
+    # ========== FIREWORKS AI ($1 free credit) ==========
+    "fireworks/llama-v3p1-70b-instruct": ModelConfig(
+        name="Llama 3.1 70B (Fireworks)", provider="fireworks", tier=ModelTier.CHEAP,
+        context_window=131072, cost_per_1k_input=0.0009, cost_per_1k_output=0.0009
+    ),
+    "fireworks/mixtral-8x22b-instruct": ModelConfig(
+        name="Mixtral 8x22B (Fireworks)", provider="fireworks", tier=ModelTier.CHEAP,
+        context_window=65536, cost_per_1k_input=0.0012, cost_per_1k_output=0.0012
+    ),
+    
+    # ========== NOVITA AI (Cheap) ==========
+    "novita/llama-3.3-70b-instruct": ModelConfig(
+        name="Llama 3.3 70B (Novita)", provider="novita", tier=ModelTier.CHEAP,
+        context_window=131072, cost_per_1k_input=0.0001, cost_per_1k_output=0.0003
+    ),
+    "novita/deepseek-v3": ModelConfig(
+        name="DeepSeek V3 (Novita)", provider="novita", tier=ModelTier.CHEAP,
+        context_window=163840, cost_per_1k_input=0.00027, cost_per_1k_output=0.0004
+    ),
+    
+    # ========== PERPLEXITY (Search-grounded) ==========
+    "perplexity/llama-3.1-sonar-small-128k-online": ModelConfig(
+        name="Sonar Small Online (Perplexity)", provider="perplexity", tier=ModelTier.STANDARD,
+        context_window=128000, cost_per_1k_input=0.0002, cost_per_1k_output=0.0002
+    ),
+    "perplexity/llama-3.1-sonar-large-128k-online": ModelConfig(
+        name="Sonar Large Online (Perplexity)", provider="perplexity", tier=ModelTier.STANDARD,
+        context_window=128000, cost_per_1k_input=0.001, cost_per_1k_output=0.001
     ),
     
     # ========== STANDARD TIER ==========
@@ -721,6 +833,594 @@ class TogetherAIProvider(BaseProvider):
         return await self.retry_handler.execute_with_retry("together_ai", _call)
 
 
+class HuggingFaceProvider(BaseProvider):
+    """HuggingFace Inference API - Access to thousands of free models"""
+    
+    def __init__(self):
+        super().__init__()
+        self.api_key = os.getenv('HUGGINGFACE_API_KEY') or os.getenv('HF_API_KEY')
+        self.base_url = "https://api-inference.huggingface.co/models"
+        
+    @property
+    def is_available(self) -> bool:
+        return bool(self.api_key)
+    
+    async def complete(
+        self,
+        messages: List[Dict[str, str]],
+        model: str,
+        temperature: float = 0.7,
+        max_tokens: int = 2048,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Complete using HuggingFace Inference API"""
+        
+        if model.startswith("huggingface/"):
+            model = model[12:]
+        
+        # Convert messages to prompt for HF models
+        prompt = ""
+        for msg in messages:
+            role = msg.get("role", "user")
+            content = msg.get("content", "")
+            if role == "system":
+                prompt += f"<|system|>\n{content}\n"
+            elif role == "user":
+                prompt += f"<|user|>\n{content}\n"
+            elif role == "assistant":
+                prompt += f"<|assistant|>\n{content}\n"
+        prompt += "<|assistant|>\n"
+        
+        async def _call():
+            session = await self.pool.get_session()
+            async with session.post(
+                f"{self.base_url}/{model}",
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "inputs": prompt,
+                    "parameters": {
+                        "temperature": temperature,
+                        "max_new_tokens": max_tokens,
+                        "return_full_text": False
+                    }
+                }
+            ) as resp:
+                if resp.status != 200:
+                    text = await resp.text()
+                    raise Exception(f"HuggingFace error: {resp.status} - {text}")
+                data = await resp.json()
+                
+                # Handle different response formats
+                if isinstance(data, list) and len(data) > 0:
+                    content = data[0].get("generated_text", "")
+                elif isinstance(data, dict):
+                    content = data.get("generated_text", str(data))
+                else:
+                    content = str(data)
+                
+                return {
+                    "content": content,
+                    "model": model,
+                    "usage": {},
+                    "provider": "huggingface",
+                    "finish_reason": "stop"
+                }
+        
+        return await self.retry_handler.execute_with_retry("huggingface", _call)
+
+
+class CohereProvider(BaseProvider):
+    """Cohere - Great for classification and RAG, 1000/month free"""
+    
+    def __init__(self):
+        super().__init__()
+        self.api_key = os.getenv('COHERE_API_KEY')
+        self.base_url = "https://api.cohere.ai/v1"
+        
+    @property
+    def is_available(self) -> bool:
+        return bool(self.api_key)
+    
+    async def complete(
+        self,
+        messages: List[Dict[str, str]],
+        model: str,
+        temperature: float = 0.7,
+        max_tokens: int = 2048,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Complete using Cohere"""
+        
+        if model.startswith("cohere/"):
+            model = model[7:]
+        
+        # Convert messages format
+        chat_history = []
+        user_message = ""
+        system_message = None
+        
+        for msg in messages:
+            role = msg.get("role", "user")
+            content = msg.get("content", "")
+            if role == "system":
+                system_message = content
+            elif role == "user":
+                user_message = content
+            elif role == "assistant":
+                chat_history.append({"role": "CHATBOT", "message": content})
+        
+        async def _call():
+            session = await self.pool.get_session()
+            payload = {
+                "model": model if model else "command-r",
+                "message": user_message,
+                "temperature": temperature,
+                "max_tokens": max_tokens
+            }
+            if chat_history:
+                payload["chat_history"] = chat_history
+            if system_message:
+                payload["preamble"] = system_message
+            
+            async with session.post(
+                f"{self.base_url}/chat",
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json"
+                },
+                json=payload
+            ) as resp:
+                if resp.status != 200:
+                    text = await resp.text()
+                    raise Exception(f"Cohere error: {resp.status} - {text}")
+                data = await resp.json()
+                
+                return {
+                    "content": data.get("text", ""),
+                    "model": data.get("model", model),
+                    "usage": {
+                        "prompt_tokens": data.get("meta", {}).get("billed_units", {}).get("input_tokens", 0),
+                        "completion_tokens": data.get("meta", {}).get("billed_units", {}).get("output_tokens", 0)
+                    },
+                    "provider": "cohere",
+                    "finish_reason": data.get("finish_reason", "stop")
+                }
+        
+        return await self.retry_handler.execute_with_retry("cohere", _call)
+
+
+class GoogleGeminiProvider(BaseProvider):
+    """Google Gemini - 60 RPM free tier via AI Studio"""
+    
+    def __init__(self):
+        super().__init__()
+        self.api_key = os.getenv('GOOGLE_AI_API_KEY') or os.getenv('GEMINI_API_KEY')
+        self.base_url = "https://generativelanguage.googleapis.com/v1beta"
+        
+    @property
+    def is_available(self) -> bool:
+        return bool(self.api_key)
+    
+    async def complete(
+        self,
+        messages: List[Dict[str, str]],
+        model: str,
+        temperature: float = 0.7,
+        max_tokens: int = 2048,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Complete using Google Gemini"""
+        
+        if model.startswith("google/"):
+            model = model[7:]
+        if not model:
+            model = "gemini-1.5-flash"
+        
+        # Convert messages to Gemini format
+        contents = []
+        system_instruction = None
+        
+        for msg in messages:
+            role = msg.get("role", "user")
+            content = msg.get("content", "")
+            if role == "system":
+                system_instruction = content
+            elif role == "user":
+                contents.append({"role": "user", "parts": [{"text": content}]})
+            elif role == "assistant":
+                contents.append({"role": "model", "parts": [{"text": content}]})
+        
+        async def _call():
+            session = await self.pool.get_session()
+            
+            payload = {
+                "contents": contents,
+                "generationConfig": {
+                    "temperature": temperature,
+                    "maxOutputTokens": max_tokens
+                }
+            }
+            if system_instruction:
+                payload["systemInstruction"] = {"parts": [{"text": system_instruction}]}
+            
+            async with session.post(
+                f"{self.base_url}/models/{model}:generateContent?key={self.api_key}",
+                headers={"Content-Type": "application/json"},
+                json=payload
+            ) as resp:
+                if resp.status != 200:
+                    text = await resp.text()
+                    raise Exception(f"Gemini error: {resp.status} - {text}")
+                data = await resp.json()
+                
+                # Extract content from response
+                content = ""
+                if "candidates" in data and len(data["candidates"]) > 0:
+                    parts = data["candidates"][0].get("content", {}).get("parts", [])
+                    content = "".join([p.get("text", "") for p in parts])
+                
+                usage = data.get("usageMetadata", {})
+                
+                return {
+                    "content": content,
+                    "model": model,
+                    "usage": {
+                        "prompt_tokens": usage.get("promptTokenCount", 0),
+                        "completion_tokens": usage.get("candidatesTokenCount", 0)
+                    },
+                    "provider": "google",
+                    "finish_reason": data.get("candidates", [{}])[0].get("finishReason", "STOP")
+                }
+        
+        return await self.retry_handler.execute_with_retry("google", _call)
+
+
+class MistralProvider(BaseProvider):
+    """Mistral AI - Fast European models with free tier"""
+    
+    def __init__(self):
+        super().__init__()
+        self.api_key = os.getenv('MISTRAL_API_KEY')
+        self.base_url = "https://api.mistral.ai/v1"
+        
+    @property
+    def is_available(self) -> bool:
+        return bool(self.api_key)
+
+
+class CerebrasProvider(BaseProvider):
+    """Cerebras - World's fastest inference at 3000+ tokens/sec, FREE tier available"""
+    
+    def __init__(self):
+        super().__init__()
+        self.api_key = os.getenv('CEREBRAS_API_KEY')
+        self.base_url = "https://api.cerebras.ai/v1"
+        
+    @property
+    def is_available(self) -> bool:
+        return bool(self.api_key)
+    
+    async def complete(
+        self,
+        messages: List[Dict[str, str]],
+        model: str,
+        temperature: float = 0.7,
+        max_tokens: int = 2048,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Complete using Cerebras - Ultra-fast inference"""
+        
+        if model.startswith("cerebras/"):
+            model = model[9:]
+        if not model:
+            model = "llama-3.3-70b"  # Default fast model
+        
+        async def _call():
+            session = await self.pool.get_session()
+            async with session.post(
+                f"{self.base_url}/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": model,
+                    "messages": messages,
+                    "temperature": temperature,
+                    "max_tokens": max_tokens
+                }
+            ) as resp:
+                if resp.status != 200:
+                    text = await resp.text()
+                    raise Exception(f"Cerebras error: {resp.status} - {text}")
+                data = await resp.json()
+                return {
+                    "content": data["choices"][0]["message"]["content"],
+                    "model": data.get("model", model),
+                    "usage": data.get("usage", {}),
+                    "provider": "cerebras",
+                    "finish_reason": data["choices"][0].get("finish_reason", "stop")
+                }
+        
+        return await self.retry_handler.execute_with_retry("cerebras", _call)
+
+
+class SambaNovaProvider(BaseProvider):
+    """SambaNova - Fast inference on open models, FREE tier available"""
+    
+    def __init__(self):
+        super().__init__()
+        self.api_key = os.getenv('SAMBANOVA_API_KEY')
+        self.base_url = "https://api.sambanova.ai/v1"
+        
+    @property
+    def is_available(self) -> bool:
+        return bool(self.api_key)
+    
+    async def complete(
+        self,
+        messages: List[Dict[str, str]],
+        model: str,
+        temperature: float = 0.7,
+        max_tokens: int = 2048,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Complete using SambaNova Cloud"""
+        
+        if model.startswith("sambanova/"):
+            model = model[10:]
+        if not model:
+            model = "Meta-Llama-3.1-405B-Instruct"
+        
+        async def _call():
+            session = await self.pool.get_session()
+            async with session.post(
+                f"{self.base_url}/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": model,
+                    "messages": messages,
+                    "temperature": temperature,
+                    "max_tokens": max_tokens
+                }
+            ) as resp:
+                if resp.status != 200:
+                    text = await resp.text()
+                    raise Exception(f"SambaNova error: {resp.status} - {text}")
+                data = await resp.json()
+                return {
+                    "content": data["choices"][0]["message"]["content"],
+                    "model": data.get("model", model),
+                    "usage": data.get("usage", {}),
+                    "provider": "sambanova",
+                    "finish_reason": data["choices"][0].get("finish_reason", "stop")
+                }
+        
+        return await self.retry_handler.execute_with_retry("sambanova", _call)
+
+
+class FireworksAIProvider(BaseProvider):
+    """Fireworks AI - Fast inference with $1 free credit"""
+    
+    def __init__(self):
+        super().__init__()
+        self.api_key = os.getenv('FIREWORKS_API_KEY')
+        self.base_url = "https://api.fireworks.ai/inference/v1"
+        
+    @property
+    def is_available(self) -> bool:
+        return bool(self.api_key)
+    
+    async def complete(
+        self,
+        messages: List[Dict[str, str]],
+        model: str,
+        temperature: float = 0.7,
+        max_tokens: int = 2048,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Complete using Fireworks AI"""
+        
+        if model.startswith("fireworks/"):
+            model = model[10:]
+        if not model:
+            model = "accounts/fireworks/models/llama-v3p1-70b-instruct"
+        
+        async def _call():
+            session = await self.pool.get_session()
+            async with session.post(
+                f"{self.base_url}/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": model,
+                    "messages": messages,
+                    "temperature": temperature,
+                    "max_tokens": max_tokens
+                }
+            ) as resp:
+                if resp.status != 200:
+                    text = await resp.text()
+                    raise Exception(f"Fireworks error: {resp.status} - {text}")
+                data = await resp.json()
+                return {
+                    "content": data["choices"][0]["message"]["content"],
+                    "model": data.get("model", model),
+                    "usage": data.get("usage", {}),
+                    "provider": "fireworks",
+                    "finish_reason": data["choices"][0].get("finish_reason", "stop")
+                }
+        
+        return await self.retry_handler.execute_with_retry("fireworks", _call)
+
+
+class NovitaAIProvider(BaseProvider):
+    """Novita AI - Affordable inference with many open models"""
+    
+    def __init__(self):
+        super().__init__()
+        self.api_key = os.getenv('NOVITA_API_KEY')
+        self.base_url = "https://api.novita.ai/v3/openai"
+        
+    @property
+    def is_available(self) -> bool:
+        return bool(self.api_key)
+    
+    async def complete(
+        self,
+        messages: List[Dict[str, str]],
+        model: str,
+        temperature: float = 0.7,
+        max_tokens: int = 2048,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Complete using Novita AI"""
+        
+        if model.startswith("novita/"):
+            model = model[7:]
+        if not model:
+            model = "meta-llama/llama-3.3-70b-instruct"
+        
+        async def _call():
+            session = await self.pool.get_session()
+            async with session.post(
+                f"{self.base_url}/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": model,
+                    "messages": messages,
+                    "temperature": temperature,
+                    "max_tokens": max_tokens
+                }
+            ) as resp:
+                if resp.status != 200:
+                    text = await resp.text()
+                    raise Exception(f"Novita AI error: {resp.status} - {text}")
+                data = await resp.json()
+                return {
+                    "content": data["choices"][0]["message"]["content"],
+                    "model": data.get("model", model),
+                    "usage": data.get("usage", {}),
+                    "provider": "novita",
+                    "finish_reason": data["choices"][0].get("finish_reason", "stop")
+                }
+        
+        return await self.retry_handler.execute_with_retry("novita", _call)
+
+
+class PerplexityProvider(BaseProvider):
+    """Perplexity AI - Best search-grounded AI with API access"""
+    
+    def __init__(self):
+        super().__init__()
+        self.api_key = os.getenv('PERPLEXITY_API_KEY') or os.getenv('PPLX_API_KEY')
+        self.base_url = "https://api.perplexity.ai"
+        
+    @property
+    def is_available(self) -> bool:
+        return bool(self.api_key)
+    
+    async def complete(
+        self,
+        messages: List[Dict[str, str]],
+        model: str,
+        temperature: float = 0.7,
+        max_tokens: int = 2048,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Complete using Perplexity - Search-grounded responses"""
+        
+        if model.startswith("perplexity/"):
+            model = model[11:]
+        if not model:
+            model = "llama-3.1-sonar-small-128k-online"  # Search-grounded
+        
+        async def _call():
+            session = await self.pool.get_session()
+            async with session.post(
+                f"{self.base_url}/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": model,
+                    "messages": messages,
+                    "temperature": temperature,
+                    "max_tokens": max_tokens
+                }
+            ) as resp:
+                if resp.status != 200:
+                    text = await resp.text()
+                    raise Exception(f"Perplexity error: {resp.status} - {text}")
+                data = await resp.json()
+                return {
+                    "content": data["choices"][0]["message"]["content"],
+                    "model": data.get("model", model),
+                    "usage": data.get("usage", {}),
+                    "provider": "perplexity",
+                    "finish_reason": data["choices"][0].get("finish_reason", "stop"),
+                    "citations": data.get("citations", [])  # Perplexity includes citations
+                }
+        
+        return await self.retry_handler.execute_with_retry("perplexity", _call)
+    
+    async def complete(
+        self,
+        messages: List[Dict[str, str]],
+        model: str,
+        temperature: float = 0.7,
+        max_tokens: int = 2048,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Complete using Mistral AI"""
+        
+        if model.startswith("mistral/"):
+            model = model[8:]
+        if not model:
+            model = "mistral-small-latest"
+        
+        async def _call():
+            session = await self.pool.get_session()
+            async with session.post(
+                f"{self.base_url}/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": model,
+                    "messages": messages,
+                    "temperature": temperature,
+                    "max_tokens": max_tokens
+                }
+            ) as resp:
+                if resp.status != 200:
+                    text = await resp.text()
+                    raise Exception(f"Mistral error: {resp.status} - {text}")
+                data = await resp.json()
+                return {
+                    "content": data["choices"][0]["message"]["content"],
+                    "model": data.get("model", model),
+                    "usage": data.get("usage", {}),
+                    "provider": "mistral",
+                    "finish_reason": data["choices"][0].get("finish_reason", "stop")
+                }
+        
+        return await self.retry_handler.execute_with_retry("mistral", _call)
+
+
 # ============================================================
 # UNIFIED LLM GATEWAY
 # ============================================================
@@ -752,18 +1452,37 @@ class UnifiedLLMGateway:
         self.openrouter = OpenRouterProvider()
         self.deepseek = DeepSeekProvider()
         self.together = TogetherAIProvider()
+        self.huggingface = HuggingFaceProvider()
+        self.cohere = CohereProvider()
+        self.gemini = GoogleGeminiProvider()
+        self.mistral = MistralProvider()
+        # New FREE/cheap providers
+        self.cerebras = CerebrasProvider()      # 3000 tok/sec FREE
+        self.sambanova = SambaNovaProvider()    # FREE tier
+        self.fireworks = FireworksAIProvider()  # $1 free credit
+        self.novita = NovitaAIProvider()        # Cheap inference
+        self.perplexity = PerplexityProvider()  # Search-grounded
         
         self.usage_tracker: Dict[str, Dict[str, float]] = {}
         self.pool = ConnectionPool()
         
-        # Provider priority for fallback
+        # Provider priority for fallback (FREE first, then CHEAP, then STANDARD)
         self.fallback_order = [
-            ("groq", self.groq),
-            ("ollama", self.ollama),
-            ("openrouter", self.openrouter),
-            ("deepseek", self.deepseek),
-            ("together_ai", self.together),
-            ("litellm", self.litellm),
+            ("groq", self.groq),                  # FREE - Fastest
+            ("cerebras", self.cerebras),          # FREE - 3000 tok/sec!
+            ("sambanova", self.sambanova),        # FREE - Fast
+            ("ollama", self.ollama),              # FREE - Local
+            ("openrouter", self.openrouter),      # FREE tier available
+            ("gemini", self.gemini),              # FREE 60 RPM
+            ("huggingface", self.huggingface),    # FREE tier
+            ("cohere", self.cohere),              # FREE 1000/month
+            ("mistral", self.mistral),            # FREE tier
+            ("fireworks", self.fireworks),        # $1 free credit
+            ("novita", self.novita),              # CHEAP
+            ("deepseek", self.deepseek),          # CHEAP
+            ("together_ai", self.together),       # CHEAP
+            ("perplexity", self.perplexity),      # Search-grounded (paid)
+            ("litellm", self.litellm),            # Fallback to any
         ]
         
     async def initialize(self):
@@ -978,11 +1697,20 @@ class UnifiedLLMGateway:
     def _get_fallback_model(self, provider: str) -> Optional[str]:
         """Get the default model for a provider"""
         defaults = {
-            "groq": "groq/llama-3.1-70b-versatile",
+            "groq": "groq/llama-3.3-70b-versatile",
+            "cerebras": "cerebras/llama-3.3-70b",
+            "sambanova": "sambanova/Meta-Llama-3.1-405B-Instruct",
             "ollama": "ollama/llama3.1" if "llama3.1" in self.ollama.available_models else (
                 self.ollama.available_models[0] if self.ollama.available_models else None
             ),
             "openrouter": "openrouter/meta-llama/llama-3.1-8b-instruct:free",
+            "gemini": "google/gemini-1.5-flash",
+            "huggingface": "huggingface/meta-llama/Llama-3.2-3B-Instruct",
+            "cohere": "cohere/command-r",
+            "mistral": "mistral/mistral-small-latest",
+            "fireworks": "fireworks/accounts/fireworks/models/llama-v3p1-70b-instruct",
+            "novita": "novita/meta-llama/llama-3.3-70b-instruct",
+            "perplexity": "perplexity/llama-3.1-sonar-small-128k-online",
             "deepseek": "deepseek/deepseek-chat",
             "together_ai": "together_ai/meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo",
         }
@@ -1118,27 +1846,144 @@ Be objective and thorough in your analysis. If you cannot verify the claim, say 
                 continue
         
         if not results:
-            raise Exception("All models failed for consensus verification")
+            # Fallback to single model if consensus fails
+            logger.warning("Consensus failed, falling back to single model verification")
+            try:
+                result = await self.gateway.complete(
+                    messages=messages,
+                    model="auto",
+                    temperature=0.3,
+                    max_tokens=1024
+                )
+                return self._parse_result(result["content"], result["model"])
+            except Exception as e:
+                logger.error(f"Single model fallback also failed: {e}")
+                return {"verdict": "UNVERIFIABLE", "confidence": 0.3, "explanation": "LLM verification unavailable"}
         
         return self._aggregate_results(results)
     
     def _select_consensus_models(self, num_models: int) -> List[str]:
-        """Select diverse models for consensus"""
+        """Select diverse models for consensus - DEEP RESEARCH MODE
+        
+        This uses ALL available free models for maximum accuracy and consensus.
+        Minimum 4 models, maximum 8+ for enterprise-grade verification.
+        """
         available = []
         
-        # Prioritize diverse providers for better consensus
+        # ========== FREE TIER MODELS (Priority 1 - Use ALL) ==========
+        
+        # Cerebras - FASTEST (3000+ tok/sec) - Use first!
+        if self.gateway.cerebras.is_available:
+            available.extend([
+                "cerebras/llama-3.3-70b",            # Best Cerebras model
+                "cerebras/llama-3.1-8b",             # Fast backup
+                "cerebras/qwen-3-32b",               # Qwen model
+            ])
+        
+        # SambaNova - Fast and FREE
+        if self.gateway.sambanova.is_available:
+            available.extend([
+                "sambanova/Meta-Llama-3.1-405B-Instruct",  # 405B model FREE!
+                "sambanova/Meta-Llama-3.1-70B-Instruct",
+                "sambanova/DeepSeek-V3",
+            ])
+        
+        # Groq - Fast and free
         if self.gateway.groq.is_available:
-            available.append("groq/llama-3.1-70b-versatile")
-        if self.gateway.ollama.is_available and self.gateway.ollama.available_models:
-            available.append(f"ollama/{self.gateway.ollama.available_models[0]}")
+            available.extend([
+                "groq/llama-3.3-70b-versatile",      # Best Groq model
+                "groq/mixtral-8x7b-32768",           # Diverse architecture (MoE)
+                "groq/gemma2-9b-it",                 # Google's model
+                "groq/llama-3.1-8b-instant",         # Fast backup
+            ])
+        
+        # Google Gemini - 60 RPM free
+        if self.gateway.gemini.is_available:
+            available.extend([
+                "google/gemini-1.5-flash",           # Fast, 1M context
+                "google/gemini-1.5-pro",             # Best quality
+            ])
+        
+        # OpenRouter free models - Different providers for diversity
         if self.gateway.openrouter.is_available:
-            available.append("openrouter/google/gemma-2-9b-it:free")
+            available.extend([
+                "openrouter/meta-llama/llama-3.2-3b-instruct:free",
+                "openrouter/mistralai/mistral-7b-instruct:free",
+                "openrouter/meta-llama/llama-3.1-8b-instruct:free",
+                "openrouter/google/gemma-2-9b-it:free",
+                "openrouter/microsoft/phi-3-mini-128k-instruct:free",
+                "openrouter/huggingfaceh4/zephyr-7b-beta:free",
+            ])
+        
+        # Cohere - 1000/month free
+        if self.gateway.cohere.is_available:
+            available.extend([
+                "cohere/command-r",                  # Good for RAG
+            ])
+        
+        # Mistral - Free tier
+        if self.gateway.mistral.is_available:
+            available.extend([
+                "mistral/mistral-small-latest",
+            ])
+        
+        # HuggingFace - Free tier
+        if self.gateway.huggingface.is_available:
+            available.extend([
+                "huggingface/meta-llama/Llama-3.2-3B-Instruct",
+                "huggingface/mistralai/Mistral-7B-Instruct-v0.3",
+            ])
+        
+        # Fireworks AI - $1 free credit
+        if self.gateway.fireworks.is_available:
+            available.extend([
+                "fireworks/accounts/fireworks/models/llama-v3p1-70b-instruct",
+                "fireworks/accounts/fireworks/models/mixtral-8x22b-instruct",
+            ])
+        
+        # Perplexity - Search grounded (great for fact-checking!)
+        if self.gateway.perplexity.is_available:
+            available.extend([
+                "perplexity/llama-3.1-sonar-small-128k-online",  # Search grounded
+            ])
+        
+        # ========== LOCAL MODELS (Priority 2 - Free, private) ==========
+        if self.gateway.ollama.is_available and self.gateway.ollama.available_models:
+            for model in self.gateway.ollama.available_models[:5]:
+                available.append(f"ollama/{model}")
+        
+        # ========== CHEAP TIER (Priority 3 - Low cost backup) ==========
         if self.gateway.deepseek.is_available:
-            available.append("deepseek/deepseek-chat")
+            available.extend([
+                "deepseek/deepseek-chat",
+                "deepseek/deepseek-reasoner",        # R1 reasoning model
+            ])
+        
         if self.gateway.together.is_available:
-            available.append("together_ai/meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo")
-            
-        return available[:num_models]
+            available.extend([
+                "together_ai/meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo",
+                "together_ai/mistralai/Mixtral-8x22B-Instruct-v0.1",
+            ])
+        
+        if self.gateway.novita.is_available:
+            available.extend([
+                "novita/meta-llama/llama-3.3-70b-instruct",
+                "novita/deepseek/deepseek-v3",
+            ])
+        
+        # Ensure minimum 4 models for proper consensus
+        min_models = max(4, num_models)
+        
+        # Remove duplicates while preserving order
+        seen = set()
+        unique_available = []
+        for model in available:
+            if model not in seen:
+                seen.add(model)
+                unique_available.append(model)
+        
+        logger.info(f"Deep Research Mode: Selected {len(unique_available[:min_models])} models for consensus from {len(unique_available)} available")
+        return unique_available[:min_models]
     
     def _parse_result(self, content: str, model: str) -> Dict[str, Any]:
         """Parse LLM response into structured result"""

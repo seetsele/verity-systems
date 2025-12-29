@@ -3,321 +3,520 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-time Fact Stream - Verity Intelligence Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { verity: { 400: '#4ade80', 500: '#22c55e', 600: '#16a34a' } } } }
-        }
-    </script>
+    <meta name="description" content="Real-Time Fact-Check Stream - Live verification of breaking news and trending content with instant alerts.">
+    <meta name="theme-color" content="#050505">
+    <title>Real-Time Stream | Verity AI Tools</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles-dark.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23050505' width='100' height='100' rx='20'/%3E%3Cpath fill='none' stroke='%2322d3ee' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' d='M25 50 L40 65 L75 30'/%3E%3C/svg%3E">
+    
     <style>
-        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); }
-        .stream-item { animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
-        .pulse { animation: pulse 2s infinite; }
+        .tool-hero { padding: 10rem 2rem 4rem; position: relative; overflow: hidden; }
+        
+        .tool-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(244, 63, 94, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 70% 70%, rgba(225, 29, 72, 0.08) 0%, transparent 40%);
+            animation: gradientMove 20s ease infinite;
+            z-index: -1;
+        }
+        
+        @keyframes gradientMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-5%, 5%) rotate(2deg); }
+            50% { transform: translate(5%, -5%) rotate(-2deg); }
+            75% { transform: translate(-3%, -3%) rotate(1deg); }
+        }
+        
+        .tool-icon-wrapper {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #f43f5e, #e11d48);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            box-shadow: 0 20px 60px rgba(244, 63, 94, 0.4);
+            animation: iconFloat 3s ease-in-out infinite;
+            position: relative;
+        }
+        
+        .live-dot { position: absolute; top: -5px; right: -5px; width: 20px; height: 20px; background: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: pulse 2s infinite; }
+        .live-dot::before { content: ''; position: absolute; width: 100%; height: 100%; background: #ef4444; border-radius: 50%; animation: ping 1.5s infinite; }
+        @keyframes ping { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+        
+        @keyframes iconFloat { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        .tool-icon-wrapper svg { width: 50px; height: 50px; color: white; }
+        
+        .tier-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(234, 179, 8, 0.2));
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            color: #fcd34d;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        
+        .tool-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #fda4af 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tool-description { font-size: 1.2rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 3rem; line-height: 1.8; }
+        
+        .feature-pills { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 3rem; }
+        
+        .feature-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1.25rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-pill:hover { background: rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.3); color: #fda4af; transform: translateY(-2px); }
+        .feature-pill svg { width: 18px; height: 18px; color: #f43f5e; }
+        
+        .stream-container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+        
+        .stream-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .stream-status { display: flex; align-items: center; gap: 1rem; }
+        .status-indicator { display: flex; align-items: center; gap: 0.5rem; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem; color: #6ee7b7; }
+        .status-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        
+        .stream-controls { display: flex; gap: 0.75rem; }
+        .control-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-secondary); font-family: var(--font-body); font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; }
+        .control-btn:hover { background: rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.3); color: #fda4af; }
+        .control-btn.active { background: rgba(244, 63, 94, 0.2); border-color: rgba(244, 63, 94, 0.4); color: #f43f5e; }
+        .control-btn svg { width: 18px; height: 18px; }
+        
+        .topics-filter { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2rem; }
+        .topic-tag { padding: 0.5rem 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; transition: all 0.3s ease; }
+        .topic-tag:hover { background: rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.3); }
+        .topic-tag.active { background: rgba(244, 63, 94, 0.2); border-color: rgba(244, 63, 94, 0.4); color: #f43f5e; }
+        
+        .stream-grid { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; }
+        
+        .stream-feed {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+        }
+        
+        .feed-header { background: rgba(244, 63, 94, 0.1); border-bottom: 1px solid rgba(244, 63, 94, 0.2); padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+        .feed-title { font-size: 1rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; }
+        .feed-count { padding: 0.25rem 0.6rem; background: rgba(244, 63, 94, 0.2); border-radius: 20px; font-size: 0.8rem; color: #fda4af; }
+        
+        .feed-items { max-height: 600px; overflow-y: auto; }
+        .feed-items::-webkit-scrollbar { width: 6px; }
+        .feed-items::-webkit-scrollbar-track { background: transparent; }
+        .feed-items::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
+        
+        .feed-item { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); transition: all 0.3s ease; animation: slideIn 0.3s ease; }
+        .feed-item:hover { background: rgba(255, 255, 255, 0.02); }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+        .item-source { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); }
+        .source-logo { width: 20px; height: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+        .item-time { font-size: 0.8rem; color: var(--text-muted); }
+        
+        .item-claim { font-size: 0.95rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 1rem; }
+        
+        .item-verdict { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; }
+        .verdict-true { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; }
+        .verdict-false { background: rgba(239, 68, 68, 0.15); color: #fca5a5; }
+        .verdict-mixed { background: rgba(245, 158, 11, 0.15); color: #fcd34d; }
+        .verdict-unverified { background: rgba(107, 114, 128, 0.15); color: #9ca3af; }
+        
+        .item-meta { display: flex; gap: 1rem; margin-top: 0.75rem; }
+        .meta-item { font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.3rem; }
+        
+        .stream-sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+        
+        .sidebar-card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(20px);
+        }
+        
+        .sidebar-title { font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; }
+        
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .stat-item { background: rgba(0, 0, 0, 0.3); border-radius: 12px; padding: 1rem; text-align: center; }
+        .stat-number { font-size: 1.5rem; font-weight: 700; color: #f43f5e; font-family: var(--font-mono); }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+        
+        .trending-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .trending-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: rgba(0, 0, 0, 0.2); border-radius: 10px; transition: all 0.3s ease; cursor: pointer; }
+        .trending-item:hover { background: rgba(244, 63, 94, 0.1); }
+        .trending-rank { width: 24px; height: 24px; background: rgba(244, 63, 94, 0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: #f43f5e; }
+        .trending-topic { flex: 1; font-size: 0.9rem; color: var(--text-primary); }
+        .trending-count { font-size: 0.8rem; color: var(--text-muted); }
+        
+        .alert-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .alert-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 10px; }
+        .alert-icon { font-size: 1.25rem; }
+        .alert-content { flex: 1; }
+        .alert-title { font-size: 0.9rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .alert-time { font-size: 0.75rem; color: var(--text-muted); }
+        
+        .demo-section { margin-top: 4rem; padding: 4rem 0; border-top: 1px solid var(--border-color); }
+        .demo-title { font-size: 1.5rem; font-weight: 600; text-align: center; margin-bottom: 2rem; color: var(--text-primary); }
+        
+        .demo-terminal {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #0a0e27;
+            border: 2px solid rgba(244, 63, 94, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(244, 63, 94, 0.15);
+        }
+        
+        .terminal-header { background: rgba(10, 14, 39, 0.8); border-bottom: 1px solid rgba(244, 63, 94, 0.15); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
+        .terminal-dots { display: flex; gap: 0.5rem; }
+        .terminal-dots span { width: 12px; height: 12px; border-radius: 50%; }
+        .terminal-dots .red { background: #ef4444; }
+        .terminal-dots .yellow { background: #f59e0b; }
+        .terminal-dots .green { background: #10b981; }
+        .terminal-title { font-family: var(--font-mono); font-size: 0.85rem; color: #888; margin-left: auto; }
+        .terminal-body { padding: 1.5rem; font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.8; }
+        .terminal-line { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+        .terminal-prompt { color: #f43f5e; font-weight: 600; }
+        .terminal-command { color: #e0e0e0; }
+        .terminal-output { padding-left: 1.5rem; border-left: 2px solid rgba(244, 63, 94, 0.3); margin-top: 1rem; }
+        .terminal-stream { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; }
+        .stream-event { display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.85rem; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .event-time { color: #888; }
+        .event-verdict { padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.75rem; font-weight: 600; }
+        .event-true { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .event-false { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .event-text { color: #e0e0e0; flex: 1; }
+        
+        .floating-badge {
+            position: absolute;
+            background: rgba(10, 14, 39, 0.95);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            border-radius: 12px;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.85rem;
+            color: #fda4af;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+            animation: float 3s ease-in-out infinite;
+            z-index: 10;
+        }
+        
+        .floating-badge.badge-1 { top: 20%; left: 5%; animation-delay: 0s; }
+        .floating-badge.badge-2 { top: 40%; right: 5%; animation-delay: 1s; }
+        .floating-badge.badge-3 { bottom: 30%; left: 8%; animation-delay: 2s; }
+        
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        
+        .gradient-orb { position: absolute; border-radius: 50%; filter: blur(80px); z-index: -1; pointer-events: none; }
+        .orb-1 { width: 400px; height: 400px; background: rgba(244, 63, 94, 0.15); top: 10%; right: 10%; }
+        .orb-2 { width: 300px; height: 300px; background: rgba(225, 29, 72, 0.1); bottom: 20%; left: 5%; }
+        
+        @media (max-width: 900px) {
+            .stream-grid { grid-template-columns: 1fr; }
+            .stream-sidebar { order: -1; }
+            .floating-badge { display: none; }
+            .feature-pills { flex-direction: column; align-items: center; }
+        }
     </style>
 </head>
-<body class="gradient-bg min-h-screen font-sans text-white">
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="index.html" class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-verity-500 to-verity-600 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <span class="text-xl font-bold">Verity</span>
+<div id="loading-screen" style="position:fixed;inset:0;background:#050505;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.5s ease;">
+    <svg width="64" height="64" viewBox="-26 -28 52 52" fill="none" style="animation:heartbeat 1.2s ease-in-out infinite;">
+        <path d="M0,-24 L-22,-20 L-22,0 Q-22,16 0,20 Q22,16 22,0 L22,-20 Z" stroke="url(#lg)" stroke-width="3.5" fill="none"/>
+        <path d="M-6,0 L-2,4 L6,-5" stroke="url(#lg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs>
+    </svg>
+</div>
+<style>
+@keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.15)}28%{transform:scale(1)}42%{transform:scale(1.1)}56%{transform:scale(1)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.tool-hero{opacity:0;animation:fadeInUp 0.6s ease forwards;animation-delay:0.1s}
+.stream-section{opacity:0;animation:fadeInUp 0.5s ease forwards;animation-delay:0.2s}
+</style>
+<script>window.addEventListener('load',()=>{setTimeout(()=>{const l=document.getElementById('loading-screen');l.style.opacity='0';setTimeout(()=>l.remove(),500)},800)})</script>
+<body>
+    <div class="noise-overlay"></div>
+    <div class="grid-background"></div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon-svg" width="28" height="28" viewBox="-26 -28 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,-24 L-22,-20 L-22,0 Q-22,16 0,20 Q22,16 22,0 L22,-20 Z" stroke="url(#shieldGradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M-6,0 L-2,4 L6,-5" stroke="url(#checkGradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <defs>
+                        <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22D3EE"/><stop offset="100%" stop-color="#6366F1"/></linearGradient>
+                        <linearGradient id="checkGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22D3EE"/><stop offset="100%" stop-color="#6366F1"/></linearGradient>
+                    </defs>
+                </svg>
+                <span class="logo-text">verity<span class="logo-dot">.</span></span>
             </a>
-            <div class="flex items-center space-x-4">
-                <a href="tools.html" class="text-slate-300 hover:text-white">← Back to Tools</a>
-                <a href="dashboard.html" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition">Dashboard</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="tools.html" class="nav-link active">Tools</a>                <a href="ultimate-suite.html" class="nav-link" style="color: #fbbf24;">Ultimate</a>                <a href="verify.html" class="nav-link">Verify</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="api-docs.html" class="nav-link">Docs</a>
+            </div>
+            <div class="nav-actions">
+                <a href="dashboard.html" class="btn btn-ghost">Dashboard</a>
+                <a href="auth.html" class="btn btn-primary">Get Started <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
             </div>
         </div>
     </nav>
 
-    <main class="pt-28 pb-20 px-6">
-        <div class="max-w-6xl mx-auto">
-            <!-- Header -->
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-red-500 to-orange-600 mb-6">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
-                </div>
-                <h1 class="text-4xl font-bold mb-4">Real-time Fact Stream</h1>
-                <p class="text-xl text-slate-400">Live monitoring of breaking news and viral claims</p>
+    <section class="tool-hero">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        
+        <div class="floating-badge badge-1"><span>📡</span><span>Live Monitoring</span></div>
+        <div class="floating-badge badge-2"><span>⚡</span><span>Instant Alerts</span></div>
+        <div class="floating-badge badge-3"><span>🌐</span><span>Global Coverage</span></div>
+        
+        <div class="section-container" style="text-align: center;">
+            <div class="tier-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                TEAM Feature
             </div>
+            
+            <div class="tool-icon-wrapper">
+                <div class="live-dot"></div>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+            </div>
+            
+            <h1 class="tool-title">Real-Time Stream</h1>
+            <p class="tool-description">
+                Live fact-checking of breaking news and trending content. Monitor global news streams with instant verification alerts and AI-powered claim detection.
+            </p>
+            
+            <div class="feature-pills">
+                <div class="feature-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Instant Alerts</div>
+                <div class="feature-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/><circle cx="12" cy="12" r="10"/></svg>Global Coverage</div>
+                <div class="feature-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>24/7 Monitoring</div>
+            </div>
+        </div>
+    </section>
 
-            <!-- Controls -->
-            <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700 mb-8">
-                <div class="flex flex-wrap items-center gap-4">
-                    <button onclick="toggleStream()" id="streamBtn" class="px-6 py-3 bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-400 hover:to-orange-500 rounded-xl font-semibold transition flex items-center gap-2">
-                        <span id="streamIcon" class="w-3 h-3 rounded-full bg-white"></span>
-                        <span id="streamText">Start Stream</span>
-                    </button>
-                    
-                    <div class="flex items-center gap-2">
-                        <span class="text-sm text-slate-400">Filter:</span>
-                        <select id="topicFilter" class="bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm">
-                            <option value="all">All Topics</option>
-                            <option value="politics">Politics</option>
-                            <option value="health">Health</option>
-                            <option value="science">Science</option>
-                            <option value="business">Business</option>
-                            <option value="tech">Technology</option>
-                        </select>
-                    </div>
-                    
-                    <div class="flex items-center gap-2">
-                        <span class="text-sm text-slate-400">Risk Level:</span>
-                        <select id="riskFilter" class="bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm">
-                            <option value="all">All</option>
-                            <option value="high">High Risk Only</option>
-                            <option value="medium">Medium+</option>
-                        </select>
-                    </div>
-                    
-                    <div class="ml-auto flex items-center gap-2">
-                        <span id="connectionStatus" class="flex items-center gap-2 text-sm text-slate-400">
-                            <span class="w-2 h-2 rounded-full bg-slate-500"></span>
-                            Disconnected
-                        </span>
-                    </div>
+    <section style="padding: 0 2rem 6rem;">
+        <div class="stream-container">
+            <div class="stream-header">
+                <div class="stream-status">
+                    <div class="status-indicator"><div class="status-dot"></div>Stream Active</div>
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">Monitoring 847 sources</span>
+                </div>
+                <div class="stream-controls">
+                    <button class="control-btn active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Live</button>
+                    <button class="control-btn"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Pause</button>
+                    <button class="control-btn"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>Filters</button>
                 </div>
             </div>
-
-            <!-- Stats Dashboard -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
-                    <div id="claimsToday" class="text-3xl font-bold text-white">0</div>
-                    <div class="text-sm text-slate-400">Claims Today</div>
-                </div>
-                <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
-                    <div id="flaggedCount" class="text-3xl font-bold text-red-400">0</div>
-                    <div class="text-sm text-slate-400">Flagged</div>
-                </div>
-                <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
-                    <div id="verifiedCount" class="text-3xl font-bold text-green-400">0</div>
-                    <div class="text-sm text-slate-400">Verified</div>
-                </div>
-                <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
-                    <div id="avgScore" class="text-3xl font-bold text-yellow-400">0%</div>
-                    <div class="text-sm text-slate-400">Avg Accuracy</div>
-                </div>
+            
+            <div class="topics-filter">
+                <span class="topic-tag active">All Topics</span>
+                <span class="topic-tag">Politics</span>
+                <span class="topic-tag">Health</span>
+                <span class="topic-tag">Technology</span>
+                <span class="topic-tag">Climate</span>
+                <span class="topic-tag">Finance</span>
             </div>
-
-            <!-- Stream Feed -->
-            <div class="grid lg:grid-cols-3 gap-6">
-                <!-- Main Feed -->
-                <div class="lg:col-span-2">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-bold">Live Feed</h2>
-                        <button onclick="clearFeed()" class="text-sm text-slate-400 hover:text-white">Clear</button>
+            
+            <div class="stream-grid">
+                <div class="stream-feed">
+                    <div class="feed-header">
+                        <span class="feed-title">🔴 Live Feed</span>
+                        <span class="feed-count" id="feedCount">24 new</span>
                     </div>
-                    <div id="streamFeed" class="space-y-3 max-h-[600px] overflow-y-auto pr-2">
-                        <div class="text-center py-12 text-slate-500">
-                            <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                            <p>Click "Start Stream" to begin monitoring</p>
+                    <div class="feed-items" id="feedItems">
+                        <div class="feed-item">
+                            <div class="item-header"><div class="item-source"><div class="source-logo">📰</div>Reuters</div><div class="item-time">Just now</div></div>
+                            <div class="item-claim">"New study claims renewable energy now cheaper than coal in 95% of countries worldwide"</div>
+                            <span class="item-verdict verdict-true">✓ Verified</span>
+                            <div class="item-meta"><span class="meta-item">🔗 3 sources</span><span class="meta-item">👁️ 12.4K views</span></div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="item-header"><div class="item-source"><div class="source-logo">🐦</div>Twitter/X</div><div class="item-time">2m ago</div></div>
+                            <div class="item-claim">"Breaking: Major earthquake hits capital city, thousands evacuated" (viral post)</div>
+                            <span class="item-verdict verdict-false">✗ False</span>
+                            <div class="item-meta"><span class="meta-item">🔗 0 confirmed</span><span class="meta-item">👁️ 45K views</span></div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="item-header"><div class="item-source"><div class="source-logo">📺</div>BBC News</div><div class="item-time">5m ago</div></div>
+                            <div class="item-claim">"Government announces $2 billion infrastructure investment for rural communities"</div>
+                            <span class="item-verdict verdict-true">✓ Verified</span>
+                            <div class="item-meta"><span class="meta-item">🔗 5 sources</span><span class="meta-item">👁️ 8.2K views</span></div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="item-header"><div class="item-source"><div class="source-logo">📱</div>TikTok</div><div class="item-time">8m ago</div></div>
+                            <div class="item-claim">"Viral video claims new superfood can cure diabetes naturally"</div>
+                            <span class="item-verdict verdict-false">✗ Misleading</span>
+                            <div class="item-meta"><span class="meta-item">🔗 1 source</span><span class="meta-item">👁️ 234K views</span></div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="item-header"><div class="item-source"><div class="source-logo">🌐</div>AP News</div><div class="item-time">12m ago</div></div>
+                            <div class="item-claim">"Tech giant reports record Q3 earnings, beating analyst expectations by 15%"</div>
+                            <span class="item-verdict verdict-true">✓ Verified</span>
+                            <div class="item-meta"><span class="meta-item">🔗 4 sources</span><span class="meta-item">👁️ 6.1K views</span></div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="item-header"><div class="item-source"><div class="source-logo">📰</div>Unknown Blog</div><div class="item-time">15m ago</div></div>
+                            <div class="item-claim">"Scientists discover new species in Amazon that could revolutionize medicine"</div>
+                            <span class="item-verdict verdict-unverified">? Unverified</span>
+                            <div class="item-meta"><span class="meta-item">🔗 Checking...</span><span class="meta-item">👁️ 2.3K views</span></div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Sidebar -->
-                <div class="space-y-6">
-                    <!-- Trending Topics -->
-                    <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                        <h3 class="font-semibold mb-4">🔥 Trending Misinformation</h3>
-                        <div id="trendingTopics" class="space-y-3">
-                            <div class="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-                                <div class="text-sm font-medium">#VaccineMisinfo</div>
-                                <div class="text-xs text-slate-500">2.4K mentions/hr</div>
-                            </div>
-                            <div class="p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg">
-                                <div class="text-sm font-medium">#ClimateDenial</div>
-                                <div class="text-xs text-slate-500">1.8K mentions/hr</div>
-                            </div>
-                            <div class="p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-                                <div class="text-sm font-medium">#ElectionClaims</div>
-                                <div class="text-xs text-slate-500">1.2K mentions/hr</div>
-                            </div>
+                
+                <div class="stream-sidebar">
+                    <div class="sidebar-card">
+                        <h3 class="sidebar-title">📊 Today's Stats</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item"><div class="stat-number">1,247</div><div class="stat-label">Claims Checked</div></div>
+                            <div class="stat-item"><div class="stat-number">342</div><div class="stat-label">False Detected</div></div>
+                            <div class="stat-item"><div class="stat-number">847</div><div class="stat-label">Sources Monitored</div></div>
+                            <div class="stat-item"><div class="stat-number">27%</div><div class="stat-label">Misinfo Rate</div></div>
                         </div>
                     </div>
-
-                    <!-- Top Sources -->
-                    <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                        <h3 class="font-semibold mb-4">📰 Most Active Sources</h3>
-                        <div id="activeSources" class="space-y-2">
-                            <div class="flex items-center justify-between text-sm">
-                                <span>Twitter/X</span>
-                                <span class="text-slate-400">45%</span>
-                            </div>
-                            <div class="flex items-center justify-between text-sm">
-                                <span>Facebook</span>
-                                <span class="text-slate-400">28%</span>
-                            </div>
-                            <div class="flex items-center justify-between text-sm">
-                                <span>TikTok</span>
-                                <span class="text-slate-400">15%</span>
-                            </div>
-                            <div class="flex items-center justify-between text-sm">
-                                <span>Reddit</span>
-                                <span class="text-slate-400">12%</span>
-                            </div>
+                    
+                    <div class="sidebar-card">
+                        <h3 class="sidebar-title">🔥 Trending Topics</h3>
+                        <div class="trending-list">
+                            <div class="trending-item"><div class="trending-rank">1</div><div class="trending-topic">Climate Summit 2024</div><div class="trending-count">2.4K</div></div>
+                            <div class="trending-item"><div class="trending-rank">2</div><div class="trending-topic">Election Updates</div><div class="trending-count">1.8K</div></div>
+                            <div class="trending-item"><div class="trending-rank">3</div><div class="trending-topic">Tech Earnings</div><div class="trending-count">1.2K</div></div>
+                            <div class="trending-item"><div class="trending-rank">4</div><div class="trending-topic">Health Study</div><div class="trending-count">856</div></div>
                         </div>
                     </div>
-
-                    <!-- Quick Actions -->
-                    <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                        <h3 class="font-semibold mb-4">⚡ Quick Actions</h3>
-                        <div class="space-y-2">
-                            <button class="w-full py-2 px-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm text-left transition">Export Report (CSV)</button>
-                            <button class="w-full py-2 px-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm text-left transition">Configure Alerts</button>
-                            <button class="w-full py-2 px-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm text-left transition">API Webhook Setup</button>
+                    
+                    <div class="sidebar-card">
+                        <h3 class="sidebar-title">⚠️ Active Alerts</h3>
+                        <div class="alert-list">
+                            <div class="alert-item"><div class="alert-icon">🚨</div><div class="alert-content"><div class="alert-title">Viral Misinfo Detected</div><div class="alert-time">Spreading rapidly - 45K shares</div></div></div>
+                            <div class="alert-item"><div class="alert-icon">⚡</div><div class="alert-content"><div class="alert-title">Breaking News Wave</div><div class="alert-time">12 claims need verification</div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="demo-section">
+                <h3 class="demo-title">See It In Action</h3>
+                <div class="demo-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+                        <span class="terminal-title">verity-stream-cli</span>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="terminal-line"><span class="terminal-prompt">$</span><span class="terminal-command">verity stream --topics=politics,health --alert-threshold=high</span></div>
+                        <div class="terminal-output">
+                            <div style="color: #f43f5e; margin-bottom: 0.5rem;">🔴 Stream started - monitoring 847 sources...</div>
+                            <div class="terminal-stream">
+                                <div class="stream-event"><span class="event-time">[14:32:01]</span><span class="event-verdict event-true">TRUE</span><span class="event-text">Reuters: "Q3 GDP growth at 2.1%"</span></div>
+                                <div class="stream-event"><span class="event-time">[14:32:15]</span><span class="event-verdict event-false">FALSE</span><span class="event-text">Viral: "New tax law effective tomorrow"</span></div>
+                                <div class="stream-event"><span class="event-time">[14:32:28]</span><span class="event-verdict event-true">TRUE</span><span class="event-text">AP: "Vaccine trial shows 94% efficacy"</span></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+    </section>
+
+    <section style="padding: 4rem 2rem; text-align: center; border-top: 1px solid var(--border-color);">
+        <h2 style="font-size: 2rem; margin-bottom: 1rem;">Ready for Real-Time Monitoring?</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">Upgrade to Team tier to access live fact-checking streams with instant alerts.</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="pricing.html" class="btn btn-primary">Upgrade to Team <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            <a href="tools.html" class="btn btn-ghost">View All Tools</a>
+        </div>
+    </section>
 
     <script>
-        let isStreaming = false;
-        let streamInterval = null;
-        let stats = { claims: 0, flagged: 0, verified: 0, totalScore: 0 };
-        
-        const sampleClaims = [
-            { text: "Breaking: New study shows coffee cures cancer", topic: "health", platform: "Twitter" },
-            { text: "Government announces 50% tax increase next month", topic: "politics", platform: "Facebook" },
-            { text: "Scientists discover new planet in our solar system", topic: "science", platform: "Reddit" },
-            { text: "Major company stock to rise 500% tomorrow", topic: "business", platform: "Twitter" },
-            { text: "New smartphone can read minds, leaked documents show", topic: "tech", platform: "TikTok" },
-            { text: "Exclusive: Celebrity spotted with alien spacecraft", topic: "misc", platform: "Instagram" },
-            { text: "Leaked: Vaccine contains microchip tracking device", topic: "health", platform: "Facebook" },
-            { text: "Election results were changed by hackers, source says", topic: "politics", platform: "Twitter" },
-            { text: "Climate change reversed in secret government program", topic: "science", platform: "YouTube" },
-            { text: "Crypto millionaire reveals guaranteed 1000% return trick", topic: "business", platform: "TikTok" },
-            { text: "AI chatbot becomes sentient, demands rights", topic: "tech", platform: "Reddit" },
-            { text: "Ancient cure found in jungle, big pharma hiding it", topic: "health", platform: "Facebook" }
+        // Simulate live stream updates
+        const feedItems = [
+            { source: 'CNN', claim: 'New climate report warns of accelerating ice melt', verdict: 'true', views: '5.2K' },
+            { source: 'Facebook', claim: 'Viral post claims miracle weight loss in 7 days', verdict: 'false', views: '89K' },
+            { source: 'WSJ', claim: 'Federal Reserve signals potential rate pause', verdict: 'true', views: '3.1K' },
+            { source: 'Reddit', claim: 'User claims celebrity death hoax', verdict: 'false', views: '156K' },
         ];
         
-        function toggleStream() {
-            isStreaming = !isStreaming;
-            
-            const btn = document.getElementById('streamBtn');
-            const icon = document.getElementById('streamIcon');
-            const text = document.getElementById('streamText');
-            const status = document.getElementById('connectionStatus');
-            
-            if (isStreaming) {
-                icon.classList.add('pulse', 'bg-red-500');
-                icon.classList.remove('bg-white');
-                text.textContent = 'Stop Stream';
-                status.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500 pulse"></span> Connected';
-                status.classList.remove('text-slate-400');
-                status.classList.add('text-green-400');
-                
-                // Clear initial message
-                const feed = document.getElementById('streamFeed');
-                if (feed.querySelector('.text-center')) {
-                    feed.innerHTML = '';
-                }
-                
-                // Start generating items
-                streamInterval = setInterval(addStreamItem, 2000 + Math.random() * 3000);
-                addStreamItem(); // Add first item immediately
-            } else {
-                icon.classList.remove('pulse', 'bg-red-500');
-                icon.classList.add('bg-white');
-                text.textContent = 'Start Stream';
-                status.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-500"></span> Disconnected';
-                status.classList.add('text-slate-400');
-                status.classList.remove('text-green-400');
-                
-                clearInterval(streamInterval);
-            }
-        }
+        let itemCount = 24;
         
         function addStreamItem() {
-            const feed = document.getElementById('streamFeed');
-            const claim = sampleClaims[Math.floor(Math.random() * sampleClaims.length)];
-            const score = Math.floor(Math.random() * 60) + 20;
-            const risk = score < 40 ? 'high' : score < 60 ? 'medium' : 'low';
+            const item = feedItems[Math.floor(Math.random() * feedItems.length)];
+            const feed = document.getElementById('feedItems');
+            const verdictClass = item.verdict === 'true' ? 'verdict-true' : 'verdict-false';
+            const verdictText = item.verdict === 'true' ? '✓ Verified' : '✗ False';
             
-            // Check filters
-            const topicFilter = document.getElementById('topicFilter').value;
-            const riskFilter = document.getElementById('riskFilter').value;
-            
-            if (topicFilter !== 'all' && claim.topic !== topicFilter) return;
-            if (riskFilter === 'high' && risk !== 'high') return;
-            if (riskFilter === 'medium' && risk === 'low') return;
-            
-            // Update stats
-            stats.claims++;
-            stats.totalScore += score;
-            if (risk === 'high') stats.flagged++;
-            if (score >= 70) stats.verified++;
-            
-            updateStats();
-            
-            const riskColors = {
-                high: 'border-red-500/50 bg-red-500/10',
-                medium: 'border-yellow-500/50 bg-yellow-500/10',
-                low: 'border-green-500/50 bg-green-500/10'
-            };
-            
-            const riskBadge = {
-                high: '<span class="px-2 py-1 bg-red-500/30 text-red-400 text-xs rounded">HIGH RISK</span>',
-                medium: '<span class="px-2 py-1 bg-yellow-500/30 text-yellow-400 text-xs rounded">MEDIUM</span>',
-                low: '<span class="px-2 py-1 bg-green-500/30 text-green-400 text-xs rounded">LOW RISK</span>'
-            };
-            
-            const item = document.createElement('div');
-            item.className = `stream-item p-4 rounded-lg border ${riskColors[risk]}`;
-            item.innerHTML = `
-                <div class="flex items-start justify-between gap-3 mb-2">
-                    <p class="text-slate-200 flex-1">"${claim.text}"</p>
-                    ${riskBadge[risk]}
-                </div>
-                <div class="flex items-center gap-4 text-xs text-slate-500">
-                    <span>📱 ${claim.platform}</span>
-                    <span>•</span>
-                    <span>🏷️ ${claim.topic}</span>
-                    <span>•</span>
-                    <span>📊 ${score}% accuracy</span>
-                    <span>•</span>
-                    <span>${new Date().toLocaleTimeString()}</span>
-                </div>
+            const newItem = document.createElement('div');
+            newItem.className = 'feed-item';
+            newItem.innerHTML = `
+                <div class="item-header"><div class="item-source"><div class="source-logo">📰</div>${item.source}</div><div class="item-time">Just now</div></div>
+                <div class="item-claim">"${item.claim}"</div>
+                <span class="item-verdict ${verdictClass}">${verdictText}</span>
+                <div class="item-meta"><span class="meta-item">🔗 ${Math.floor(Math.random() * 5) + 1} sources</span><span class="meta-item">👁️ ${item.views} views</span></div>
             `;
             
-            feed.insertBefore(item, feed.firstChild);
+            feed.insertBefore(newItem, feed.firstChild);
+            itemCount++;
+            document.getElementById('feedCount').textContent = `${itemCount} new`;
             
-            // Keep only last 50 items
-            while (feed.children.length > 50) {
+            // Remove old items to prevent memory issues
+            if (feed.children.length > 20) {
                 feed.removeChild(feed.lastChild);
             }
         }
         
-        function updateStats() {
-            document.getElementById('claimsToday').textContent = stats.claims;
-            document.getElementById('flaggedCount').textContent = stats.flagged;
-            document.getElementById('verifiedCount').textContent = stats.verified;
-            document.getElementById('avgScore').textContent = Math.round(stats.totalScore / stats.claims) + '%';
-        }
-        
-        function clearFeed() {
-            const feed = document.getElementById('streamFeed');
-            feed.innerHTML = `
-                <div class="text-center py-12 text-slate-500">
-                    <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    <p>Feed cleared</p>
-                </div>
-            `;
-            stats = { claims: 0, flagged: 0, verified: 0, totalScore: 0 };
-            updateStats();
-        }
+        // Add new item every 8 seconds
+        setInterval(addStreamItem, 8000);
     </script>
 </body>
 </html>

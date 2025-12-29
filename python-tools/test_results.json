@@ -1,0 +1,56 @@
+{
+  "total": 37,
+  "passed": 35,
+  "failed": 2,
+  "accuracy": 94.5945945945946,
+  "avg_response_time_ms": 2252.3377328305633,
+  "avg_confidence": 0.9291729729729729,
+  "by_category": {
+    "geography": {
+      "passed": 5,
+      "total": 5
+    },
+    "science": {
+      "passed": 13,
+      "total": 14
+    },
+    "history": {
+      "passed": 8,
+      "total": 8
+    },
+    "statistics": {
+      "passed": 4,
+      "total": 5
+    },
+    "misinformation": {
+      "passed": 1,
+      "total": 1
+    },
+    "health": {
+      "passed": 2,
+      "total": 2
+    },
+    "conspiracy": {
+      "passed": 2,
+      "total": 2
+    }
+  },
+  "failures": [
+    {
+      "claim": "The speed of light is exactly 299,792 kilometers per second",
+      "expected": "true",
+      "actual": "mixed",
+      "category": "science",
+      "notes": ""
+    },
+    {
+      "claim": "India has the largest population in the world as of 2024",
+      "expected": "true",
+      "actual": "false",
+      "category": "statistics",
+      "notes": ""
+    }
+  ],
+  "target_met": true,
+  "timestamp": "2025-12-29T14:58:57.908079"
+}
