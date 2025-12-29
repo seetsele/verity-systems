@@ -22,6 +22,7 @@ import signal
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
 from contextlib import asynccontextmanager
+from pathlib import Path
 import logging
 import json
 import hashlib
@@ -62,6 +63,14 @@ from verity_quota_manager import (
     PlanTier,
     PlanLimits,
     QuotaManager
+)
+
+# Import Redis quota manager (production)
+from verity_redis_quota import (
+    get_redis_quota_manager,
+    get_redis_cache,
+    RedisQuotaManager,
+    RedisCache
 )
 
 # Configure logging
@@ -124,6 +133,23 @@ async def lifespan(app: FastAPI):
     app.state.metrics = MetricsCollector()
     app.state.shutdown = GracefulShutdown()
     
+    # Initialize Redis quota manager and cache
+    if config.REDIS_URL:
+        try:
+            app.state.redis_quota = get_redis_quota_manager(config.REDIS_URL)
+            app.state.redis_cache = get_redis_cache(config.REDIS_URL)
+            # Test connection
+            await app.state.redis_quota._get_client()
+            logger.info("[OK] Redis Cloud connected for quotas and caching")
+        except Exception as e:
+            logger.warning(f"[WARN] Redis connection failed, falling back to file-based: {e}")
+            app.state.redis_quota = None
+            app.state.redis_cache = None
+    else:
+        logger.info("[INFO] No REDIS_URL configured, using file-based quota manager")
+        app.state.redis_quota = None
+        app.state.redis_cache = None
+    
     # Track startup
     app.state.startup_time = datetime.now()
     app.state.request_count = 0
@@ -134,6 +160,13 @@ async def lifespan(app: FastAPI):
     
     # Graceful shutdown
     logger.info("Shutting down Verity API Server v4.0...")
+    
+    # Close Redis connections
+    if app.state.redis_quota:
+        await app.state.redis_quota.close()
+    if app.state.redis_cache:
+        await app.state.redis_cache.close()
+    
     await shutdown_verifier()
     logger.info("Shutdown complete")
 
@@ -341,9 +374,21 @@ def check_feature_access(tier: str, feature: str) -> bool:
         "monte_carlo": limits.monte_carlo,
         "temporal_geo": limits.temporal_geo,
         "similar_claims": limits.similar_claims,
+        "deep_research": limits.deep_research,
     }
     
     return feature_map.get(feature, True)  # Default allow for basic features
+
+
+def get_tier_llm_limit(tier: str) -> int:
+    """Get the LLM model limit for a tier"""
+    try:
+        plan_tier = PlanTier(tier.lower())
+    except ValueError:
+        plan_tier = PlanTier.FREE
+    
+    limits = PlanLimits.get_limits(plan_tier)
+    return limits.llm_models
 
 
 # ============================================================
@@ -382,6 +427,26 @@ async def detailed_health():
         "uptime_seconds": uptime,
         "total_requests": app.state.request_count
     }
+    
+    # Add Redis status
+    if hasattr(app.state, 'redis_cache') and app.state.redis_cache:
+        try:
+            cache_stats = await app.state.redis_cache.get_stats()
+            health["redis"] = {
+                "status": "connected" if cache_stats.get("connected") else "disconnected",
+                "cached_verifications": cache_stats.get("cached_verifications", 0),
+                "memory_used": cache_stats.get("memory_used", "unknown")
+            }
+        except Exception as e:
+            health["redis"] = {
+                "status": "error",
+                "error": str(e)
+            }
+    else:
+        health["redis"] = {
+            "status": "not_configured",
+            "note": "Using file-based quota storage"
+        }
     
     return health
 
@@ -453,9 +518,13 @@ async def get_quota_status(req: Request):
     Returns daily and monthly usage limits and remaining quota.
     """
     user_id, tier = get_user_tier(req)
-    quota_manager = get_quota_manager()
     
-    usage = quota_manager.get_usage(user_id, tier)
+    # Use Redis if available, otherwise fall back to file-based
+    if hasattr(app.state, 'redis_quota') and app.state.redis_quota:
+        usage = await app.state.redis_quota.get_usage(user_id, tier)
+    else:
+        quota_manager = get_quota_manager()
+        usage = quota_manager.get_usage(user_id, tier)
     
     return {
         "user_id": usage["user_id"],
@@ -492,6 +561,7 @@ async def get_available_plans():
                 "verifications_per_month": limits.verifications_per_month if limits.verifications_per_month < 999999 else "unlimited",
                 "verifications_per_day": limits.verifications_per_day if limits.verifications_per_day < 999999 else "unlimited",
                 "data_sources": limits.data_sources,
+                "llm_models": limits.llm_models if limits.llm_models < 999999 else "unlimited",
                 "team_members": limits.team_members if limits.team_members < 999999 else "unlimited"
             },
             "features": {
@@ -501,6 +571,7 @@ async def get_available_plans():
                 "monte_carlo": limits.monte_carlo,
                 "temporal_geo": limits.temporal_geo,
                 "similar_claims": limits.similar_claims,
+                "deep_research": limits.deep_research,
                 "priority_support": limits.priority_support
             }
         })
@@ -531,16 +602,53 @@ async def verify_claim(request: VerifyRequest, req: Request):
     request_id = req.state.request_id
     
     try:
-        # Check quota
+        # Check quota (use Redis if available)
         user_id, tier = get_user_tier(req)
-        quota_manager = get_quota_manager()
         
-        allowed, quota_details = quota_manager.check_quota(user_id, tier)
+        if hasattr(app.state, 'redis_quota') and app.state.redis_quota:
+            # Redis-based quota checking
+            allowed, quota_details = await app.state.redis_quota.check_quota(user_id, tier)
+            
+            # Also check rate limit
+            rate_ok, rate_details = await app.state.redis_quota.check_rate_limit(user_id, tier)
+            if not rate_ok:
+                raise HTTPException(
+                    status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                    detail=rate_details,
+                    headers={"Retry-After": str(rate_details.get("retry_after_seconds", 60))}
+                )
+        else:
+            # File-based quota checking
+            quota_manager = get_quota_manager()
+            allowed, quota_details = quota_manager.check_quota(user_id, tier)
+        
         if not allowed:
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 detail=quota_details
             )
+        
+        # Check Redis cache first
+        cache_hit = False
+        if hasattr(app.state, 'redis_cache') and app.state.redis_cache:
+            cached_result = await app.state.redis_cache.get(request.claim)
+            if cached_result:
+                cache_hit = True
+                processing_time = (time.time() - start_time) * 1000
+                
+                return VerifyResponse(
+                    request_id=request_id,
+                    claim=request.claim,
+                    verdict=cached_result.get("verdict", "UNKNOWN"),
+                    confidence=cached_result.get("confidence", 0.0),
+                    summary=cached_result.get("summary", ""),
+                    explanation=cached_result.get("explanation", ""),
+                    source_count=cached_result.get("source_count", 0),
+                    warnings=cached_result.get("warnings", []),
+                    processing_time_ms=round(processing_time, 2),
+                    cache_hit=True,
+                    timestamp=datetime.now().isoformat()
+                )
         
         verifier: EnhancedVerifier = app.state.verifier
         
@@ -551,12 +659,16 @@ async def verify_claim(request: VerifyRequest, req: Request):
             options=request.options
         )
         
-        # Record usage on success
-        quota_manager.record_usage(user_id, tier)
+        # Record usage on success (use Redis if available)
+        if hasattr(app.state, 'redis_quota') and app.state.redis_quota:
+            await app.state.redis_quota.record_usage(user_id, tier)
+        else:
+            quota_manager = get_quota_manager()
+            quota_manager.record_usage(user_id, tier)
         
         processing_time = (time.time() - start_time) * 1000
         
-        return VerifyResponse(
+        response_data = VerifyResponse(
             request_id=request_id,
             claim=request.claim,
             verdict=result.status.value,
@@ -570,11 +682,26 @@ async def verify_claim(request: VerifyRequest, req: Request):
             timestamp=datetime.now().isoformat()
         )
         
+        # Cache the result in Redis
+        if hasattr(app.state, 'redis_cache') and app.state.redis_cache:
+            await app.state.redis_cache.set(request.claim, {
+                "verdict": result.status.value,
+                "confidence": round(result.confidence_score, 4),
+                "summary": result.summary,
+                "explanation": result.explanation,
+                "source_count": len(result.traditional_sources) + len(result.extended_sources),
+                "warnings": result.warnings
+            })
+        
+        return response_data
+        
     except RateLimitExceededError as e:
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             detail="Rate limit exceeded. Please try again later."
         )
+    except HTTPException:
+        raise  # Re-raise HTTP exceptions as-is
     except Exception as e:
         logger.error(f"Verification error: {e}", request_id=request_id)
         raise HTTPException(
@@ -1456,6 +1583,93 @@ async def stripe_webhook(req: Request):
     except Exception as e:
         logger.error(f"Webhook error: {e}")
         raise HTTPException(status_code=400, detail=str(e))
+
+
+# ============================================================
+# WAITLIST
+# ============================================================
+
+class WaitlistEntry(BaseModel):
+    firstName: str
+    lastName: str
+    email: str
+    useCase: str
+    organization: Optional[str] = None
+
+@app.post("/api/v1/waitlist", tags=["Waitlist"])
+async def join_waitlist(entry: WaitlistEntry):
+    """
+    Add a user to the waitlist.
+    
+    Stores waitlist entries in a JSON file for demo purposes.
+    In production, use a proper database.
+    """
+    import json
+    from datetime import datetime
+    
+    waitlist_file = Path(__file__).parent / "waitlist.json"
+    
+    # Load existing entries
+    entries = []
+    if waitlist_file.exists():
+        try:
+            with open(waitlist_file, "r") as f:
+                entries = json.load(f)
+        except:
+            entries = []
+    
+    # Check for duplicate email
+    for existing in entries:
+        if existing.get("email") == entry.email:
+            return {
+                "success": True,
+                "message": "You're already on the waitlist!",
+                "position": entries.index(existing) + 1
+            }
+    
+    # Add new entry
+    new_entry = {
+        "id": len(entries) + 1,
+        "firstName": entry.firstName,
+        "lastName": entry.lastName,
+        "email": entry.email,
+        "useCase": entry.useCase,
+        "organization": entry.organization,
+        "timestamp": datetime.now().isoformat(),
+        "status": "pending"
+    }
+    entries.append(new_entry)
+    
+    # Save
+    with open(waitlist_file, "w") as f:
+        json.dump(entries, f, indent=2)
+    
+    logger.info(f"New waitlist signup: {entry.email}")
+    
+    return {
+        "success": True,
+        "message": "Welcome to the waitlist!",
+        "position": len(entries),
+        "total": len(entries)
+    }
+
+@app.get("/api/v1/waitlist/count", tags=["Waitlist"])
+async def get_waitlist_count():
+    """Get the current waitlist count."""
+    import json
+    
+    waitlist_file = Path(__file__).parent / "waitlist.json"
+    
+    count = 2847  # Base count for display
+    if waitlist_file.exists():
+        try:
+            with open(waitlist_file, "r") as f:
+                entries = json.load(f)
+                count += len(entries)
+        except:
+            pass
+    
+    return {"count": count}
 
 
 # ============================================================

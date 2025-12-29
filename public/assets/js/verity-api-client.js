@@ -8,7 +8,7 @@
 
 class VerityAPIClient {
     constructor(options = {}) {
-        this.apiBase = options.apiBase || 'http://localhost:8000';
+        this.apiBase = options.apiBase || 'http://localhost:8081';
         this.apiKey = options.apiKey || null;
         this.timeout = options.timeout || 30000;
         this.useDemo = options.useDemo || false;
@@ -116,7 +116,7 @@ class VerityAPIClient {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), this.timeout);
         
-        const response = await fetch(`${this.apiBase}/v3/verify`, {
+        const response = await fetch(`${this.apiBase}/api/v4/verify`, {
             method: 'POST',
             headers: this.getHeaders(),
             body: JSON.stringify(requestBody),
@@ -146,7 +146,7 @@ class VerityAPIClient {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 5000);
                 
-                const response = await fetch(`${this.apiBase}/v3/quick-check`, {
+                const response = await fetch(`${this.apiBase}/api/v4/quick-check`, {
                     method: 'POST',
                     headers: this.getHeaders(),
                     body: JSON.stringify({ claim }),
@@ -173,7 +173,7 @@ class VerityAPIClient {
     async verifyBatch(claims, options = {}) {
         if (this.apiAvailable && !this.useDemo) {
             try {
-                const response = await fetch(`${this.apiBase}/v3/verify/batch`, {
+                const response = await fetch(`${this.apiBase}/api/v4/batch`, {
                     method: 'POST',
                     headers: this.getHeaders(),
                     body: JSON.stringify({
@@ -205,7 +205,7 @@ class VerityAPIClient {
     async analyzeClaim(claim) {
         if (this.apiAvailable && !this.useDemo) {
             try {
-                const response = await fetch(`${this.apiBase}/v3/analyze-claim`, {
+                const response = await fetch(`${this.apiBase}/api/v4/analyze`, {
                     method: 'POST',
                     headers: this.getHeaders(),
                     body: JSON.stringify({ claim }),
@@ -230,7 +230,7 @@ class VerityAPIClient {
     async getProviders() {
         if (this.apiAvailable) {
             try {
-                const response = await fetch(`${this.apiBase}/v3/providers`, {
+                const response = await fetch(`${this.apiBase}/api/v4/providers`, {
                     method: 'GET',
                     headers: this.getHeaders()
                 });
@@ -615,7 +615,7 @@ class VerityAPIClient {
 // Create global instance
 window.VerityAPIClient = VerityAPIClient;
 window.verity = new VerityAPIClient({
-    apiBase: 'http://localhost:8000',
+    apiBase: 'http://localhost:8081',
     useDemo: false  // Will auto-fallback to demo if API unavailable
 });
 

@@ -35,6 +35,8 @@ class PlanLimits:
     monte_carlo: bool
     temporal_geo: bool
     similar_claims: bool
+    deep_research: bool  # Deep Research Mode with 4-8 LLMs, 20+ sources
+    llm_models: int  # Number of LLM models for consensus
     team_members: int
     priority_support: bool
     
@@ -52,6 +54,8 @@ class PlanLimits:
                 monte_carlo=False,
                 temporal_geo=False,
                 similar_claims=False,
+                deep_research=False,  # Limited to 2 LLMs, 5 sources
+                llm_models=2,
                 team_members=1,
                 priority_support=False
             ),
@@ -65,6 +69,8 @@ class PlanLimits:
                 monte_carlo=False,
                 temporal_geo=False,
                 similar_claims=True,
+                deep_research=True,  # Full Deep Research: 4-8 LLMs, 20+ sources
+                llm_models=8,
                 team_members=1,
                 priority_support=False
             ),
@@ -78,6 +84,8 @@ class PlanLimits:
                 monte_carlo=True,
                 temporal_geo=True,
                 similar_claims=True,
+                deep_research=True,  # Full Deep Research: 4-8 LLMs, 20+ sources
+                llm_models=8,
                 team_members=5,
                 priority_support=True
             ),
@@ -91,6 +99,8 @@ class PlanLimits:
                 monte_carlo=True,
                 temporal_geo=True,
                 similar_claims=True,
+                deep_research=True,  # Full Deep Research: 4-8 LLMs, 20+ sources
+                llm_models=15,  # Access to ALL LLM models
                 team_members=999999,
                 priority_support=True
             )

@@ -26,6 +26,10 @@ mistralai==0.1.8
 # Cohere
 cohere==4.47
 
+# Microsoft Azure AI Foundry
+azure-ai-projects>=1.0.0
+azure-identity>=1.25.0
+
 # ===========================================
 # UNIFIED LLM GATEWAY (NEW v5.0)
 # ===========================================

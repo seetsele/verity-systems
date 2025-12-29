@@ -5,7 +5,7 @@
 
 class VerityClient {
     constructor(options = {}) {
-        this.baseURL = options.baseURL || 'http://localhost:8000';
+        this.baseURL = options.baseURL || 'http://localhost:8081';
         this.apiKey = options.apiKey || null;
         this.accessToken = options.accessToken || null;
         this.onError = options.onError || console.error;
@@ -112,7 +112,7 @@ class VerityClient {
      * @returns {Promise<object>} Verification result
      */
     async verifyClaim(claim, options = {}) {
-        return this._request('/v1/verify', {
+        return this._request('/api/v4/verify', {
             method: 'POST',
             body: JSON.stringify({
                 claim,
@@ -130,7 +130,7 @@ class VerityClient {
      * @returns {Promise<object>} Detailed verification result
      */
     async verifyClaimDetailed(claim, options = {}) {
-        return this._request('/v1/verify/detailed', {
+        return this._request('/api/v4/verify/detailed', {
             method: 'POST',
             body: JSON.stringify({
                 claim,
@@ -148,7 +148,7 @@ class VerityClient {
      * @returns {Promise<object>} Batch verification results
      */
     async verifyBatch(claims, options = {}) {
-        return this._request('/v1/verify/batch', {
+        return this._request('/api/v4/batch', {
             method: 'POST',
             body: JSON.stringify({
                 claims,
@@ -166,7 +166,7 @@ class VerityClient {
      * @returns {Promise<object>} List of providers
      */
     async getProviders() {
-        return this._request('/v1/providers');
+        return this._request('/api/v4/providers');
     }
 
     /**
@@ -174,7 +174,7 @@ class VerityClient {
      * @returns {Promise<object>} Usage statistics
      */
     async getUsage() {
-        return this._request('/v1/usage');
+        return this._request('/api/v4/quota');
     }
 
     /**

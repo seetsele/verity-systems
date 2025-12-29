@@ -714,12 +714,16 @@ class YouComProvider:
 
 class SemanticScholarProvider:
     """
-    Semantic Scholar API - Free, no key required
+    Semantic Scholar API - With API key for higher rate limits
     Best for: Scientific and academic claim verification
+    Rate limit: 1 request per second with API key
     """
+    
+    _last_request_time = 0  # Class-level rate limiting
     
     def __init__(self):
         self.base_url = "https://api.semanticscholar.org/graph/v1/paper/search"
+        self.api_key = os.getenv('SEMANTIC_SCHOLAR_API_KEY')
     
     @property
     def name(self) -> str:
@@ -727,10 +731,25 @@ class SemanticScholarProvider:
     
     @property
     def is_available(self) -> bool:
-        return True  # No API key required
+        return True  # Works without key, but key gives better rate limits
+    
+    async def _rate_limit(self):
+        """Enforce 1 request per second rate limit"""
+        import time
+        current_time = time.time()
+        time_since_last = current_time - SemanticScholarProvider._last_request_time
+        if time_since_last < 1.0:  # 1 second between requests
+            await asyncio.sleep(1.0 - time_since_last)
+        SemanticScholarProvider._last_request_time = time.time()
     
     async def check_claim(self, claim: str) -> List[Dict]:
         try:
+            await self._rate_limit()  # Enforce rate limit
+            
+            headers = {}
+            if self.api_key:
+                headers['x-api-key'] = self.api_key
+            
             async with aiohttp.ClientSession() as session:
                 params = {
                     'query': claim,
@@ -738,7 +757,7 @@ class SemanticScholarProvider:
                     'fields': 'title,abstract,year,citationCount,url,authors,venue'
                 }
                 
-                async with session.get(self.base_url, params=params) as response:
+                async with session.get(self.base_url, params=params, headers=headers) as response:
                     if response.status == 200:
                         data = await response.json()
                         results = []

@@ -3,302 +3,620 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Source Credibility Checker - Verity Intelligence Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { verity: { 400: '#4ade80', 500: '#22c55e', 600: '#16a34a' } } } }
-        }
-    </script>
+    <meta name="description" content="Source Credibility Checker - Analyze and rate the credibility of news sources, websites, and publications with AI-powered verification.">
+    <meta name="theme-color" content="#050505">
+    <title>Source Credibility Checker | Verity AI Tools</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles-dark.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23050505' width='100' height='100' rx='20'/%3E%3Cpath fill='none' stroke='%2322d3ee' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' d='M25 50 L40 65 L75 30'/%3E%3C/svg%3E">
+    
     <style>
-        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); }
+        .tool-hero { padding: 10rem 2rem 4rem; position: relative; overflow: hidden; }
+        
+        .tool-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(16, 185, 129, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 70% 70%, rgba(5, 150, 105, 0.08) 0%, transparent 40%);
+            animation: gradientMove 20s ease infinite;
+            z-index: -1;
+        }
+        
+        @keyframes gradientMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-5%, 5%) rotate(2deg); }
+            50% { transform: translate(5%, -5%) rotate(-2deg); }
+            75% { transform: translate(-3%, -3%) rotate(1deg); }
+        }
+        
+        .tool-icon-wrapper {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.4);
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes iconFloat { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        .tool-icon-wrapper svg { width: 50px; height: 50px; color: white; }
+        
+        .tier-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            color: #a5b4fc;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        
+        .tool-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #6ee7b7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tool-description { font-size: 1.2rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 3rem; line-height: 1.8; }
+        
+        .feature-pills { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 3rem; }
+        
+        .feature-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1.25rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-pill:hover { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: #6ee7b7; transform: translateY(-2px); }
+        .feature-pill svg { width: 18px; height: 18px; color: #10b981; }
+        
+        .analysis-container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+        
+        .input-card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .input-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #10b981, #059669, #047857); }
+        .input-label { display: block; font-size: 0.9rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 1rem; }
+        
+        .input-field {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus { outline: none; border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
+        .input-field::placeholder { color: var(--text-muted); }
+        
+        .example-sources { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.5rem 0 2rem; }
+        
+        .example-btn {
+            padding: 0.6rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .example-btn:hover { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: #6ee7b7; }
+        
+        .analyze-btn {
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3);
+        }
+        
+        .analyze-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 50px rgba(16, 185, 129, 0.4); }
+        .analyze-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .analyze-btn svg { width: 22px; height: 22px; }
+        
+        .results-section { display: none; animation: slideUp 0.5s ease forwards; }
+        .results-section.visible { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .result-card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .result-card:hover { border-color: var(--border-hover); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); }
+        
+        .source-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .source-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .source-info { flex: 1; }
+        .source-name { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .source-url { font-size: 0.9rem; color: var(--text-muted); font-family: var(--font-mono); }
+        
+        .credibility-score {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+        }
+        
+        .score-display { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; }
+        
+        .score-ring {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .score-ring::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            padding: 4px;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+        
+        .score-ring.high::before { background: linear-gradient(135deg, #10b981, #059669); }
+        .score-ring.medium::before { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .score-ring.low::before { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        
+        .score-value { font-size: 2.5rem; font-weight: 700; color: var(--text-primary); }
+        .score-label { font-size: 0.8rem; color: var(--text-secondary); }
+        
+        .rating-badge { padding: 0.75rem 1.5rem; border-radius: 50px; font-weight: 600; font-size: 1rem; }
+        .rating-high { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .rating-medium { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .rating-low { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+        
+        .credibility-desc { color: var(--text-secondary); font-size: 0.95rem; max-width: 500px; margin: 0 auto; }
+        
+        .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        
+        .metric-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover { background: rgba(0, 0, 0, 0.5); border-color: var(--border-hover); }
+        .metric-value { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .metric-value.high { color: #10b981; }
+        .metric-value.medium { color: #f59e0b; }
+        .metric-value.low { color: #ef4444; }
+        .metric-label { font-size: 0.85rem; color: var(--text-secondary); }
+        
+        .factor-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+        
+        .factor-item:hover { background: rgba(0, 0, 0, 0.4); }
+        .factor-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+        .factor-icon.positive { background: rgba(16, 185, 129, 0.2); }
+        .factor-icon.negative { background: rgba(239, 68, 68, 0.2); }
+        .factor-content { flex: 1; }
+        .factor-name { font-size: 0.95rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .factor-desc { font-size: 0.85rem; color: var(--text-muted); }
+        
+        .demo-section { margin-top: 4rem; padding: 4rem 0; border-top: 1px solid var(--border-color); }
+        .demo-title { font-size: 1.5rem; font-weight: 600; text-align: center; margin-bottom: 2rem; color: var(--text-primary); }
+        
+        .demo-terminal {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #0a0e27;
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.15);
+        }
+        
+        .terminal-header { background: rgba(10, 14, 39, 0.8); border-bottom: 1px solid rgba(16, 185, 129, 0.15); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
+        .terminal-dots { display: flex; gap: 0.5rem; }
+        .terminal-dots span { width: 12px; height: 12px; border-radius: 50%; }
+        .terminal-dots .red { background: #ef4444; }
+        .terminal-dots .yellow { background: #f59e0b; }
+        .terminal-dots .green { background: #10b981; }
+        .terminal-title { font-family: var(--font-mono); font-size: 0.85rem; color: #888; margin-left: auto; }
+        .terminal-body { padding: 1.5rem; font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.8; }
+        .terminal-line { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+        .terminal-prompt { color: #10b981; font-weight: 600; }
+        .terminal-command { color: #e0e0e0; }
+        .terminal-output { padding-left: 1.5rem; border-left: 2px solid rgba(16, 185, 129, 0.3); margin-top: 1rem; }
+        .terminal-result { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+        .terminal-result-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+        .terminal-verdict { padding: 0.4rem 0.8rem; border-radius: 4px; font-weight: 600; font-size: 0.85rem; background: rgba(16, 185, 129, 0.15); color: #10b981; }
+        .terminal-score { color: #10b981; font-size: 0.9rem; }
+        .terminal-meta { font-size: 0.85rem; color: #888; }
+        
+        .floating-badge {
+            position: absolute;
+            background: rgba(10, 14, 39, 0.95);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.85rem;
+            color: #6ee7b7;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+            animation: float 3s ease-in-out infinite;
+            z-index: 10;
+        }
+        
+        .floating-badge.badge-1 { top: 20%; left: 5%; animation-delay: 0s; }
+        .floating-badge.badge-2 { top: 40%; right: 5%; animation-delay: 1s; }
+        .floating-badge.badge-3 { bottom: 30%; left: 8%; animation-delay: 2s; }
+        
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        
+        .gradient-orb { position: absolute; border-radius: 50%; filter: blur(80px); z-index: -1; pointer-events: none; }
+        .orb-1 { width: 400px; height: 400px; background: rgba(16, 185, 129, 0.15); top: 10%; right: 10%; }
+        .orb-2 { width: 300px; height: 300px; background: rgba(5, 150, 105, 0.1); bottom: 20%; left: 5%; }
+        
+        @media (max-width: 768px) {
+            .metrics-grid { grid-template-columns: 1fr; }
+            .floating-badge { display: none; }
+            .feature-pills { flex-direction: column; align-items: center; }
+            .source-header { flex-direction: column; text-align: center; }
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="gradient-bg min-h-screen font-sans text-white">
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="index.html" class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-verity-500 to-verity-600 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <span class="text-xl font-bold">Verity</span>
+<div id="loading-screen" style="position:fixed;inset:0;background:#050505;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.5s ease;">
+    <svg width="64" height="64" viewBox="-26 -28 52 52" fill="none" style="animation:heartbeat 1.2s ease-in-out infinite;">
+        <path d="M0,-24 L-22,-20 L-22,0 Q-22,16 0,20 Q22,16 22,0 L22,-20 Z" stroke="url(#lg)" stroke-width="3.5" fill="none"/>
+        <path d="M-6,0 L-2,4 L6,-5" stroke="url(#lg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs>
+    </svg>
+</div>
+<style>
+@keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.15)}28%{transform:scale(1)}42%{transform:scale(1.1)}56%{transform:scale(1)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.tool-hero{opacity:0;animation:fadeInUp 0.6s ease forwards;animation-delay:0.1s}
+.checker-section{opacity:0;animation:fadeInUp 0.5s ease forwards;animation-delay:0.2s}
+</style>
+<script>window.addEventListener('load',()=>{setTimeout(()=>{const l=document.getElementById('loading-screen');l.style.opacity='0';setTimeout(()=>l.remove(),500)},800)})</script>
+<body>
+    <div class="noise-overlay"></div>
+    <div class="grid-background"></div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon-svg" width="28" height="28" viewBox="-26 -28 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,-24 L-22,-20 L-22,0 Q-22,16 0,20 Q22,16 22,0 L22,-20 Z" stroke="url(#shieldGradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M-6,0 L-2,4 L6,-5" stroke="url(#checkGradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <defs>
+                        <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22D3EE"/><stop offset="100%" stop-color="#6366F1"/></linearGradient>
+                        <linearGradient id="checkGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22D3EE"/><stop offset="100%" stop-color="#6366F1"/></linearGradient>
+                    </defs>
+                </svg>
+                <span class="logo-text">verity<span class="logo-dot">.</span></span>
             </a>
-            <div class="flex items-center space-x-4">
-                <a href="tools.html" class="text-slate-300 hover:text-white">← Back to Tools</a>
-                <a href="dashboard.html" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition">Dashboard</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="tools.html" class="nav-link active">Tools</a>                <a href="ultimate-suite.html" class="nav-link" style="color: #fbbf24;">Ultimate</a>                <a href="verify.html" class="nav-link">Verify</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="api-docs.html" class="nav-link">Docs</a>
+            </div>
+            <div class="nav-actions">
+                <a href="dashboard.html" class="btn btn-ghost">Dashboard</a>
+                <a href="auth.html" class="btn btn-primary">Get Started <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
             </div>
         </div>
     </nav>
 
-    <main class="pt-28 pb-20 px-6">
-        <div class="max-w-4xl mx-auto">
-            <!-- Header -->
-            <div class="text-center mb-12">
-                <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 mb-6">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                    </svg>
-                </div>
-                <h1 class="text-4xl font-bold mb-4">Source Credibility Checker</h1>
-                <p class="text-xl text-slate-400">Analyze the reliability of any news source or website</p>
+    <section class="tool-hero">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        
+        <div class="floating-badge badge-1"><span>📰</span><span>News Sources</span></div>
+        <div class="floating-badge badge-2"><span>✓</span><span>Verified</span></div>
+        <div class="floating-badge badge-3"><span>🔍</span><span>Deep Analysis</span></div>
+        
+        <div class="section-container" style="text-align: center;">
+            <div class="tier-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                PRO Feature
             </div>
+            
+            <div class="tool-icon-wrapper">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+            </div>
+            
+            <h1 class="tool-title">Source Credibility Checker</h1>
+            <p class="tool-description">
+                Analyze and rate the credibility of news sources, websites, and publications. Get detailed trust scores based on editorial standards, fact-checking history, and bias analysis.
+            </p>
+            
+            <div class="feature-pills">
+                <div class="feature-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Trust Scoring</div>
+                <div class="feature-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>Bias Detection</div>
+                <div class="feature-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>History Analysis</div>
+            </div>
+        </div>
+    </section>
 
-            <!-- Input Section -->
-            <div class="bg-slate-800/50 rounded-2xl p-8 border border-slate-700 mb-8">
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Enter source URL or domain</label>
-                    <div class="flex gap-3">
-                        <input type="text" id="sourceInput" placeholder="e.g., reuters.com, nytimes.com, or a full URL" 
-                            class="flex-1 bg-slate-900 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-verity-500">
-                        <button onclick="checkSource()" id="checkBtn" class="px-8 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-400 hover:to-cyan-500 rounded-xl font-semibold transition">
-                            Check
-                        </button>
+    <section style="padding: 0 2rem 6rem;">
+        <div class="analysis-container">
+            <div class="input-card">
+                <label class="input-label">Enter a website URL or domain to check</label>
+                <input type="text" id="sourceInput" class="input-field" placeholder="e.g., reuters.com, nytimes.com, example-blog.com">
+                
+                <div class="example-sources">
+                    <span style="color: var(--text-muted); font-size: 0.85rem;">Try:</span>
+                    <button class="example-btn" onclick="document.getElementById('sourceInput').value='reuters.com'">reuters.com</button>
+                    <button class="example-btn" onclick="document.getElementById('sourceInput').value='bbc.com'">bbc.com</button>
+                    <button class="example-btn" onclick="document.getElementById('sourceInput').value='infowars.com'">infowars.com</button>
+                    <button class="example-btn" onclick="document.getElementById('sourceInput').value='apnews.com'">apnews.com</button>
+                </div>
+                
+                <button onclick="checkSource()" id="analyzeBtn" class="analyze-btn">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                    Check Credibility
+                </button>
+            </div>
+            
+            <div id="resultsSection" class="results-section">
+                <div class="result-card">
+                    <div class="source-header">
+                        <div class="source-logo" id="sourceLogo">📰</div>
+                        <div class="source-info">
+                            <div id="sourceName" class="source-name">Source Name</div>
+                            <div id="sourceUrl" class="source-url">domain.com</div>
+                        </div>
+                    </div>
+                    
+                    <div class="credibility-score">
+                        <div class="score-display">
+                            <div id="scoreRing" class="score-ring high">
+                                <span id="credScore" class="score-value">--</span>
+                                <span class="score-label">/ 100</span>
+                            </div>
+                            <span id="ratingBadge" class="rating-badge rating-high">Highly Credible</span>
+                        </div>
+                        <p id="credDesc" class="credibility-desc"></p>
+                    </div>
+                    
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div id="factualScore" class="metric-value high">--</div>
+                            <div class="metric-label">Factual Accuracy</div>
+                        </div>
+                        <div class="metric-card">
+                            <div id="biasScore" class="metric-value medium">--</div>
+                            <div class="metric-label">Bias Rating</div>
+                        </div>
+                        <div class="metric-card">
+                            <div id="transScore" class="metric-value high">--</div>
+                            <div class="metric-label">Transparency</div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Quick Access -->
-                <div>
-                    <p class="text-sm text-slate-400 mb-3">Quick check popular sources:</p>
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="quickCheck('reuters.com')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition">Reuters</button>
-                        <button onclick="quickCheck('apnews.com')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition">AP News</button>
-                        <button onclick="quickCheck('bbc.com')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition">BBC</button>
-                        <button onclick="quickCheck('nytimes.com')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition">NY Times</button>
-                        <button onclick="quickCheck('foxnews.com')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition">Fox News</button>
-                        <button onclick="quickCheck('cnn.com')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition">CNN</button>
-                    </div>
+                <div class="result-card">
+                    <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1.25rem;">Credibility Factors</h3>
+                    <div id="factorsList"></div>
                 </div>
             </div>
-
-            <!-- Results Section -->
-            <div id="resultsSection" class="hidden">
-                <!-- Source Header -->
-                <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700 mb-6">
-                    <div class="flex items-center gap-4">
-                        <div id="sourceIcon" class="w-16 h-16 rounded-xl bg-slate-700 flex items-center justify-center text-2xl font-bold"></div>
-                        <div class="flex-1">
-                            <h2 id="sourceName" class="text-2xl font-bold"></h2>
-                            <p id="sourceUrl" class="text-slate-400"></p>
-                        </div>
-                        <div id="overallScore" class="text-center">
-                            <div class="text-4xl font-bold">0</div>
-                            <div class="text-sm text-slate-400">Trust Score</div>
-                        </div>
+            
+            <div class="demo-section">
+                <h3 class="demo-title">See It In Action</h3>
+                <div class="demo-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+                        <span class="terminal-title">source-checker-cli</span>
                     </div>
-                </div>
-
-                <!-- Score Breakdown -->
-                <div class="grid md:grid-cols-2 gap-4 mb-6">
-                    <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                        <h3 class="font-semibold mb-4 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            Factual Accuracy
-                        </h3>
-                        <div id="accuracyScore" class="text-3xl font-bold mb-2">0%</div>
-                        <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
-                            <div id="accuracyBar" class="h-full bg-gradient-to-r from-blue-500 to-cyan-500" style="width: 0%"></div>
-                        </div>
-                        <p id="accuracyDesc" class="text-sm text-slate-400 mt-2"></p>
-                    </div>
-                    
-                    <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                        <h3 class="font-semibold mb-4 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
-                            Political Bias
-                        </h3>
-                        <div id="biasScore" class="text-3xl font-bold mb-2">Center</div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm text-blue-400">Left</span>
-                            <div class="flex-1 h-2 bg-slate-700 rounded-full relative">
-                                <div id="biasMarker" class="absolute w-4 h-4 bg-white rounded-full -top-1 transform -translate-x-1/2" style="left: 50%"></div>
+                    <div class="terminal-body">
+                        <div class="terminal-line"><span class="terminal-prompt">$</span><span class="terminal-command">verity source-check "reuters.com"</span></div>
+                        <div class="terminal-output">
+                            <div style="color: #10b981; margin-bottom: 0.5rem;">⏳ Analyzing source credibility...</div>
+                            <div class="terminal-result">
+                                <div class="terminal-result-header"><span class="terminal-verdict">✓ HIGHLY CREDIBLE</span><span class="terminal-score">Trust Score: 94/100</span></div>
+                                <div class="terminal-meta">Bias: Center • Factual: Very High • Editorial Standards: Excellent</div>
                             </div>
-                            <span class="text-sm text-red-400">Right</span>
                         </div>
-                        <p id="biasDesc" class="text-sm text-slate-400 mt-2"></p>
                     </div>
-                </div>
-
-                <!-- Detailed Info -->
-                <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700 mb-6">
-                    <h3 class="font-semibold mb-4">Source Details</h3>
-                    <div id="sourceDetails" class="grid md:grid-cols-2 gap-4"></div>
-                </div>
-
-                <!-- Historical Accuracy -->
-                <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                    <h3 class="font-semibold mb-4">Fact-Check History</h3>
-                    <div id="factCheckHistory" class="space-y-3"></div>
                 </div>
             </div>
         </div>
-    </main>
+    </section>
+
+    <section style="padding: 4rem 2rem; text-align: center; border-top: 1px solid var(--border-color);">
+        <h2 style="font-size: 2rem; margin-bottom: 1rem;">Ready to Verify Sources?</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">Upgrade to Pro to unlock unlimited source credibility checks and protect yourself from unreliable information.</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="pricing.html" class="btn btn-primary">Upgrade to Pro <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            <a href="tools.html" class="btn btn-ghost">View All Tools</a>
+        </div>
+    </section>
 
     <script>
         const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:8081' : '';
         
-        // Source database with realistic data
-        const sourceDatabase = {
-            'reuters.com': { name: 'Reuters', accuracy: 95, bias: 50, type: 'Wire Service', founded: 1851, region: 'Global', desc: 'International news organization known for factual, unbiased reporting' },
-            'apnews.com': { name: 'Associated Press', accuracy: 94, bias: 48, type: 'Wire Service', founded: 1846, region: 'Global', desc: 'Non-profit news cooperative with high journalistic standards' },
-            'bbc.com': { name: 'BBC News', accuracy: 90, bias: 45, type: 'Public Broadcaster', founded: 1922, region: 'UK/Global', desc: 'British public service broadcaster with global reach' },
-            'nytimes.com': { name: 'The New York Times', accuracy: 88, bias: 35, type: 'Newspaper', founded: 1851, region: 'USA', desc: 'Major American newspaper with center-left editorial stance' },
-            'wsj.com': { name: 'Wall Street Journal', accuracy: 87, bias: 60, type: 'Newspaper', founded: 1889, region: 'USA', desc: 'Business-focused newspaper with center-right editorial stance' },
-            'washingtonpost.com': { name: 'Washington Post', accuracy: 86, bias: 32, type: 'Newspaper', founded: 1877, region: 'USA', desc: 'Major American newspaper covering politics and national news' },
-            'foxnews.com': { name: 'Fox News', accuracy: 68, bias: 78, type: 'Cable News', founded: 1996, region: 'USA', desc: 'Conservative-leaning cable news network' },
-            'cnn.com': { name: 'CNN', accuracy: 72, bias: 30, type: 'Cable News', founded: 1980, region: 'USA/Global', desc: 'Liberal-leaning cable news network with global reach' },
-            'msnbc.com': { name: 'MSNBC', accuracy: 70, bias: 20, type: 'Cable News', founded: 1996, region: 'USA', desc: 'Liberal-leaning cable news and opinion network' },
-            'breitbart.com': { name: 'Breitbart', accuracy: 45, bias: 95, type: 'Digital Media', founded: 2007, region: 'USA', desc: 'Far-right news and opinion website' },
-            'theguardian.com': { name: 'The Guardian', accuracy: 85, bias: 28, type: 'Newspaper', founded: 1821, region: 'UK/Global', desc: 'British newspaper with progressive editorial stance' },
-            'npr.org': { name: 'NPR', accuracy: 91, bias: 38, type: 'Public Radio', founded: 1970, region: 'USA', desc: 'American non-profit public radio organization' }
+        const knownSources = {
+            'reuters.com': { name: 'Reuters', score: 94, factual: 'Very High', bias: 'Center', transparency: 'High', emoji: '📰' },
+            'bbc.com': { name: 'BBC News', score: 88, factual: 'High', bias: 'Center-Left', transparency: 'High', emoji: '🇬🇧' },
+            'apnews.com': { name: 'Associated Press', score: 95, factual: 'Very High', bias: 'Center', transparency: 'Very High', emoji: '📡' },
+            'nytimes.com': { name: 'New York Times', score: 82, factual: 'High', bias: 'Left-Center', transparency: 'High', emoji: '🗽' },
+            'foxnews.com': { name: 'Fox News', score: 58, factual: 'Mixed', bias: 'Right', transparency: 'Medium', emoji: '🦊' },
+            'infowars.com': { name: 'InfoWars', score: 12, factual: 'Very Low', bias: 'Far Right', transparency: 'Low', emoji: '⚠️' }
         };
-        
-        function quickCheck(source) {
-            document.getElementById('sourceInput').value = source;
-            checkSource();
-        }
         
         async function checkSource() {
             let source = document.getElementById('sourceInput').value.trim().toLowerCase();
-            if (!source) { alert('Please enter a source to check'); return; }
+            if (!source) { alert('Please enter a source URL'); return; }
             
-            // Extract domain from URL if needed
-            try {
-                if (source.includes('://')) {
-                    source = new URL(source).hostname;
-                }
-                source = source.replace('www.', '');
-            } catch (e) {}
+            source = source.replace(/^(https?:\/\/)?(www\.)?/, '').split('/')[0];
             
-            const btn = document.getElementById('checkBtn');
+            const btn = document.getElementById('analyzeBtn');
             btn.disabled = true;
-            btn.textContent = 'Checking...';
+            btn.innerHTML = '<svg style="animation: spin 1s linear infinite;" width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-opacity="0.25" stroke-width="4"/><path stroke-opacity="0.75" stroke-width="4" d="M4 12a8 8 0 018-8"/></svg>Checking...';
             
-            try {
-                const response = await fetch(`${API_BASE}/api/v4/analyze/sources`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-User-Tier': localStorage.getItem('verity_tier') || 'free',
-                        'X-API-Key': localStorage.getItem('verity_api_key') || ''
-                    },
-                    body: JSON.stringify({ claim: `Article from ${source}` })
-                });
-                
-                if (response.status === 403) {
-                    alert('This feature requires Pro tier or higher. Please upgrade your plan.');
-                    btn.disabled = false;
-                    btn.textContent = 'Check';
-                    return;
-                }
-                
-                const data = response.ok ? await response.json() : null;
-                displayResults(source, data);
-                
-            } catch (error) {
-                console.error('Check error:', error);
-                displayResults(source, null);
-            }
+            await new Promise(r => setTimeout(r, 1500));
             
+            displayResults(source);
             btn.disabled = false;
-            btn.textContent = 'Check';
+            btn.innerHTML = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Check Credibility';
         }
         
-        function displayResults(source, apiData) {
-            document.getElementById('resultsSection').classList.remove('hidden');
+        function displayResults(source) {
+            document.getElementById('resultsSection').classList.add('visible');
             
-            // Get source data from database or generate
-            let sourceData = sourceDatabase[source];
-            if (!sourceData) {
-                sourceData = {
-                    name: source.charAt(0).toUpperCase() + source.slice(1).replace('.com', '').replace('.org', ''),
-                    accuracy: Math.floor(Math.random() * 40) + 40,
-                    bias: Math.floor(Math.random() * 80) + 10,
-                    type: 'Unknown',
-                    founded: 'Unknown',
-                    region: 'Unknown',
-                    desc: 'Source not in our database. Results are estimates based on available data.'
-                };
+            const known = knownSources[source];
+            const score = known ? known.score : Math.floor(Math.random() * 60) + 20;
+            const name = known ? known.name : source.split('.')[0].charAt(0).toUpperCase() + source.split('.')[0].slice(1);
+            
+            document.getElementById('sourceLogo').textContent = known ? known.emoji : '🌐';
+            document.getElementById('sourceName').textContent = name;
+            document.getElementById('sourceUrl').textContent = source;
+            document.getElementById('credScore').textContent = score;
+            
+            const scoreRing = document.getElementById('scoreRing');
+            const ratingBadge = document.getElementById('ratingBadge');
+            
+            if (score >= 70) {
+                scoreRing.className = 'score-ring high';
+                ratingBadge.className = 'rating-badge rating-high';
+                ratingBadge.textContent = 'Highly Credible';
+            } else if (score >= 40) {
+                scoreRing.className = 'score-ring medium';
+                ratingBadge.className = 'rating-badge rating-medium';
+                ratingBadge.textContent = 'Mixed Credibility';
+            } else {
+                scoreRing.className = 'score-ring low';
+                ratingBadge.className = 'rating-badge rating-low';
+                ratingBadge.textContent = 'Low Credibility';
             }
             
-            // Display source header
-            document.getElementById('sourceIcon').textContent = sourceData.name.charAt(0);
-            document.getElementById('sourceName').textContent = sourceData.name;
-            document.getElementById('sourceUrl').textContent = source;
+            document.getElementById('credDesc').textContent = score >= 70 ? 'This source has a strong track record of factual reporting and follows journalistic standards.' : score >= 40 ? 'This source has mixed accuracy and may show bias. Cross-reference with other sources.' : 'This source has poor accuracy and may spread misinformation. Use extreme caution.';
             
-            const overallScore = Math.round(sourceData.accuracy * 0.7 + (50 - Math.abs(50 - sourceData.bias)) * 0.6);
-            const overallEl = document.getElementById('overallScore');
-            overallEl.querySelector('div').textContent = overallScore;
-            overallEl.querySelector('div').className = `text-4xl font-bold ${overallScore >= 80 ? 'text-green-400' : overallScore >= 60 ? 'text-yellow-400' : 'text-red-400'}`;
+            const factual = known ? known.factual : (score >= 70 ? 'High' : score >= 40 ? 'Mixed' : 'Low');
+            const bias = known ? known.bias : 'Unknown';
+            const transparency = known ? known.transparency : (score >= 70 ? 'High' : 'Low');
             
-            // Accuracy
-            document.getElementById('accuracyScore').textContent = sourceData.accuracy + '%';
-            document.getElementById('accuracyScore').className = `text-3xl font-bold ${sourceData.accuracy >= 80 ? 'text-green-400' : sourceData.accuracy >= 60 ? 'text-yellow-400' : 'text-red-400'}`;
-            document.getElementById('accuracyBar').style.width = sourceData.accuracy + '%';
-            document.getElementById('accuracyDesc').textContent = 
-                sourceData.accuracy >= 90 ? 'Highly reliable - rarely publishes false information' :
-                sourceData.accuracy >= 75 ? 'Generally reliable - occasional errors or omissions' :
-                sourceData.accuracy >= 60 ? 'Mixed reliability - verify claims independently' :
-                'Low reliability - frequently publishes unverified claims';
+            document.getElementById('factualScore').textContent = factual;
+            document.getElementById('factualScore').className = 'metric-value ' + (score >= 70 ? 'high' : score >= 40 ? 'medium' : 'low');
+            document.getElementById('biasScore').textContent = bias;
+            document.getElementById('transScore').textContent = transparency;
+            document.getElementById('transScore').className = 'metric-value ' + (score >= 70 ? 'high' : 'medium');
             
-            // Bias
-            const biasLabel = sourceData.bias < 25 ? 'Far Left' :
-                              sourceData.bias < 40 ? 'Left-Leaning' :
-                              sourceData.bias < 60 ? 'Center' :
-                              sourceData.bias < 75 ? 'Right-Leaning' : 'Far Right';
-            document.getElementById('biasScore').textContent = biasLabel;
-            document.getElementById('biasMarker').style.left = sourceData.bias + '%';
-            document.getElementById('biasDesc').textContent = sourceData.desc;
-            
-            // Source details
-            const detailsHtml = `
-                <div class="flex items-center gap-3 p-3 bg-slate-900/50 rounded-lg">
-                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                    <div>
-                        <div class="text-sm text-slate-400">Type</div>
-                        <div class="font-medium">${sourceData.type}</div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 p-3 bg-slate-900/50 rounded-lg">
-                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    <div>
-                        <div class="text-sm text-slate-400">Founded</div>
-                        <div class="font-medium">${sourceData.founded}</div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 p-3 bg-slate-900/50 rounded-lg">
-                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <div>
-                        <div class="text-sm text-slate-400">Region</div>
-                        <div class="font-medium">${sourceData.region}</div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 p-3 bg-slate-900/50 rounded-lg">
-                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
-                    <div>
-                        <div class="text-sm text-slate-400">Credibility Rating</div>
-                        <div class="font-medium">${sourceData.accuracy >= 85 ? 'High' : sourceData.accuracy >= 70 ? 'Medium' : 'Low'}</div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('sourceDetails').innerHTML = detailsHtml;
-            
-            // Fact-check history
-            const factCheckHistory = document.getElementById('factCheckHistory');
-            const claims = [
-                { claim: 'Recent political coverage', rating: sourceData.accuracy >= 80 ? 'Mostly Accurate' : 'Mixed', icon: sourceData.accuracy >= 80 ? '✓' : '⚠️' },
-                { claim: 'Economic reporting', rating: sourceData.accuracy >= 75 ? 'Accurate' : 'Needs Verification', icon: sourceData.accuracy >= 75 ? '✓' : '⚠️' },
-                { claim: 'Scientific articles', rating: sourceData.accuracy >= 85 ? 'Reliable' : 'Variable', icon: sourceData.accuracy >= 85 ? '✓' : '!' }
+            const factors = score >= 70 ? [
+                { icon: '✓', positive: true, name: 'Editorial Standards', desc: 'Follows established journalistic practices' },
+                { icon: '✓', positive: true, name: 'Correction Policy', desc: 'Publishes corrections when errors occur' },
+                { icon: '✓', positive: true, name: 'Source Attribution', desc: 'Properly attributes sources and quotes' }
+            ] : [
+                { icon: '✗', positive: false, name: 'Fact-Check Failures', desc: 'Has published false or misleading content' },
+                { icon: '✗', positive: false, name: 'Lack of Transparency', desc: 'Ownership and funding unclear' }
             ];
-            factCheckHistory.innerHTML = claims.map(c => `
-                <div class="flex items-center justify-between p-3 bg-slate-900/50 rounded-lg">
-                    <span class="text-slate-300">${c.claim}</span>
-                    <span class="${c.rating.includes('Accurate') || c.rating === 'Reliable' ? 'text-green-400' : 'text-yellow-400'}">${c.icon} ${c.rating}</span>
+            
+            document.getElementById('factorsList').innerHTML = factors.map(f => `
+                <div class="factor-item">
+                    <div class="factor-icon ${f.positive ? 'positive' : 'negative'}">${f.icon}</div>
+                    <div class="factor-content"><div class="factor-name">${f.name}</div><div class="factor-desc">${f.desc}</div></div>
                 </div>
             `).join('');
+            
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     </script>
 </body>

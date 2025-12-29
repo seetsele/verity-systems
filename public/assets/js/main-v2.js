@@ -23,7 +23,7 @@ window.addEventListener('load', () => {
 
 const DEMO_CONFIG = {
     maxAttempts: 5,  // Increased for better demo experience
-    apiBase: 'http://localhost:8000',
+    apiBase: 'http://localhost:8081',
     apiTimeout: 30000
 };
 
@@ -337,7 +337,7 @@ async function verifyWithApi(claim) {
     const timeoutId = setTimeout(() => controller.abort(), DEMO_CONFIG.apiTimeout);
     
     try {
-        const response = await fetch(`${DEMO_CONFIG.apiBase}/v1/verify`, {
+        const response = await fetch(`${DEMO_CONFIG.apiBase}/api/v4/verify`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

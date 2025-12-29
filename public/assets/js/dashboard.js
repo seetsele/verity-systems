@@ -397,7 +397,7 @@ async function performVerification(claim) {
 async function verifyClaimWithAPI(claim) {
     // Try real API first
     try {
-        const response = await fetch('http://localhost:8000/v1/verify', {
+        const response = await fetch('http://localhost:8081/api/v4/verify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ claim })

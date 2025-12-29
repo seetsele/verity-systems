@@ -1611,7 +1611,7 @@ class VerityVerificationEngine {
     
     bindResultActions() {
         document.getElementById('shareBtn')?.addEventListener('click', () => this.shareResult());
-        document.getElementById('downloadBtn')?.addEventListener('click', () => this.downloadReport());
+        // Download button now shows dropdown on hover via CSS, no click handler needed
         document.getElementById('verifyAnotherBtn')?.addEventListener('click', () => this.verifyAnother());
     }
     
@@ -1627,22 +1627,214 @@ class VerityVerificationEngine {
         }
     }
     
-    async downloadReport() {
+    async downloadReport(format = 'pdf') {
         if (!this.lastResult) {
             this.showNotification('No verification results to download', 'error');
             return;
         }
+
+        const result = this.lastResult;
+        const timestamp = new Date().toLocaleString();
+        const claim = document.getElementById('claimText')?.value || 'N/A';
+
+        if (format === 'txt') {
+            const report = this.generateReport(result);
+            const blob = new Blob([report], { type: 'text/plain' });
+            this.downloadBlob(blob, `verity-report-${Date.now()}.txt`);
+        }
+        else if (format === 'json') {
+            const report = {
+                exported_at: new Date().toISOString(),
+                claim: claim,
+                result: result
+            };
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            this.downloadBlob(blob, `verity-report-${Date.now()}.json`);
+        }
+        else if (format === 'pdf') {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Header
+            doc.setFillColor(5, 5, 5);
+            doc.rect(0, 0, 210, 40, 'F');
+            doc.setTextColor(34, 211, 238);
+            doc.setFontSize(24);
+            doc.text('Verity', 20, 25);
+            doc.setTextColor(99, 102, 241);
+            doc.text('.', 52, 25);
+            doc.setFontSize(10);
+            doc.setTextColor(150, 150, 150);
+            doc.text('Fact Check Verification Report', 60, 25);
+            doc.text(timestamp, 150, 25);
+
+            // Content
+            doc.setTextColor(30, 30, 30);
+            let y = 55;
+
+            // Claim
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.text('CLAIM ANALYZED:', 20, y);
+            y += 8;
+            doc.setFontSize(12);
+            doc.setTextColor(30, 30, 30);
+            const claimLines = doc.splitTextToSize(claim, 170);
+            doc.text(claimLines, 20, y);
+            y += claimLines.length * 6 + 10;
+
+            // Verdict
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.text('VERDICT:', 20, y);
+            y += 8;
+            doc.setFontSize(16);
+            const verdictLabel = result.verdict?.label || 'Unknown';
+            const verdictScore = Math.round(result.verdict?.score || 0);
+            if (verdictLabel.toLowerCase().includes('true')) {
+                doc.setTextColor(34, 197, 94);
+            } else if (verdictLabel.toLowerCase().includes('false')) {
+                doc.setTextColor(239, 68, 68);
+            } else {
+                doc.setTextColor(245, 158, 11);
+            }
+            doc.text(verdictLabel.toUpperCase(), 20, y);
+            doc.setTextColor(100, 100, 100);
+            doc.setFontSize(12);
+            doc.text(`  (${verdictScore}% confidence)`, 20 + doc.getTextWidth(verdictLabel.toUpperCase()) + 5, y);
+            y += 15;
+
+            // Summary
+            if (result.summary) {
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text('SUMMARY:', 20, y);
+                y += 8;
+                doc.setFontSize(11);
+                doc.setTextColor(50, 50, 50);
+                const summaryLines = doc.splitTextToSize(result.summary, 170);
+                doc.text(summaryLines.slice(0, 10), 20, y);
+                y += Math.min(summaryLines.length, 10) * 5 + 10;
+            }
+
+            // Accuracy Breakdown
+            if (result.accuracy) {
+                if (y > 220) { doc.addPage(); y = 20; }
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text('ACCURACY BREAKDOWN:', 20, y);
+                y += 8;
+                doc.setFontSize(10);
+                doc.setTextColor(50, 50, 50);
+                doc.text(`• Factual Accuracy: ${Math.round(result.accuracy.factual)}%`, 25, y); y += 6;
+                doc.text(`• Source Reliability: ${Math.round(result.accuracy.source)}%`, 25, y); y += 6;
+                doc.text(`• Context Accuracy: ${Math.round(result.accuracy.context)}%`, 25, y); y += 6;
+                doc.text(`• Bias Score: ${Math.round(result.accuracy.bias)}%`, 25, y); y += 10;
+            }
+
+            // Sources
+            if (result.sources?.length > 0) {
+                if (y > 240) { doc.addPage(); y = 20; }
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text('SOURCES REFERENCED:', 20, y);
+                y += 8;
+                doc.setFontSize(9);
+                result.sources.slice(0, 5).forEach(s => {
+                    doc.setTextColor(50, 50, 50);
+                    doc.text(`• ${s.name} (${s.trust} trust)`, 25, y);
+                    y += 5;
+                });
+            }
+
+            // Footer
+            doc.setFontSize(8);
+            doc.setTextColor(150, 150, 150);
+            doc.text('Generated by Verity Systems - AI-Powered Fact Verification', 20, 285);
+
+            doc.save(`verity-report-${Date.now()}.pdf`);
+        }
+        else if (format === 'docx') {
+            const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = window.docx;
+
+            const verdictLabel = result.verdict?.label || 'Unknown';
+            const verdictScore = Math.round(result.verdict?.score || 0);
+            const verdictColor = verdictLabel.toLowerCase().includes('true') ? '22c55e' : 
+                                 verdictLabel.toLowerCase().includes('false') ? 'ef4444' : 'f59e0b';
+
+            const doc = new Document({
+                sections: [{
+                    properties: {},
+                    children: [
+                        new Paragraph({
+                            children: [
+                                new TextRun({ text: 'Verity', bold: true, size: 48, color: '22d3ee' }),
+                                new TextRun({ text: '.', bold: true, size: 48, color: '6366f1' }),
+                                new TextRun({ text: '  Fact Check Report', size: 24, color: '666666' })
+                            ]
+                        }),
+                        new Paragraph({ text: timestamp, spacing: { after: 400 } }),
+                        
+                        new Paragraph({ text: 'CLAIM ANALYZED', heading: HeadingLevel.HEADING_2, spacing: { before: 400 } }),
+                        new Paragraph({ text: claim, spacing: { after: 300 } }),
+                        
+                        new Paragraph({ text: 'VERDICT', heading: HeadingLevel.HEADING_2, spacing: { before: 400 } }),
+                        new Paragraph({
+                            children: [
+                                new TextRun({ text: verdictLabel.toUpperCase(), bold: true, size: 32, color: verdictColor }),
+                                new TextRun({ text: `  (${verdictScore}% confidence)`, size: 24, color: '666666' })
+                            ],
+                            spacing: { after: 300 }
+                        }),
+                        
+                        ...(result.summary ? [
+                            new Paragraph({ text: 'SUMMARY', heading: HeadingLevel.HEADING_2, spacing: { before: 400 } }),
+                            new Paragraph({ text: result.summary, spacing: { after: 300 } })
+                        ] : []),
+                        
+                        ...(result.accuracy ? [
+                            new Paragraph({ text: 'ACCURACY BREAKDOWN', heading: HeadingLevel.HEADING_2, spacing: { before: 400 } }),
+                            new Paragraph({ text: `• Factual Accuracy: ${Math.round(result.accuracy.factual)}%` }),
+                            new Paragraph({ text: `• Source Reliability: ${Math.round(result.accuracy.source)}%` }),
+                            new Paragraph({ text: `• Context Accuracy: ${Math.round(result.accuracy.context)}%` }),
+                            new Paragraph({ text: `• Bias Score: ${Math.round(result.accuracy.bias)}%`, spacing: { after: 300 } })
+                        ] : []),
+                        
+                        ...(result.sources?.length > 0 ? [
+                            new Paragraph({ text: 'SOURCES REFERENCED', heading: HeadingLevel.HEADING_2, spacing: { before: 400 } }),
+                            ...result.sources.slice(0, 10).map(s => new Paragraph({
+                                text: `• ${s.name} (${s.trust} trust)`,
+                                spacing: { after: 100 }
+                            }))
+                        ] : []),
+                        
+                        new Paragraph({ text: '', spacing: { before: 600 } }),
+                        new Paragraph({
+                            children: [
+                                new TextRun({ text: 'Generated by Verity Systems - AI-Powered Fact Verification', size: 16, color: '999999' })
+                            ],
+                            alignment: AlignmentType.CENTER
+                        })
+                    ]
+                }]
+            });
+
+            const blob = await Packer.toBlob(doc);
+            this.downloadBlob(blob, `verity-report-${Date.now()}.docx`);
+        }
         
-        const report = this.generateReport(this.lastResult);
-        const blob = new Blob([report], { type: 'text/plain' });
+        this.showNotification('Report downloaded!', 'success');
+    }
+
+    downloadBlob(blob, filename) {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `verity-report-${Date.now()}.txt`;
+        a.download = filename;
+        document.body.appendChild(a);
         a.click();
+        document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        
-        this.showNotification('Report downloaded!', 'success');
     }
     
     generateReport(result) {

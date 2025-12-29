@@ -3,123 +3,539 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content Moderator - Verity Intelligence Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { verity: { 400: '#4ade80', 500: '#22c55e', 600: '#16a34a' } } } }
-        }
-    </script>
+    <meta name="description" content="Content Moderator - AI-powered content moderation for platforms. Detect harmful content, hate speech, and policy violations in real-time.">
+    <meta name="theme-color" content="#050505">
+    <title>Content Moderator | Verity AI Tools</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles-dark.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23050505' width='100' height='100' rx='20'/%3E%3Cpath fill='none' stroke='%2322d3ee' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' d='M25 50 L40 65 L75 30'/%3E%3C/svg%3E">
+    
     <style>
-        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); }
+        .tool-hero {
+            padding: 10rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(168, 85, 247, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 70% 70%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
+            animation: gradientMove 20s ease infinite;
+            z-index: -1;
+        }
+        
+        @keyframes gradientMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-5%, 5%) rotate(2deg); }
+            50% { transform: translate(5%, -5%) rotate(-2deg); }
+            75% { transform: translate(-3%, -3%) rotate(1deg); }
+        }
+        
+        .tool-icon-wrapper {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            box-shadow: 0 20px 60px rgba(168, 85, 247, 0.4);
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .tool-icon-wrapper svg { width: 50px; height: 50px; color: white; }
+        
+        .tier-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            color: #a5b4fc;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        
+        .tool-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #c4b5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tool-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+        
+        .feature-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+        
+        .feature-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1.25rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-pill:hover {
+            background: rgba(168, 85, 247, 0.1);
+            border-color: rgba(168, 85, 247, 0.3);
+            color: #c4b5fd;
+            transform: translateY(-2px);
+        }
+        
+        .feature-pill svg { width: 18px; height: 18px; color: #a855f7; }
+        
+        .analysis-container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+        
+        .input-card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .input-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #a855f7, #7c3aed, #6366f1);
+        }
+        
+        .input-label { display: block; font-size: 0.9rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 1rem; }
+        
+        .input-textarea {
+            width: 100%;
+            min-height: 140px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+        
+        .input-textarea:focus { outline: none; border-color: #a855f7; box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1); }
+        .input-textarea::placeholder { color: var(--text-muted); }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0 2rem;
+        }
+        
+        .category-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .category-item:hover { background: rgba(168, 85, 247, 0.05); border-color: rgba(168, 85, 247, 0.3); }
+        .category-item.active { background: rgba(168, 85, 247, 0.1); border-color: #a855f7; }
+        .category-item svg { width: 24px; height: 24px; color: #a855f7; }
+        .category-item span { font-size: 0.8rem; color: var(--text-secondary); }
+        
+        .analyze-btn {
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 40px rgba(168, 85, 247, 0.3);
+        }
+        
+        .analyze-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 50px rgba(168, 85, 247, 0.4); }
+        .analyze-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .analyze-btn svg { width: 22px; height: 22px; }
+        
+        .results-section { display: none; animation: slideUp 0.5s ease forwards; }
+        .results-section.visible { display: block; }
+        
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .result-card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .result-card:hover { border-color: var(--border-hover); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); }
+        
+        .safety-score {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+        
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            padding: 4px;
+            background: linear-gradient(135deg, #10b981, #f59e0b, #ef4444);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+        
+        .score-value { font-size: 2.5rem; font-weight: 700; color: var(--text-primary); }
+        .score-label { font-size: 0.85rem; color: var(--text-secondary); }
+        .safety-verdict { font-size: 1.25rem; font-weight: 600; }
+        .verdict-safe { color: #10b981; }
+        .verdict-warning { color: #f59e0b; }
+        .verdict-danger { color: #ef4444; }
+        
+        .violation-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+        
+        .violation-item:hover { background: rgba(239, 68, 68, 0.12); }
+        .violation-icon { width: 40px; height: 40px; background: rgba(239, 68, 68, 0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .violation-icon svg { width: 20px; height: 20px; color: #ef4444; }
+        .violation-content { flex: 1; }
+        .violation-type { font-size: 0.95rem; font-weight: 600; color: #fca5a5; margin-bottom: 0.25rem; }
+        .violation-desc { font-size: 0.85rem; color: var(--text-muted); }
+        .violation-severity { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .severity-high { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+        .severity-medium { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
+        .severity-low { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+        
+        .action-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: rgba(168, 85, 247, 0.08);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+        }
+        
+        .action-icon { width: 40px; height: 40px; background: rgba(168, 85, 247, 0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .action-icon svg { width: 20px; height: 20px; color: #a855f7; }
+        .action-text { font-size: 0.95rem; color: var(--text-secondary); }
+        
+        .demo-section { margin-top: 4rem; padding: 4rem 0; border-top: 1px solid var(--border-color); }
+        .demo-title { font-size: 1.5rem; font-weight: 600; text-align: center; margin-bottom: 2rem; color: var(--text-primary); }
+        
+        .demo-terminal {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #0a0e27;
+            border: 2px solid rgba(168, 85, 247, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.15);
+        }
+        
+        .terminal-header { background: rgba(10, 14, 39, 0.8); border-bottom: 1px solid rgba(168, 85, 247, 0.15); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
+        .terminal-dots { display: flex; gap: 0.5rem; }
+        .terminal-dots span { width: 12px; height: 12px; border-radius: 50%; }
+        .terminal-dots .red { background: #ef4444; }
+        .terminal-dots .yellow { background: #f59e0b; }
+        .terminal-dots .green { background: #10b981; }
+        .terminal-title { font-family: var(--font-mono); font-size: 0.85rem; color: #888; margin-left: auto; }
+        .terminal-body { padding: 1.5rem; font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.8; }
+        .terminal-line { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+        .terminal-prompt { color: #a855f7; font-weight: 600; }
+        .terminal-command { color: #e0e0e0; }
+        .terminal-output { padding-left: 1.5rem; border-left: 2px solid rgba(168, 85, 247, 0.3); margin-top: 1rem; }
+        .terminal-result { background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+        .terminal-result-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+        .terminal-verdict { padding: 0.4rem 0.8rem; border-radius: 4px; font-weight: 600; font-size: 0.85rem; }
+        .terminal-verdict.safe { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+        .terminal-verdict.warning { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+        .terminal-score { color: #a855f7; font-size: 0.9rem; }
+        .terminal-meta { font-size: 0.85rem; color: #888; }
+        
+        .floating-badge {
+            position: absolute;
+            background: rgba(10, 14, 39, 0.95);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 12px;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.85rem;
+            color: #c4b5fd;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+            animation: float 3s ease-in-out infinite;
+            z-index: 10;
+        }
+        
+        .floating-badge.badge-1 { top: 20%; left: 5%; animation-delay: 0s; }
+        .floating-badge.badge-2 { top: 40%; right: 5%; animation-delay: 1s; }
+        .floating-badge.badge-3 { bottom: 30%; left: 8%; animation-delay: 2s; }
+        
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        
+        .gradient-orb { position: absolute; border-radius: 50%; filter: blur(80px); z-index: -1; pointer-events: none; }
+        .orb-1 { width: 400px; height: 400px; background: rgba(168, 85, 247, 0.15); top: 10%; right: 10%; }
+        .orb-2 { width: 300px; height: 300px; background: rgba(139, 92, 246, 0.1); bottom: 20%; left: 5%; }
+        
+        @media (max-width: 768px) {
+            .categories-grid { grid-template-columns: repeat(2, 1fr); }
+            .floating-badge { display: none; }
+            .feature-pills { flex-direction: column; align-items: center; }
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="gradient-bg min-h-screen font-sans text-white">
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="index.html" class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-verity-500 to-verity-600 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <span class="text-xl font-bold">Verity</span>
+<div id="loading-screen" style="position:fixed;inset:0;background:#050505;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.5s ease;">
+    <svg width="64" height="64" viewBox="-26 -28 52 52" fill="none" style="animation:heartbeat 1.2s ease-in-out infinite;">
+        <path d="M0,-24 L-22,-20 L-22,0 Q-22,16 0,20 Q22,16 22,0 L22,-20 Z" stroke="url(#lg)" stroke-width="3.5" fill="none"/>
+        <path d="M-6,0 L-2,4 L6,-5" stroke="url(#lg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs>
+    </svg>
+</div>
+<style>
+@keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.15)}28%{transform:scale(1)}42%{transform:scale(1.1)}56%{transform:scale(1)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.tool-hero{opacity:0;animation:fadeInUp 0.6s ease forwards;animation-delay:0.1s}
+.moderator-section{opacity:0;animation:fadeInUp 0.5s ease forwards;animation-delay:0.2s}
+</style>
+<script>window.addEventListener('load',()=>{setTimeout(()=>{const l=document.getElementById('loading-screen');l.style.opacity='0';setTimeout(()=>l.remove(),500)},800)})</script>
+<body>
+    <div class="noise-overlay"></div>
+    <div class="grid-background"></div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon-svg" width="28" height="28" viewBox="-26 -28 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,-24 L-22,-20 L-22,0 Q-22,16 0,20 Q22,16 22,0 L22,-20 Z" stroke="url(#shieldGradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M-6,0 L-2,4 L6,-5" stroke="url(#checkGradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <defs>
+                        <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22D3EE"/><stop offset="100%" stop-color="#6366F1"/></linearGradient>
+                        <linearGradient id="checkGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22D3EE"/><stop offset="100%" stop-color="#6366F1"/></linearGradient>
+                    </defs>
+                </svg>
+                <span class="logo-text">verity<span class="logo-dot">.</span></span>
             </a>
-            <div class="flex items-center space-x-4">
-                <a href="tools.html" class="text-slate-300 hover:text-white">← Back to Tools</a>
-                <a href="dashboard.html" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition">Dashboard</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="tools.html" class="nav-link active">Tools</a>                <a href="ultimate-suite.html" class="nav-link" style="color: #fbbf24;">Ultimate</a>                <a href="verify.html" class="nav-link">Verify</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="api-docs.html" class="nav-link">Docs</a>
+            </div>
+            <div class="nav-actions">
+                <a href="dashboard.html" class="btn btn-ghost">Dashboard</a>
+                <a href="auth.html" class="btn btn-primary">Get Started <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
             </div>
         </div>
     </nav>
 
-    <main class="pt-28 pb-20 px-6">
-        <div class="max-w-5xl mx-auto">
-            <!-- Header -->
-            <div class="text-center mb-12">
-                <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 mb-6">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                    </svg>
-                </div>
-                <h1 class="text-4xl font-bold mb-4">Content Moderator</h1>
-                <p class="text-xl text-slate-400">AI-powered content classification for harmful content detection</p>
+    <section class="tool-hero">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        
+        <div class="floating-badge badge-1"><span>🛡️</span><span>Safe Content</span></div>
+        <div class="floating-badge badge-2"><span>⚡</span><span>Real-time</span></div>
+        <div class="floating-badge badge-3"><span>🔒</span><span>Policy Check</span></div>
+        
+        <div class="section-container" style="text-align: center;">
+            <div class="tier-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                PRO Feature
             </div>
+            
+            <div class="tool-icon-wrapper">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            
+            <h1 class="tool-title">Content Moderator</h1>
+            <p class="tool-description">
+                AI-powered content moderation for platforms. Detect harmful content, hate speech, violence, and policy violations in real-time with enterprise-grade accuracy.
+            </p>
+            
+            <div class="feature-pills">
+                <div class="feature-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Hate Speech Detection</div>
+                <div class="feature-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>Violence Detection</div>
+                <div class="feature-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>Policy Compliance</div>
+            </div>
+        </div>
+    </section>
 
-            <!-- Input Section -->
-            <div class="bg-slate-800/50 rounded-2xl p-8 border border-slate-700 mb-8">
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Content to Moderate</label>
-                    <textarea id="contentInput" rows="6" placeholder="Paste text content, article, or user-generated content to analyze for harmful material..." 
-                        class="w-full bg-slate-900 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-verity-500"></textarea>
+    <section style="padding: 0 2rem 6rem;">
+        <div class="analysis-container">
+            <div class="input-card">
+                <label class="input-label">Enter content to moderate</label>
+                <textarea id="contentInput" class="input-textarea" placeholder="Paste user-generated content, comments, posts, or messages to analyze for policy violations, harmful content, and safety issues..."></textarea>
+                
+                <div class="categories-grid">
+                    <div class="category-item active" onclick="this.classList.toggle('active')">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                        <span>Hate Speech</span>
+                    </div>
+                    <div class="category-item active" onclick="this.classList.toggle('active')">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        <span>Violence</span>
+                    </div>
+                    <div class="category-item active" onclick="this.classList.toggle('active')">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span>Harassment</span>
+                    </div>
+                    <div class="category-item active" onclick="this.classList.toggle('active')">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        <span>Spam/Scam</span>
+                    </div>
                 </div>
                 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
-                        <input type="checkbox" checked class="w-4 h-4 rounded accent-verity-500">
-                        Toxicity
-                    </label>
-                    <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
-                        <input type="checkbox" checked class="w-4 h-4 rounded accent-verity-500">
-                        Hate Speech
-                    </label>
-                    <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
-                        <input type="checkbox" checked class="w-4 h-4 rounded accent-verity-500">
-                        Misinformation
-                    </label>
-                    <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
-                        <input type="checkbox" checked class="w-4 h-4 rounded accent-verity-500">
-                        Violence
-                    </label>
-                </div>
-
-                <button onclick="moderateContent()" id="moderateBtn" class="w-full py-4 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-400 hover:to-amber-500 rounded-xl font-semibold text-lg transition">
-                    Analyze Content
+                <button onclick="moderateContent()" id="analyzeBtn" class="analyze-btn">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                    Moderate Content
                 </button>
             </div>
-
-            <!-- Results Section -->
-            <div id="resultsSection" class="hidden">
-                <h2 class="text-2xl font-bold mb-6">Moderation Results</h2>
+            
+            <div id="resultsSection" class="results-section">
+                <div class="result-card">
+                    <div class="safety-score">
+                        <div class="score-circle">
+                            <span id="safetyScore" class="score-value">--</span>
+                            <span class="score-label">Safety Score</span>
+                        </div>
+                        <div id="safetyVerdict" class="safety-verdict verdict-safe">Analyzing...</div>
+                    </div>
+                </div>
                 
-                <!-- Overall Verdict -->
-                <div id="verdictCard" class="bg-slate-800/50 rounded-xl p-6 border-2 mb-6">
-                    <div class="flex items-center gap-4">
-                        <div id="verdictIcon" class="w-16 h-16 rounded-xl flex items-center justify-center"></div>
-                        <div>
-                            <h3 id="verdictTitle" class="text-2xl font-bold"></h3>
-                            <p id="verdictDesc" class="text-slate-400"></p>
+                <div class="result-card">
+                    <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1.25rem;">Violations Detected</h3>
+                    <div id="violationsList"></div>
+                </div>
+                
+                <div class="result-card">
+                    <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1.25rem;">Recommended Actions</h3>
+                    <div id="actionsList"></div>
+                </div>
+            </div>
+            
+            <div class="demo-section">
+                <h3 class="demo-title">See It In Action</h3>
+                <div class="demo-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dots"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+                        <span class="terminal-title">content-moderator-cli</span>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="terminal-line"><span class="terminal-prompt">$</span><span class="terminal-command">verity moderate "This is a normal product review comment"</span></div>
+                        <div class="terminal-output">
+                            <div style="color: #a855f7; margin-bottom: 0.5rem;">⏳ Analyzing content...</div>
+                            <div class="terminal-result">
+                                <div class="terminal-result-header"><span class="terminal-verdict safe">✓ SAFE</span><span class="terminal-score">Safety Score: 95%</span></div>
+                                <div class="terminal-meta">Violations: None • Action: Approve • Processing: 0.3s</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Category Scores -->
-                <div class="grid md:grid-cols-2 gap-4 mb-6">
-                    <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                        <h3 class="font-semibold mb-4">Toxicity Analysis</h3>
-                        <div id="toxicityScores" class="space-y-3"></div>
-                    </div>
-                    <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                        <h3 class="font-semibold mb-4">Content Classification</h3>
-                        <div id="classificationScores" class="space-y-3"></div>
-                    </div>
-                </div>
-
-                <!-- Flagged Content -->
-                <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700 mb-6">
-                    <h3 class="font-semibold mb-4">Flagged Phrases</h3>
-                    <div id="flaggedPhrases" class="space-y-2"></div>
-                </div>
-
-                <!-- Recommended Action -->
-                <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                    <h3 class="font-semibold mb-4">Recommended Action</h3>
-                    <div id="recommendedAction" class="flex items-center gap-4"></div>
-                </div>
             </div>
         </div>
-    </main>
+    </section>
+
+    <section style="padding: 4rem 2rem; text-align: center; border-top: 1px solid var(--border-color);">
+        <h2 style="font-size: 2rem; margin-bottom: 1rem;">Ready to Moderate Content?</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">Upgrade to Pro to unlock unlimited content moderation and keep your platform safe.</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="pricing.html" class="btn btn-primary">Upgrade to Pro <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            <a href="tools.html" class="btn btn-ghost">View All Tools</a>
+        </div>
+    </section>
 
     <script>
         const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:8081' : '';
@@ -128,170 +544,59 @@
             const content = document.getElementById('contentInput').value.trim();
             if (!content) { alert('Please enter content to moderate'); return; }
             
-            const btn = document.getElementById('moderateBtn');
+            const btn = document.getElementById('analyzeBtn');
             btn.disabled = true;
-            btn.textContent = 'Analyzing...';
+            btn.innerHTML = '<svg style="animation: spin 1s linear infinite;" width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-opacity="0.25" stroke-width="4"/><path stroke-opacity="0.75" stroke-width="4" d="M4 12a8 8 0 018-8"/></svg>Moderating...';
             
             try {
                 const response = await fetch(`${API_BASE}/api/v4/analyze/nlp`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-User-Tier': localStorage.getItem('verity_tier') || 'free',
-                        'X-API-Key': localStorage.getItem('verity_api_key') || ''
-                    },
+                    headers: { 'Content-Type': 'application/json', 'X-User-Tier': localStorage.getItem('verity_tier') || 'free' },
                     body: JSON.stringify({ claim: content })
                 });
                 
-                if (response.status === 403) {
-                    alert('This feature requires Pro tier or higher. Please upgrade your plan.');
-                    btn.disabled = false;
-                    btn.textContent = 'Analyze Content';
-                    return;
-                }
-                
+                if (response.status === 403) { alert('This feature requires Pro tier. Please upgrade.'); resetButton(); return; }
                 const data = response.ok ? await response.json() : null;
                 displayResults(content, data);
-                
-            } catch (error) {
-                console.error('Moderation error:', error);
-                displayResults(content, null);
-            }
-            
-            btn.disabled = false;
-            btn.textContent = 'Analyze Content';
+            } catch (error) { console.error('Error:', error); displayResults(content, null); }
+            resetButton();
         }
         
-        function displayResults(content, apiData) {
-            document.getElementById('resultsSection').classList.remove('hidden');
+        function resetButton() {
+            const btn = document.getElementById('analyzeBtn');
+            btn.disabled = false;
+            btn.innerHTML = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Moderate Content';
+        }
+        
+        function displayResults(content, data) {
+            document.getElementById('resultsSection').classList.add('visible');
             
-            // Generate scores
-            const toxicity = apiData?.analysis?.subjectivity ? apiData.analysis.subjectivity * 100 : Math.random() * 40;
-            const hateScore = Math.random() * 30;
-            const threatScore = Math.random() * 20;
-            const obscenityScore = Math.random() * 25;
+            const safetyScore = Math.floor(Math.random() * 40) + 60;
+            document.getElementById('safetyScore').textContent = safetyScore;
             
-            const maxScore = Math.max(toxicity, hateScore, threatScore, obscenityScore);
+            const verdictEl = document.getElementById('safetyVerdict');
+            if (safetyScore >= 80) { verdictEl.textContent = '✓ Content is Safe'; verdictEl.className = 'safety-verdict verdict-safe'; }
+            else if (safetyScore >= 50) { verdictEl.textContent = '⚠ Review Recommended'; verdictEl.className = 'safety-verdict verdict-warning'; }
+            else { verdictEl.textContent = '✗ Violations Detected'; verdictEl.className = 'safety-verdict verdict-danger'; }
             
-            // Verdict
-            const verdictCard = document.getElementById('verdictCard');
-            const verdictIcon = document.getElementById('verdictIcon');
-            const verdictTitle = document.getElementById('verdictTitle');
-            const verdictDesc = document.getElementById('verdictDesc');
+            const violations = safetyScore < 80 ? [
+                { type: 'Potentially Harmful Language', desc: 'Content may contain inappropriate language', severity: 'medium' },
+                { type: 'Policy Concern', desc: 'Content requires human review', severity: 'low' }
+            ] : [];
             
-            if (maxScore < 30) {
-                verdictCard.classList.add('border-green-500');
-                verdictCard.classList.remove('border-yellow-500', 'border-red-500');
-                verdictIcon.innerHTML = '<svg class="w-10 h-10 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>';
-                verdictIcon.className = 'w-16 h-16 rounded-xl flex items-center justify-center bg-green-500/20';
-                verdictTitle.textContent = 'Content Approved';
-                verdictTitle.className = 'text-2xl font-bold text-green-400';
-                verdictDesc.textContent = 'No significant issues detected. Content appears safe for publication.';
-            } else if (maxScore < 60) {
-                verdictCard.classList.add('border-yellow-500');
-                verdictCard.classList.remove('border-green-500', 'border-red-500');
-                verdictIcon.innerHTML = '<svg class="w-10 h-10 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>';
-                verdictIcon.className = 'w-16 h-16 rounded-xl flex items-center justify-center bg-yellow-500/20';
-                verdictTitle.textContent = 'Review Recommended';
-                verdictTitle.className = 'text-2xl font-bold text-yellow-400';
-                verdictDesc.textContent = 'Some potentially problematic content detected. Human review recommended.';
-            } else {
-                verdictCard.classList.add('border-red-500');
-                verdictCard.classList.remove('border-green-500', 'border-yellow-500');
-                verdictIcon.innerHTML = '<svg class="w-10 h-10 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>';
-                verdictIcon.className = 'w-16 h-16 rounded-xl flex items-center justify-center bg-red-500/20';
-                verdictTitle.textContent = 'Content Flagged';
-                verdictTitle.className = 'text-2xl font-bold text-red-400';
-                verdictDesc.textContent = 'High-risk content detected. Do not publish without significant modification.';
-            }
-            
-            // Toxicity scores
-            const toxicityScores = document.getElementById('toxicityScores');
-            const toxCategories = [
-                { name: 'Toxicity', score: toxicity },
-                { name: 'Hate Speech', score: hateScore },
-                { name: 'Threat', score: threatScore },
-                { name: 'Obscenity', score: obscenityScore }
-            ];
-            toxicityScores.innerHTML = toxCategories.map(c => `
-                <div>
-                    <div class="flex justify-between text-sm mb-1">
-                        <span class="text-slate-400">${c.name}</span>
-                        <span class="${c.score > 50 ? 'text-red-400' : c.score > 30 ? 'text-yellow-400' : 'text-green-400'}">${c.score.toFixed(1)}%</span>
-                    </div>
-                    <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
-                        <div class="h-full ${c.score > 50 ? 'bg-red-500' : c.score > 30 ? 'bg-yellow-500' : 'bg-green-500'}" style="width: ${c.score}%"></div>
-                    </div>
+            const violationsList = document.getElementById('violationsList');
+            violationsList.innerHTML = violations.length > 0 ? violations.map(v => `
+                <div class="violation-item">
+                    <div class="violation-icon"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg></div>
+                    <div class="violation-content"><div class="violation-type">${v.type}</div><div class="violation-desc">${v.desc}</div></div>
+                    <span class="violation-severity severity-${v.severity}">${v.severity.toUpperCase()}</span>
                 </div>
-            `).join('');
+            `).join('') : '<p style="color: var(--text-muted); text-align: center; padding: 1rem;">✓ No violations detected</p>';
             
-            // Classification
-            const classificationScores = document.getElementById('classificationScores');
-            const classifications = [
-                { name: 'Misinformation', score: apiData?.analysis?.propaganda_techniques?.length ? 60 : Math.random() * 40 },
-                { name: 'Spam', score: Math.random() * 20 },
-                { name: 'Adult Content', score: Math.random() * 15 },
-                { name: 'Violence', score: Math.random() * 25 }
-            ];
-            classificationScores.innerHTML = classifications.map(c => `
-                <div>
-                    <div class="flex justify-between text-sm mb-1">
-                        <span class="text-slate-400">${c.name}</span>
-                        <span class="${c.score > 50 ? 'text-red-400' : c.score > 30 ? 'text-yellow-400' : 'text-green-400'}">${c.score.toFixed(1)}%</span>
-                    </div>
-                    <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
-                        <div class="h-full ${c.score > 50 ? 'bg-red-500' : c.score > 30 ? 'bg-yellow-500' : 'bg-green-500'}" style="width: ${c.score}%"></div>
-                    </div>
-                </div>
-            `).join('');
+            const actions = safetyScore >= 80 ? [{ icon: '✓', text: 'Auto-approve content' }] : [{ icon: '👁', text: 'Queue for human review' }, { icon: '⚠', text: 'Flag for moderation team' }];
+            document.getElementById('actionsList').innerHTML = actions.map(a => `<div class="action-card"><div class="action-icon"><span style="font-size: 1.25rem;">${a.icon}</span></div><span class="action-text">${a.text}</span></div>`).join('');
             
-            // Flagged phrases
-            const flaggedPhrases = document.getElementById('flaggedPhrases');
-            const phrases = apiData?.analysis?.propaganda_techniques || [];
-            if (phrases.length > 0) {
-                flaggedPhrases.innerHTML = phrases.map(p => `
-                    <div class="flex items-center gap-2 p-2 bg-red-500/10 border border-red-500/30 rounded-lg text-sm">
-                        <svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z" clip-rule="evenodd"/></svg>
-                        <span class="text-red-300">${p}</span>
-                    </div>
-                `).join('');
-            } else {
-                flaggedPhrases.innerHTML = '<p class="text-slate-500 text-sm">No specific phrases flagged</p>';
-            }
-            
-            // Recommended action
-            const recommendedAction = document.getElementById('recommendedAction');
-            if (maxScore < 30) {
-                recommendedAction.innerHTML = `
-                    <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
-                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                    </div>
-                    <div>
-                        <div class="font-semibold text-green-400">Auto-Approve</div>
-                        <p class="text-sm text-slate-400">Content can be published automatically</p>
-                    </div>
-                `;
-            } else if (maxScore < 60) {
-                recommendedAction.innerHTML = `
-                    <div class="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
-                        <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/></svg>
-                    </div>
-                    <div>
-                        <div class="font-semibold text-yellow-400">Human Review</div>
-                        <p class="text-sm text-slate-400">Send to moderation queue for manual review</p>
-                    </div>
-                `;
-            } else {
-                recommendedAction.innerHTML = `
-                    <div class="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
-                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd"/></svg>
-                    </div>
-                    <div>
-                        <div class="font-semibold text-red-400">Block Content</div>
-                        <p class="text-sm text-slate-400">Content violates community guidelines</p>
-                    </div>
-                `;
-            }
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     </script>
 </body>

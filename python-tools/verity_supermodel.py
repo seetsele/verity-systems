@@ -12,7 +12,7 @@ APIs Integrated:
 - Hugging Face Inference API (free tier)
 - DuckDuckGo Search (free, no API key)
 - Wikidata Query Service (free)
-- OpenAI API (via Azure credits from GitHub Education)
+- Azure AI Foundry (replaces Azure OpenAI - more robust)
 - Perplexity AI (research queries)
 - Serper API (Google search - free tier)
 
@@ -621,12 +621,16 @@ class HuggingFaceProvider(FactCheckProvider):
                 async with session.post(url, headers=headers, json=payload) as response:
                     if response.status == 200:
                         data = await response.json()
-                        results.append({
-                            'source': 'Hugging Face NLI',
-                            'model': self.models['nli'],
-                            'labels': data.get('labels', []),
-                            'scores': data.get('scores', [])
-                        })
+                        # Handle both list and dict response formats
+                        if isinstance(data, list) and len(data) > 0:
+                            data = data[0]  # Take first result if list
+                        if isinstance(data, dict):
+                            results.append({
+                                'source': 'Hugging Face NLI',
+                                'model': self.models['nli'],
+                                'labels': data.get('labels', []),
+                                'scores': data.get('scores', [])
+                            })
         except Exception as e:
             logger.error(f"Hugging Face API error: {e}")
         
@@ -663,7 +667,7 @@ class GroqProvider(FactCheckProvider):
                     'Content-Type': 'application/json'
                 }
                 payload = {
-                    'model': 'llama-3.1-70b-versatile',  # Free model
+                    'model': 'llama-3.3-70b-versatile',  # Free model (updated from deprecated 3.1)
                     'messages': [
                         {
                             'role': 'system',
@@ -695,7 +699,7 @@ class GroqProvider(FactCheckProvider):
                             analysis = {'raw_response': content}
                         
                         return [{
-                            'source': 'Groq (Llama 3.1)',
+                            'source': 'Groq (Llama 3.3)',
                             'analysis': analysis
                         }]
         except Exception as e:
@@ -828,22 +832,26 @@ class SerperProvider(FactCheckProvider):
         return results
 
 
-class AzureOpenAIProvider(FactCheckProvider):
+class AzureFoundryProvider(FactCheckProvider):
     """
-    Azure OpenAI Service
+    Azure AI Foundry Service (replaces Azure OpenAI)
     GitHub Education Pack: $100 Azure credits
-    Access to GPT-4 and other OpenAI models via Azure
+    Access to 1900+ AI models via Azure AI Foundry:
+    - GPT-4o, GPT-4 Turbo, GPT-3.5 Turbo
+    - Phi-4, Phi-3.5 models (Microsoft)
+    - Llama, Mistral, Cohere models
+    - DeepSeek, Jamba, and more
+    More robust with better model selection and enterprise features.
     """
     
-    def __init__(self, api_key: Optional[str] = None, endpoint: Optional[str] = None):
-        self.api_key = api_key or os.getenv('AZURE_OPENAI_API_KEY')
-        self.endpoint = endpoint or os.getenv('AZURE_OPENAI_ENDPOINT')
-        self.deployment_name = os.getenv('AZURE_OPENAI_DEPLOYMENT', 'gpt-4')
-        self.api_version = '2024-02-15-preview'
+    def __init__(self, model: str = "gpt-4o"):
+        self.api_key = os.getenv('AZURE_AI_FOUNDRY_API_KEY')
+        self.endpoint = os.getenv('AZURE_AI_FOUNDRY_ENDPOINT')
+        self.model = model
     
     @property
     def name(self) -> str:
-        return "Azure OpenAI"
+        return f"Azure AI Foundry ({self.model})"
     
     @property
     def is_available(self) -> bool:
@@ -854,10 +862,16 @@ class AzureOpenAIProvider(FactCheckProvider):
             return []
         
         try:
+            # Use Azure AI Foundry inference endpoint
+            base_url = self.endpoint.rstrip('/')
+            if not base_url.endswith('/models'):
+                base_url = f"{base_url}/models"
+            
+            url = f"{base_url}/{self.model}/chat/completions"
+            
             async with aiohttp.ClientSession() as session:
-                url = f"{self.endpoint}/openai/deployments/{self.deployment_name}/chat/completions?api-version={self.api_version}"
                 headers = {
-                    'api-key': self.api_key,
+                    'Authorization': f'Bearer {self.api_key}',
                     'Content-Type': 'application/json'
                 }
                 payload = {
@@ -891,11 +905,14 @@ class AzureOpenAIProvider(FactCheckProvider):
                             analysis = {'raw_response': content}
                         
                         return [{
-                            'source': 'Azure OpenAI (GPT-4)',
+                            'source': f'Azure AI Foundry ({self.model})',
                             'analysis': analysis
                         }]
+                    else:
+                        error_text = await response.text()
+                        logger.warning(f"Azure AI Foundry {response.status}: {error_text[:200]}")
         except Exception as e:
-            logger.error(f"Azure OpenAI API error: {e}")
+            logger.error(f"Azure AI Foundry API error: {e}")
         return []
 
 
@@ -1232,7 +1249,7 @@ class VeritySuperModel:
             # AI/LLM Providers (free tiers + GitHub Education credits)
             GroqProvider(),           # Free: Llama 3.1 70B
             AnthropicProvider(),      # GitHub Education: $25/month
-            AzureOpenAIProvider(),    # GitHub Education: $100 Azure credits
+            AzureFoundryProvider(),   # Azure AI Foundry: $100 credits, 1900+ models
             PerplexityProvider(),     # Research queries with citations
             OpenRouterProvider(),     # Free: Gemma 2 9B
             

@@ -67,8 +67,15 @@
         
         .map-container {
             display: grid;
-            grid-template-columns: 1fr 350px;
+            grid-template-columns: 320px 1fr 380px;
             height: calc(100vh - 80px);
+        }
+        
+        .map-filters {
+            background: #0a0a0a;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+            padding: 1.5rem;
         }
         
         #map {
@@ -185,6 +192,196 @@
             letter-spacing: 0.05em;
         }
         
+        /* Misinformation Type Filters */
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #6b7280;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+        
+        .type-filters {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .type-filter {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .type-filter:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+        
+        .type-filter.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+        
+        .type-filter input {
+            display: none;
+        }
+        
+        .type-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .type-icon.politics { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+        .type-icon.health { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .type-icon.science { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .type-icon.economy { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .type-icon.celebrity { background: linear-gradient(135deg, #ec4899, #db2777); }
+        .type-icon.conspiracy { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        
+        .type-info {
+            flex: 1;
+        }
+        
+        .type-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: white;
+        }
+        
+        .type-count {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        /* Research Panel */
+        .research-panel {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        
+        .research-header {
+            padding: 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .research-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .article-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .article-item {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .article-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .article-item:last-child {
+            border-bottom: none;
+        }
+        
+        .article-source {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .source-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .source-name {
+            font-size: 0.75rem;
+            color: #22d3ee;
+            font-weight: 500;
+        }
+        
+        .article-title {
+            font-size: 0.875rem;
+            color: white;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .article-date, .article-author {
+            font-size: 0.75rem;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .article-verdict {
+            font-size: 0.625rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        
+        .article-verdict.false {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        
+        .article-verdict.misleading {
+            background: rgba(249, 115, 22, 0.2);
+            color: #f97316;
+        }
+        
+        .article-verdict.partial {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+        
         .legend {
             display: flex;
             flex-direction: column;
@@ -290,28 +487,76 @@
             color: white;
         }
         
+        @media (max-width: 1024px) {
+            .map-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 50vh auto;
+            }
+            
+            .map-filters {
+                order: 1;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .map-filters .sidebar-section,
+            .map-filters .filter-group {
+                flex: 1;
+                min-width: 200px;
+            }
+            
+            #map {
+                order: 2;
+                height: 50vh;
+            }
+            
+            .map-sidebar {
+                order: 3;
+                border-left: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+        
         @media (max-width: 768px) {
             .map-container {
                 grid-template-columns: 1fr;
             }
             
+            .map-filters {
+                flex-direction: column;
+            }
+            
+            .type-filters {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+            }
+            
             .map-sidebar {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 40vh;
-                border-left: none;
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 20px 20px 0 0;
+                position: relative;
             }
             
             #map {
-                height: 60vh;
+                height: 40vh;
             }
         }
     </style>
 </head>
+<div id="loading-screen" style="position:fixed;inset:0;background:#050505;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.5s ease;">
+    <svg width="64" height="64" viewBox="-26 -28 52 52" fill="none" style="animation:heartbeat 1.2s ease-in-out infinite;">
+        <path d="M0,-24 L-22,-20 L-22,0 Q-22,16 0,20 Q22,16 22,0 L22,-20 Z" stroke="url(#lg)" stroke-width="3.5" fill="none"/>
+        <path d="M-6,0 L-2,4 L6,-5" stroke="url(#lg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs>
+    </svg>
+</div>
+<style>
+@keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.15)}28%{transform:scale(1)}42%{transform:scale(1.1)}56%{transform:scale(1)}}
+</style>
+<script>window.addEventListener('load',()=>{setTimeout(()=>{const l=document.getElementById('loading-screen');l.style.opacity='0';setTimeout(()=>l.remove(),500)},800)})</script>
 <body class="map-page">
     <!-- Header -->
     <header class="map-header">
@@ -335,16 +580,8 @@
     
     <!-- Map Container -->
     <div class="map-container">
-        <!-- Map -->
-        <div id="map" style="position: relative;">
-            <div class="loading-overlay" id="loadingOverlay">
-                <div class="loading-spinner"></div>
-            </div>
-        </div>
-        
-        <!-- Sidebar -->
-        <aside class="map-sidebar">
-            <!-- Time Filter -->
+        <!-- Left Filter Panel -->
+        <aside class="map-filters">
             <div class="sidebar-section">
                 <div class="sidebar-title">Time Range</div>
                 <div class="time-filter">
@@ -354,6 +591,104 @@
                 </div>
             </div>
             
+            <div class="filter-group">
+                <label class="filter-label">Misinformation Type</label>
+                <div class="type-filters">
+                    <label class="type-filter active">
+                        <input type="checkbox" value="politics" checked>
+                        <div class="type-icon politics">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 21h18M3 10h18M12 3l9 7H3l9-7z"/></svg>
+                        </div>
+                        <div class="type-info">
+                            <div class="type-name">Politics</div>
+                            <div class="type-count" id="countPolitics">1,247 claims</div>
+                        </div>
+                    </label>
+                    <label class="type-filter active">
+                        <input type="checkbox" value="health" checked>
+                        <div class="type-icon health">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        </div>
+                        <div class="type-info">
+                            <div class="type-name">Health</div>
+                            <div class="type-count" id="countHealth">892 claims</div>
+                        </div>
+                    </label>
+                    <label class="type-filter active">
+                        <input type="checkbox" value="science" checked>
+                        <div class="type-icon science">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 3h6v2l-1 1v4l5 5v4H5v-4l5-5V6L9 5V3z"/></svg>
+                        </div>
+                        <div class="type-info">
+                            <div class="type-name">Science</div>
+                            <div class="type-count" id="countScience">456 claims</div>
+                        </div>
+                    </label>
+                    <label class="type-filter active">
+                        <input type="checkbox" value="economy" checked>
+                        <div class="type-icon economy">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                        </div>
+                        <div class="type-info">
+                            <div class="type-name">Economy</div>
+                            <div class="type-count" id="countEconomy">328 claims</div>
+                        </div>
+                    </label>
+                    <label class="type-filter active">
+                        <input type="checkbox" value="celebrity" checked>
+                        <div class="type-icon celebrity">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        </div>
+                        <div class="type-info">
+                            <div class="type-name">Celebrity</div>
+                            <div class="type-count" id="countCelebrity">215 claims</div>
+                        </div>
+                    </label>
+                    <label class="type-filter active">
+                        <input type="checkbox" value="conspiracy" checked>
+                        <div class="type-icon conspiracy">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                        </div>
+                        <div class="type-info">
+                            <div class="type-name">Conspiracy</div>
+                            <div class="type-count" id="countConspiracy">189 claims</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Legend</div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-dot true"></div>
+                        <span>Verified True</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot false"></div>
+                        <span>Verified False</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot partial"></div>
+                        <span>Partially True</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot misleading"></div>
+                        <span>Misleading</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Map -->
+        <div id="map" style="position: relative;">
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+        
+        <!-- Right Sidebar - Research Panel -->
+        <aside class="map-sidebar">
             <!-- Stats -->
             <div class="sidebar-section">
                 <div class="sidebar-title">Global Statistics</div>
@@ -377,34 +712,24 @@
                 </div>
             </div>
             
-            <!-- Hotspots -->
-            <div class="sidebar-section">
-                <div class="sidebar-title">Misinformation Hotspots</div>
-                <div class="hotspot-list" id="hotspotList">
+            <!-- Research: Recent False Claims -->
+            <div class="research-panel">
+                <div class="research-header">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a5b4fc" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+                    </svg>
+                    <span class="research-title">Recent False Claims</span>
+                </div>
+                <div class="article-list" id="articleList">
                     <!-- Populated by JavaScript -->
                 </div>
             </div>
             
-            <!-- Legend -->
+            <!-- Hotspots -->
             <div class="sidebar-section">
-                <div class="sidebar-title">Legend</div>
-                <div class="legend">
-                    <div class="legend-item">
-                        <div class="legend-dot true"></div>
-                        <span>Verified True</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot false"></div>
-                        <span>Verified False</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot partial"></div>
-                        <span>Partially True</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot misleading"></div>
-                        <span>Misleading</span>
-                    </div>
+                <div class="sidebar-title">Top Hotspots</div>
+                <div class="hotspot-list" id="hotspotList">
+                    <!-- Populated by JavaScript -->
                 </div>
             </div>
         </aside>
@@ -473,6 +798,87 @@
                 false_claims: 280,
                 misinfo_rate: 35.9,
                 topics: ['politics', 'health']
+            }
+        ];
+        
+        // Sample articles data for research panel
+        const sampleArticles = [
+            {
+                id: 1,
+                title: "Viral claim about new tax policy debunked by economists",
+                source: "Twitter/X",
+                author: "@newsbreaker_2024",
+                date: "2024-12-28",
+                verdict: "false",
+                type: "politics",
+                location: "United States",
+                url: "#"
+            },
+            {
+                id: 2,
+                title: "Misleading health claims about popular supplement spread online",
+                source: "Facebook",
+                author: "Health Myths Page",
+                date: "2024-12-27",
+                verdict: "misleading",
+                type: "health",
+                location: "United Kingdom",
+                url: "#"
+            },
+            {
+                id: 3,
+                title: "False climate statistics shared by influencer reach millions",
+                source: "Instagram",
+                author: "@eco_truth_seeker",
+                date: "2024-12-27",
+                verdict: "false",
+                type: "science",
+                location: "France",
+                url: "#"
+            },
+            {
+                id: 4,
+                title: "Cryptocurrency scam uses fabricated celebrity endorsement",
+                source: "Telegram",
+                author: "Crypto Signals Group",
+                date: "2024-12-26",
+                verdict: "false",
+                type: "celebrity",
+                location: "India",
+                url: "#"
+            },
+            {
+                id: 5,
+                title: "Outdated economic data shared as current market analysis",
+                source: "WhatsApp",
+                author: "Unknown",
+                date: "2024-12-26",
+                verdict: "misleading",
+                type: "economy",
+                location: "Brazil",
+                url: "#"
+            },
+            {
+                id: 6,
+                title: "Doctored image of political figure goes viral before election",
+                source: "Twitter/X",
+                author: "@political_insider",
+                date: "2024-12-25",
+                verdict: "false",
+                type: "politics",
+                location: "United States",
+                url: "#"
+            },
+            {
+                id: 7,
+                title: "Conspiracy theory about 5G technology resurfaces",
+                source: "YouTube",
+                author: "Truth Seekers Channel",
+                date: "2024-12-25",
+                verdict: "false",
+                type: "conspiracy",
+                location: "United Kingdom",
+                url: "#"
             }
         ];
         
@@ -650,6 +1056,75 @@
                 </div>
             `).join('');
         }
+        
+        // Update article list (research panel)
+        function updateArticleList(articles) {
+            const list = document.getElementById('articleList');
+            if (!list) return;
+            
+            const sourceIcons = {
+                'Twitter/X': '𝕏',
+                'Facebook': 'f',
+                'Instagram': '📷',
+                'YouTube': '▶',
+                'Telegram': '✈',
+                'WhatsApp': '💬'
+            };
+            
+            list.innerHTML = articles.map(a => `
+                <div class="article-item" onclick="window.open('${a.url}', '_blank')">
+                    <div class="article-source">
+                        <div class="source-icon">${sourceIcons[a.source] || '📰'}</div>
+                        <span class="source-name">${a.source}</span>
+                        <span class="article-verdict ${a.verdict}">${a.verdict}</span>
+                    </div>
+                    <div class="article-title">${a.title}</div>
+                    <div class="article-meta">
+                        <span class="article-date">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                            ${a.date}
+                        </span>
+                        <span class="article-author">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            ${a.author}
+                        </span>
+                    </div>
+                    <div class="hotspot-topics" style="margin-top: 0.5rem;">
+                        <span class="topic-tag">${a.type}</span>
+                        <span class="topic-tag">${a.location}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Get active type filters
+        function getActiveFilters() {
+            const filters = [];
+            document.querySelectorAll('.type-filter input:checked').forEach(input => {
+                filters.push(input.value);
+            });
+            return filters;
+        }
+        
+        // Filter articles by type
+        function filterArticlesByType() {
+            const activeTypes = getActiveFilters();
+            const filtered = sampleArticles.filter(a => activeTypes.includes(a.type));
+            updateArticleList(filtered);
+        }
+        
+        // Type filter checkboxes
+        document.querySelectorAll('.type-filter').forEach(filter => {
+            filter.addEventListener('click', (e) => {
+                const input = filter.querySelector('input');
+                input.checked = !input.checked;
+                filter.classList.toggle('active', input.checked);
+                filterArticlesByType();
+            });
+        });
+        
+        // Initial article load
+        setTimeout(() => updateArticleList(sampleArticles), 100);
         
         // Fly to hotspot on click
         function flyToHotspot(lng, lat) {
