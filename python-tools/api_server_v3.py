@@ -23,6 +23,14 @@ import logging
 import json
 import hashlib
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("✅ Loaded environment variables from .env")
+except ImportError:
+    print("⚠️ python-dotenv not installed, using system environment variables")
+
 from fastapi import FastAPI, HTTPException, Depends, Request, Response, status, BackgroundTasks
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials, APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
@@ -288,6 +296,7 @@ class ClaimRequestV3(BaseModel):
     claim: str = Field(..., min_length=10, max_length=10000, description="The claim to verify")
     providers: Optional[List[str]] = Field(None, description="Specific providers to use")
     detail_level: str = Field("standard", description="Response detail: minimal, standard, or comprehensive")
+    deep_analysis: bool = Field(False, description="Enable thorough multi-pass analysis (slower but more accurate)")
     include_sources: bool = Field(True, description="Include source details")
     include_evidence: bool = Field(True, description="Include evidence chain")
     include_reasoning: bool = Field(True, description="Include reasoning chain")
@@ -547,6 +556,17 @@ async def verify_claim_v3(
     - `minimal`: Just verdict and confidence
     - `standard`: Verdict, summary, key sources
     - `comprehensive`: Full analysis with reasoning chain
+    
+    **Deep Analysis Mode:**
+    When `deep_analysis=true`, the system performs:
+    - Multi-pass claim decomposition
+    - Cross-reference verification
+    - Source reliability analysis
+    - Temporal context checking
+    - Bias and manipulation detection
+    - Expert source prioritization
+    
+    This mode takes longer (10-30 seconds) but provides higher accuracy.
     """
     model: VeritySuperModel = request.app.state.model
     engine: VerityEngine = request.app.state.engine
@@ -558,33 +578,91 @@ async def verify_claim_v3(
         # Anonymize PII
         claim = DataAnonymizer.anonymize_text(claim_request.claim)
         
+        # Determine timeout and provider set based on analysis mode
+        if claim_request.deep_analysis:
+            timeout = 45.0  # Longer timeout for deep analysis
+            logger.info(f"Deep analysis mode enabled for claim: {claim[:50]}...")
+        else:
+            timeout = 30.0
+        
         # Run verification through super model
         basic_result = await model.verify_claim(
             claim=claim,
             client_id=client_id,
-            use_cache=True,
+            use_cache=not claim_request.deep_analysis,  # Don't use cache for deep analysis
             providers=claim_request.providers
         )
         
         # Get provider results for enhanced analysis
         provider_results = []
-        for provider in model.providers:
-            if provider.is_available:
-                try:
-                    results = await asyncio.wait_for(
-                        provider.check_claim(claim),
-                        timeout=30.0
-                    )
-                    provider_results.append({
-                        'provider': provider.name,
-                        'results': results,
-                        'success': True
-                    })
-                except:
-                    pass
+        providers_to_check = model.providers
         
-        # Run through enhanced engine
-        enhanced_result = await engine.verify(claim, provider_results, client_id)
+        # For deep analysis, ensure we check ALL available providers
+        if claim_request.deep_analysis:
+            # First pass: gather all provider results
+            tasks = []
+            for provider in providers_to_check:
+                if provider.is_available:
+                    tasks.append(asyncio.create_task(
+                        asyncio.wait_for(
+                            provider.check_claim(claim),
+                            timeout=timeout
+                        )
+                    ))
+            
+            if tasks:
+                results = await asyncio.gather(*tasks, return_exceptions=True)
+                for i, result in enumerate(results):
+                    if not isinstance(result, Exception) and result:
+                        provider = providers_to_check[i]
+                        provider_results.append({
+                            'provider': provider.name,
+                            'results': result,
+                            'success': True
+                        })
+            
+            # Second pass: Re-query high-value providers for confirmation
+            high_value_providers = ['Claude', 'GPT4', 'Perplexity', 'GoogleFactCheck']
+            for provider in providers_to_check:
+                if provider.name in high_value_providers and provider.is_available:
+                    try:
+                        # Ask for explicit analysis with reasoning
+                        confirmation = await asyncio.wait_for(
+                            provider.check_claim(f"Analyze this claim step by step: {claim}"),
+                            timeout=20.0
+                        )
+                        if confirmation:
+                            provider_results.append({
+                                'provider': f"{provider.name}_confirmation",
+                                'results': confirmation,
+                                'success': True
+                            })
+                    except:
+                        pass
+        else:
+            # Standard mode: single pass
+            for provider in providers_to_check:
+                if provider.is_available:
+                    try:
+                        results = await asyncio.wait_for(
+                            provider.check_claim(claim),
+                            timeout=timeout
+                        )
+                        provider_results.append({
+                            'provider': provider.name,
+                            'results': results,
+                            'success': True
+                        })
+                    except:
+                        pass
+        
+        # Run through enhanced engine with deep analysis flag
+        enhanced_result = await engine.verify(
+            claim, 
+            provider_results, 
+            client_id,
+            deep_mode=claim_request.deep_analysis
+        )
         
         # Update analytics
         verdict_key = enhanced_result.primary_verdict.value
@@ -907,6 +985,205 @@ async def generate_api_key(
         'created_at': datetime.utcnow().isoformat(),
         'usage': 'Include in X-API-Key header'
     }
+
+
+# ============================================================
+# STRIPE PAYMENT ENDPOINTS
+# ============================================================
+
+# Stripe price IDs - configured via environment variables (loaded from .env)
+STRIPE_PRICE_MAP = {
+    'starter': os.getenv('STRIPE_STARTER_PRICE_ID', 'price_1SjCYA9HThAyZpOKDiiLhwm2'),
+    'pro': os.getenv('STRIPE_PROFESSIONAL_PRICE_ID', 'price_1SjCb99HThAyZpOKiRzqSyIg'),
+    'professional': os.getenv('STRIPE_PROFESSIONAL_PRICE_ID', 'price_1SjCb99HThAyZpOKiRzqSyIg'),
+    'business': os.getenv('STRIPE_BUSINESS_PRICE_ID', 'price_1SjClu9HThAyZpOKI9tX9bHO'),
+}
+
+
+class CheckoutRequest(BaseModel):
+    """Stripe checkout session request"""
+    price_id: str
+    customer_email: str
+    success_url: Optional[str] = None
+    cancel_url: Optional[str] = None
+
+
+class PortalRequest(BaseModel):
+    """Stripe customer portal request"""
+    return_url: str
+
+
+@app.post("/v1/checkout", tags=["Payments"], summary="Create Stripe Checkout Session")
+async def create_checkout_session(request: Request, checkout_data: CheckoutRequest):
+    """
+    Create a Stripe Checkout session for subscription payment.
+    
+    Returns a checkout URL that the client should redirect to.
+    """
+    try:
+        import stripe
+        
+        stripe_secret = os.getenv('STRIPE_SECRET_KEY')
+        if not stripe_secret:
+            raise HTTPException(
+                status_code=503,
+                detail="Payment service not configured. Contact support."
+            )
+        
+        stripe.api_key = stripe_secret
+        
+        # Determine success and cancel URLs
+        origin = request.headers.get('origin', 'http://localhost:8000')
+        success_url = checkout_data.success_url or f"{origin}/billing.html?success=true"
+        cancel_url = checkout_data.cancel_url or f"{origin}/billing.html?canceled=true"
+        
+        # Create checkout session
+        session = stripe.checkout.Session.create(
+            customer_email=checkout_data.customer_email,
+            payment_method_types=['card'],
+            line_items=[{
+                'price': checkout_data.price_id,
+                'quantity': 1,
+            }],
+            mode='subscription',
+            success_url=success_url,
+            cancel_url=cancel_url,
+            metadata={
+                'customer_email': checkout_data.customer_email
+            }
+        )
+        
+        logger.info(f"Created checkout session {session.id} for {checkout_data.customer_email}")
+        
+        return {
+            'session_id': session.id,
+            'checkout_url': session.url
+        }
+        
+    except ImportError:
+        raise HTTPException(
+            status_code=503,
+            detail="Stripe SDK not installed. Run: pip install stripe"
+        )
+    except Exception as e:
+        logger.error(f"Stripe checkout error: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Payment error: {str(e)}"
+        )
+
+
+@app.post("/v1/customer-portal", tags=["Payments"], summary="Create Customer Portal Session")
+async def create_customer_portal(request: Request, portal_data: PortalRequest):
+    """
+    Create a Stripe Customer Portal session for subscription management.
+    
+    Allows customers to manage their subscription, update payment methods, and view invoices.
+    """
+    try:
+        import stripe
+        
+        stripe_secret = os.getenv('STRIPE_SECRET_KEY')
+        if not stripe_secret:
+            raise HTTPException(
+                status_code=503,
+                detail="Payment service not configured."
+            )
+        
+        stripe.api_key = stripe_secret
+        
+        # In production, you would look up the Stripe customer ID from your database
+        # For now, we'll return an error indicating the need for customer lookup
+        customer_id = request.headers.get('X-Stripe-Customer-ID')
+        
+        if not customer_id:
+            raise HTTPException(
+                status_code=400,
+                detail="Customer ID required. Please contact support for portal access."
+            )
+        
+        session = stripe.billing_portal.Session.create(
+            customer=customer_id,
+            return_url=portal_data.return_url
+        )
+        
+        return {
+            'portal_url': session.url
+        }
+        
+    except ImportError:
+        raise HTTPException(
+            status_code=503,
+            detail="Stripe SDK not installed."
+        )
+    except Exception as e:
+        logger.error(f"Customer portal error: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Portal error: {str(e)}"
+        )
+
+
+@app.post("/v1/webhook/stripe", tags=["Payments"], summary="Stripe Webhook Handler")
+async def stripe_webhook(request: Request):
+    """
+    Handle Stripe webhook events for payment and subscription updates.
+    """
+    try:
+        import stripe
+        
+        stripe_secret = os.getenv('STRIPE_SECRET_KEY')
+        webhook_secret = os.getenv('STRIPE_WEBHOOK_SECRET')
+        
+        if not stripe_secret:
+            raise HTTPException(status_code=503, detail="Stripe not configured")
+        
+        stripe.api_key = stripe_secret
+        
+        payload = await request.body()
+        sig_header = request.headers.get('stripe-signature')
+        
+        if webhook_secret and sig_header:
+            try:
+                event = stripe.Webhook.construct_event(
+                    payload, sig_header, webhook_secret
+                )
+            except ValueError:
+                raise HTTPException(status_code=400, detail="Invalid payload")
+            except stripe.error.SignatureVerificationError:
+                raise HTTPException(status_code=400, detail="Invalid signature")
+        else:
+            # Without webhook secret, parse directly (only for development)
+            event = json.loads(payload)
+        
+        event_type = event.get('type', event.get('event_type', ''))
+        
+        logger.info(f"Received Stripe webhook: {event_type}")
+        
+        # Handle specific events
+        if event_type == 'checkout.session.completed':
+            session = event['data']['object']
+            customer_email = session.get('customer_email') or session.get('metadata', {}).get('customer_email')
+            logger.info(f"Checkout completed for {customer_email}")
+            # Update user subscription in database
+            
+        elif event_type == 'customer.subscription.updated':
+            subscription = event['data']['object']
+            logger.info(f"Subscription updated: {subscription['id']}")
+            
+        elif event_type == 'customer.subscription.deleted':
+            subscription = event['data']['object']
+            logger.info(f"Subscription cancelled: {subscription['id']}")
+            
+        elif event_type == 'invoice.payment_failed':
+            invoice = event['data']['object']
+            logger.warning(f"Payment failed for invoice: {invoice['id']}")
+        
+        return {'received': True, 'event_type': event_type}
+        
+    except Exception as e:
+        logger.error(f"Webhook error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # ============================================================

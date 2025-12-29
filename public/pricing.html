@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - Verity Intelligence Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        verity: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        }
+        .card-glow {
+            box-shadow: 0 0 40px rgba(34, 197, 94, 0.1);
+        }
+        .card-glow-pro {
+            box-shadow: 0 0 60px rgba(34, 197, 94, 0.2);
+        }
+        .feature-check {
+            color: #22c55e;
+        }
+        .feature-x {
+            color: #64748b;
+        }
+        .popular-badge {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen font-sans text-white">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="index.html" class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-verity-500 to-verity-600 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold">Verity</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-slate-300 hover:text-white transition">Home</a>
+                    <a href="pricing.html" class="text-verity-400 font-medium">Pricing</a>
+                    <a href="verify.html" class="text-slate-300 hover:text-white transition">Try Free</a>
+                    <a href="dashboard.html" class="text-slate-300 hover:text-white transition">Dashboard</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="auth.html" class="text-slate-300 hover:text-white transition">Sign In</a>
+                    <a href="auth.html?signup=true" class="px-5 py-2.5 bg-verity-600 hover:bg-verity-500 rounded-lg font-medium transition">
+                        Get Started
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">
+                Simple, Transparent Pricing
+            </h1>
+            <p class="text-xl text-slate-400 mb-8">
+                Start free. Scale as you grow. No hidden fees.
+            </p>
+            
+            <!-- Billing Toggle -->
+            <div class="flex items-center justify-center space-x-4 mb-12">
+                <span id="monthlyLabel" class="text-white font-medium">Monthly</span>
+                <button id="billingToggle" class="relative w-14 h-7 bg-slate-700 rounded-full transition-colors" onclick="toggleBilling()">
+                    <div id="toggleDot" class="absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform"></div>
+                </button>
+                <span id="annualLabel" class="text-slate-400">
+                    Annual <span class="text-verity-400 text-sm">(Save 20%)</span>
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Cards -->
+    <section class="pb-24 px-6">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-4 gap-6">
+            
+            <!-- Free Tier -->
+            <div class="bg-slate-800/50 rounded-2xl p-8 border border-slate-700 card-glow">
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-slate-300 mb-2">Free</h3>
+                    <div class="flex items-baseline">
+                        <span class="text-4xl font-bold">$0</span>
+                        <span class="text-slate-400 ml-2">/month</span>
+                    </div>
+                    <p class="text-slate-400 mt-3 text-sm">Perfect for trying out Verity</p>
+                </div>
+                
+                <button onclick="startCheckout('free')" class="block w-full py-3 px-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-center font-medium transition mb-8 disabled:opacity-50">
+                    Get Started Free
+                </button>
+                
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300"><strong>10</strong> verifications/day</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300">Basic fact-checking</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300">5 data sources</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-x mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-500">API access</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-x mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-500">Advanced analysis</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Pro Tier -->
+            <div class="bg-slate-800/50 rounded-2xl p-8 border border-verity-500/50 card-glow-pro relative">
+                <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+                    <span class="popular-badge px-4 py-1 rounded-full text-sm font-medium text-white">
+                        Most Popular
+                    </span>
+                </div>
+                
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-verity-400 mb-2">Pro</h3>
+                    <div class="flex items-baseline">
+                        <span class="text-4xl font-bold monthly-price">$29</span>
+                        <span class="text-4xl font-bold annual-price hidden">$23</span>
+                        <span class="text-slate-400 ml-2">/month</span>
+                    </div>
+                    <p class="text-slate-400 mt-3 text-sm">For journalists & researchers</p>
+                </div>
+                
+                <button onclick="startCheckout('pro')" class="block w-full py-3 px-4 bg-verity-600 hover:bg-verity-500 rounded-lg text-center font-medium transition mb-8 disabled:opacity-50">
+                    Start 7-Day Free Trial
+                </button>
+                
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300"><strong>500</strong> verifications/month</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300"><strong>27</strong> data sources</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300">API access</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300">NLP & bias detection</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300">Source credibility scores</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300">Email support</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Team Tier -->
+            <div class="bg-slate-800/50 rounded-2xl p-8 border border-slate-700 card-glow">
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-slate-300 mb-2">Team</h3>
+                    <div class="flex items-baseline">
+                        <span class="text-4xl font-bold monthly-price">$99</span>
+                        <span class="text-4xl font-bold annual-price hidden">$79</span>
+                        <span class="text-slate-400 ml-2">/month</span>
+                    </div>
+                    <p class="text-slate-400 mt-3 text-sm">For newsrooms & agencies</p>
+                </div>
+                
+                <button onclick="startCheckout('team')" class="block w-full py-3 px-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-center font-medium transition mb-8 disabled:opacity-50">
+                    Start Free Trial
+                </button>
+                
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300"><strong>2,500</strong> verifications/month</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300"><strong>5 team members</strong></span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300">All Pro features</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300">Monte Carlo confidence</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300">Temporal & geo analysis</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300">Priority support</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Enterprise Tier -->
+            <div class="bg-slate-800/50 rounded-2xl p-8 border border-slate-700 card-glow">
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-slate-300 mb-2">Enterprise</h3>
+                    <div class="flex items-baseline">
+                        <span class="text-4xl font-bold">Custom</span>
+                    </div>
+                    <p class="text-slate-400 mt-3 text-sm">For large organizations</p>
+                </div>
+                
+                <a href="mailto:enterprise@verity.ai?subject=Enterprise%20Inquiry" class="block w-full py-3 px-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-center font-medium transition mb-8">
+                    Contact Sales
+                </a>
+                
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300"><strong>Unlimited</strong> verifications</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300"><strong>Unlimited</strong> team members</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300">All Team features</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300">Custom integrations</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300">SLA & uptime guarantee</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 feature-check mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-slate-300">Dedicated account manager</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Comparison Table -->
+    <section class="py-24 px-6 bg-slate-900/50">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12">Compare All Features</h2>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-slate-700">
+                            <th class="text-left py-4 px-4 font-medium text-slate-400">Feature</th>
+                            <th class="text-center py-4 px-4 font-medium text-slate-400">Free</th>
+                            <th class="text-center py-4 px-4 font-medium text-verity-400">Pro</th>
+                            <th class="text-center py-4 px-4 font-medium text-slate-400">Team</th>
+                            <th class="text-center py-4 px-4 font-medium text-slate-400">Enterprise</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr class="border-b border-slate-800">
+                            <td class="py-4 px-4 text-slate-300">Monthly verifications</td>
+                            <td class="py-4 px-4 text-center">300</td>
+                            <td class="py-4 px-4 text-center text-verity-400 font-medium">500</td>
+                            <td class="py-4 px-4 text-center">2,500</td>
+                            <td class="py-4 px-4 text-center">Unlimited</td>
+                        </tr>
+                        <tr class="border-b border-slate-800">
+                            <td class="py-4 px-4 text-slate-300">Data sources</td>
+                            <td class="py-4 px-4 text-center">5</td>
+                            <td class="py-4 px-4 text-center text-verity-400 font-medium">27</td>
+                            <td class="py-4 px-4 text-center">27</td>
+                            <td class="py-4 px-4 text-center">27+</td>
+                        </tr>
+                        <tr class="border-b border-slate-800">
+                            <td class="py-4 px-4 text-slate-300">API Access</td>
+                            <td class="py-4 px-4 text-center text-slate-500">—</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                        </tr>
+                        <tr class="border-b border-slate-800">
+                            <td class="py-4 px-4 text-slate-300">NLP & Bias Detection</td>
+                            <td class="py-4 px-4 text-center text-slate-500">—</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                        </tr>
+                        <tr class="border-b border-slate-800">
+                            <td class="py-4 px-4 text-slate-300">Source Credibility Database</td>
+                            <td class="py-4 px-4 text-center text-slate-500">—</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                        </tr>
+                        <tr class="border-b border-slate-800">
+                            <td class="py-4 px-4 text-slate-300">Monte Carlo Confidence</td>
+                            <td class="py-4 px-4 text-center text-slate-500">—</td>
+                            <td class="py-4 px-4 text-center text-slate-500">—</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                        </tr>
+                        <tr class="border-b border-slate-800">
+                            <td class="py-4 px-4 text-slate-300">Temporal & Geospatial Analysis</td>
+                            <td class="py-4 px-4 text-center text-slate-500">—</td>
+                            <td class="py-4 px-4 text-center text-slate-500">—</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                        </tr>
+                        <tr class="border-b border-slate-800">
+                            <td class="py-4 px-4 text-slate-300">Similar Claims Detection</td>
+                            <td class="py-4 px-4 text-center text-slate-500">—</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                        </tr>
+                        <tr class="border-b border-slate-800">
+                            <td class="py-4 px-4 text-slate-300">Team Collaboration</td>
+                            <td class="py-4 px-4 text-center text-slate-500">—</td>
+                            <td class="py-4 px-4 text-center text-slate-500">—</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                        </tr>
+                        <tr class="border-b border-slate-800">
+                            <td class="py-4 px-4 text-slate-300">Custom Integrations</td>
+                            <td class="py-4 px-4 text-center text-slate-500">—</td>
+                            <td class="py-4 px-4 text-center text-slate-500">—</td>
+                            <td class="py-4 px-4 text-center text-slate-500">—</td>
+                            <td class="py-4 px-4 text-center text-verity-400">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-4 text-slate-300">Support</td>
+                            <td class="py-4 px-4 text-center text-slate-400">Community</td>
+                            <td class="py-4 px-4 text-center text-verity-400">Email</td>
+                            <td class="py-4 px-4 text-center text-slate-300">Priority</td>
+                            <td class="py-4 px-4 text-center text-slate-300">Dedicated</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-24 px-6">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+            
+            <div class="space-y-6">
+                <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                    <h3 class="font-semibold mb-2">What counts as a verification?</h3>
+                    <p class="text-slate-400">One verification = one claim checked. Whether it's a simple fact or complex analysis, it counts as one verification.</p>
+                </div>
+                
+                <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                    <h3 class="font-semibold mb-2">Can I change plans anytime?</h3>
+                    <p class="text-slate-400">Yes! Upgrade or downgrade at any time. Changes take effect immediately, and we'll prorate the difference.</p>
+                </div>
+                
+                <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                    <h3 class="font-semibold mb-2">Do you offer refunds?</h3>
+                    <p class="text-slate-400">Yes, we offer a 14-day money-back guarantee. No questions asked.</p>
+                </div>
+                
+                <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                    <h3 class="font-semibold mb-2">What payment methods do you accept?</h3>
+                    <p class="text-slate-400">We accept all major credit cards (Visa, Mastercard, Amex) via Stripe. Enterprise customers can pay via invoice.</p>
+                </div>
+                
+                <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                    <h3 class="font-semibold mb-2">Is there a free trial?</h3>
+                    <p class="text-slate-400">Yes! Pro and Team plans include a 7-day free trial. No credit card required to start.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="bg-gradient-to-br from-verity-600/20 to-verity-800/20 rounded-3xl p-12 border border-verity-500/30">
+                <h2 class="text-3xl font-bold mb-4">Ready to fight misinformation?</h2>
+                <p class="text-slate-400 mb-8 text-lg">Join thousands of journalists, researchers, and truth-seekers using Verity.</p>
+                <a href="auth.html?signup=true" class="inline-flex items-center px-8 py-4 bg-verity-600 hover:bg-verity-500 rounded-xl font-medium text-lg transition">
+                    Start Your Free Trial
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-6 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-3 mb-4 md:mb-0">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-verity-500 to-verity-600 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <span class="font-semibold">Verity Intelligence Platform</span>
+                </div>
+                <div class="text-slate-400 text-sm">
+                    © 2025 Verity Systems. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:8888'
+            : '';
+        
+        let isAnnual = false;
+        
+        function toggleBilling() {
+            isAnnual = !isAnnual;
+            
+            const toggle = document.getElementById('billingToggle');
+            const dot = document.getElementById('toggleDot');
+            const monthlyLabel = document.getElementById('monthlyLabel');
+            const annualLabel = document.getElementById('annualLabel');
+            const monthlyPrices = document.querySelectorAll('.monthly-price');
+            const annualPrices = document.querySelectorAll('.annual-price');
+            
+            if (isAnnual) {
+                toggle.classList.add('bg-verity-600');
+                toggle.classList.remove('bg-slate-700');
+                dot.classList.add('translate-x-7');
+                monthlyLabel.classList.remove('text-white');
+                monthlyLabel.classList.add('text-slate-400');
+                annualLabel.classList.remove('text-slate-400');
+                annualLabel.classList.add('text-white');
+                monthlyPrices.forEach(el => el.classList.add('hidden'));
+                annualPrices.forEach(el => el.classList.remove('hidden'));
+            } else {
+                toggle.classList.remove('bg-verity-600');
+                toggle.classList.add('bg-slate-700');
+                dot.classList.remove('translate-x-7');
+                monthlyLabel.classList.add('text-white');
+                monthlyLabel.classList.remove('text-slate-400');
+                annualLabel.classList.add('text-slate-400');
+                annualLabel.classList.remove('text-white');
+                monthlyPrices.forEach(el => el.classList.remove('hidden'));
+                annualPrices.forEach(el => el.classList.add('hidden'));
+            }
+        }
+        
+        async function startCheckout(plan) {
+            // For free plan, just redirect to signup
+            if (plan === 'free') {
+                window.location.href = 'auth.html?plan=free';
+                return;
+            }
+            
+            // Show loading state
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Loading...';
+            
+            try {
+                const email = localStorage.getItem('verity_email') || null;
+                
+                const response = await fetch(`${API_BASE}/api/v4/checkout`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-User-Tier': localStorage.getItem('verity_tier') || 'free',
+                        'X-API-Key': localStorage.getItem('verity_api_key') || ''
+                    },
+                    body: JSON.stringify({
+                        plan: plan,
+                        billing_cycle: isAnnual ? 'annual' : 'monthly',
+                        email: email
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.checkout_url) {
+                    if (data.demo_mode) {
+                        // Demo mode - simulate checkout success
+                        alert(`Demo Mode: Would redirect to Stripe checkout for ${plan} plan.\n\nTo enable real payments, configure STRIPE_SECRET_KEY in your environment.`);
+                        // Update local storage to simulate subscription
+                        localStorage.setItem('verity_tier', plan);
+                        window.location.href = 'dashboard.html?checkout=demo';
+                    } else {
+                        // Redirect to Stripe checkout
+                        window.location.href = data.checkout_url;
+                    }
+                } else {
+                    throw new Error(data.message || 'Failed to create checkout session');
+                }
+                
+            } catch (error) {
+                console.error('Checkout error:', error);
+                alert(`Error: ${error.message}\n\nPlease try again or contact support.`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+        
+        // Check for checkout result
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = new URLSearchParams(window.location.search);
+            
+            if (params.get('checkout') === 'success') {
+                // Show success message
+                alert('🎉 Welcome to Verity Pro! Your subscription is now active.');
+                // Clean URL
+                window.history.replaceState({}, '', 'pricing.html');
+            } else if (params.get('checkout') === 'cancelled') {
+                // Show cancelled message
+                alert('Checkout was cancelled. No charges were made.');
+                window.history.replaceState({}, '', 'pricing.html');
+            }
+        });
+    </script>
+</body>
+</html>

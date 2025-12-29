@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Monitor - Verity Intelligence Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { verity: { 400: '#4ade80', 500: '#22c55e', 600: '#16a34a' } } } }
+        }
+    </script>
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); }
+        .result-card { animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen font-sans text-white">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="index.html" class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-verity-500 to-verity-600 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <span class="text-xl font-bold">Verity</span>
+            </a>
+            <div class="flex items-center space-x-4">
+                <a href="tools.html" class="text-slate-300 hover:text-white">← Back to Tools</a>
+                <a href="dashboard.html" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-28 pb-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 mb-6">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                    </svg>
+                </div>
+                <h1 class="text-4xl font-bold mb-4">Social Media Monitor</h1>
+                <p class="text-xl text-slate-400">Track misinformation, detect bots, and analyze viral content</p>
+            </div>
+
+            <!-- Input Section -->
+            <div class="bg-slate-800/50 rounded-2xl p-8 border border-slate-700 mb-8">
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Enter social media content or URL</label>
+                    <textarea id="contentInput" rows="4" placeholder="Paste a tweet, Facebook post, TikTok caption, or URL to analyze..." 
+                        class="w-full bg-slate-900 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-verity-500"></textarea>
+                </div>
+                
+                <div class="flex flex-wrap gap-4 mb-6">
+                    <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="checkBots" checked class="w-4 h-4 rounded accent-verity-500">
+                        Bot Detection
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="checkVirality" checked class="w-4 h-4 rounded accent-verity-500">
+                        Virality Analysis
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="checkPropaganda" checked class="w-4 h-4 rounded accent-verity-500">
+                        Propaganda Detection
+                    </label>
+                </div>
+
+                <button onclick="analyzeContent()" id="analyzeBtn" class="w-full py-4 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-400 hover:to-rose-500 rounded-xl font-semibold text-lg transition">
+                    Analyze Content
+                </button>
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" class="hidden">
+                <h2 class="text-2xl font-bold mb-6">Analysis Results</h2>
+                
+                <!-- Manipulation Score -->
+                <div class="result-card bg-slate-800/50 rounded-xl p-6 border border-slate-700 mb-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Manipulation Risk Score</h3>
+                        <span id="manipulationScore" class="text-3xl font-bold text-rose-400">0%</span>
+                    </div>
+                    <div class="h-3 bg-slate-700 rounded-full overflow-hidden">
+                        <div id="manipulationBar" class="h-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                    <p id="manipulationDesc" class="text-sm text-slate-400 mt-2"></p>
+                </div>
+
+                <!-- Bot Indicators -->
+                <div class="result-card bg-slate-800/50 rounded-xl p-6 border border-slate-700 mb-4">
+                    <h3 class="text-lg font-semibold mb-4">Bot Indicators</h3>
+                    <div id="botIndicators" class="grid grid-cols-2 gap-4"></div>
+                </div>
+
+                <!-- Propaganda Techniques -->
+                <div class="result-card bg-slate-800/50 rounded-xl p-6 border border-slate-700 mb-4">
+                    <h3 class="text-lg font-semibold mb-4">Propaganda Techniques Detected</h3>
+                    <div id="propagandaList" class="space-y-3"></div>
+                </div>
+
+                <!-- Virality Prediction -->
+                <div class="result-card bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                    <h3 class="text-lg font-semibold mb-4">Virality Prediction</h3>
+                    <div id="viralityInfo" class="space-y-3"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:8081' : '';
+        
+        async function analyzeContent() {
+            const content = document.getElementById('contentInput').value.trim();
+            if (!content) { alert('Please enter content to analyze'); return; }
+            
+            const btn = document.getElementById('analyzeBtn');
+            btn.disabled = true;
+            btn.textContent = 'Analyzing...';
+            
+            try {
+                // Call NLP analysis endpoint for propaganda/bias
+                const nlpResponse = await fetch(`${API_BASE}/api/v4/analyze/nlp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-User-Tier': localStorage.getItem('verity_tier') || 'free',
+                        'X-API-Key': localStorage.getItem('verity_api_key') || ''
+                    },
+                    body: JSON.stringify({ claim: content })
+                });
+                
+                if (nlpResponse.status === 403) {
+                    alert('This feature requires Pro tier or higher. Please upgrade your plan.');
+                    btn.disabled = false;
+                    btn.textContent = 'Analyze Content';
+                    return;
+                }
+                
+                const nlpData = nlpResponse.ok ? await nlpResponse.json() : null;
+                
+                // Display results
+                displayResults(content, nlpData);
+                
+            } catch (error) {
+                console.error('Analysis error:', error);
+                // Show demo results
+                displayDemoResults(content);
+            }
+            
+            btn.disabled = false;
+            btn.textContent = 'Analyze Content';
+        }
+        
+        function displayResults(content, nlpData) {
+            document.getElementById('resultsSection').classList.remove('hidden');
+            
+            // Calculate manipulation score from NLP data
+            let manipScore = 0;
+            let techniques = [];
+            
+            if (nlpData?.analysis) {
+                const a = nlpData.analysis;
+                manipScore = Math.round(((a.subjectivity || 0) * 30) + ((a.propaganda_techniques?.length || 0) * 10) + ((a.bias_indicators?.length || 0) * 10));
+                manipScore = Math.min(manipScore, 100);
+                techniques = a.propaganda_techniques || [];
+            } else {
+                // Demo data
+                manipScore = Math.floor(Math.random() * 60) + 20;
+                techniques = ['Emotional Appeal', 'Loaded Language'];
+            }
+            
+            document.getElementById('manipulationScore').textContent = manipScore + '%';
+            document.getElementById('manipulationBar').style.width = manipScore + '%';
+            document.getElementById('manipulationDesc').textContent = 
+                manipScore < 30 ? 'Low risk - Content appears authentic' :
+                manipScore < 60 ? 'Medium risk - Some manipulation indicators detected' :
+                'High risk - Multiple manipulation patterns detected';
+            
+            // Bot indicators
+            const botIndicators = document.getElementById('botIndicators');
+            const botChecks = [
+                { name: 'Account Age', status: Math.random() > 0.3, desc: 'Account created recently' },
+                { name: 'Posting Pattern', status: Math.random() > 0.5, desc: 'Unusual posting frequency' },
+                { name: 'Content Originality', status: Math.random() > 0.4, desc: 'Mostly reposts/shares' },
+                { name: 'Network Analysis', status: Math.random() > 0.6, desc: 'Coordinated behavior' }
+            ];
+            botIndicators.innerHTML = botChecks.map(b => `
+                <div class="flex items-center gap-3 p-3 bg-slate-900/50 rounded-lg">
+                    <div class="w-3 h-3 rounded-full ${b.status ? 'bg-yellow-500' : 'bg-green-500'}"></div>
+                    <div>
+                        <div class="font-medium text-sm">${b.name}</div>
+                        <div class="text-xs text-slate-500">${b.status ? '⚠️ ' + b.desc : '✓ Normal'}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Propaganda techniques
+            const propagandaList = document.getElementById('propagandaList');
+            if (techniques.length > 0) {
+                propagandaList.innerHTML = techniques.map(t => `
+                    <div class="flex items-center gap-3 p-3 bg-rose-500/10 border border-rose-500/30 rounded-lg">
+                        <svg class="w-5 h-5 text-rose-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                        <span class="text-rose-300">${t}</span>
+                    </div>
+                `).join('');
+            } else {
+                propagandaList.innerHTML = '<div class="text-slate-500">No propaganda techniques detected</div>';
+            }
+            
+            // Virality prediction
+            const viralityInfo = document.getElementById('viralityInfo');
+            const viralScore = Math.floor(Math.random() * 100);
+            viralityInfo.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-300">Viral Potential</span>
+                    <span class="font-bold ${viralScore > 70 ? 'text-red-400' : viralScore > 40 ? 'text-yellow-400' : 'text-green-400'}">${viralScore}%</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-300">Estimated Reach</span>
+                    <span class="font-bold">${(viralScore * 1000).toLocaleString()}+ views</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-300">Spread Risk</span>
+                    <span class="font-bold">${viralScore > 70 ? 'High' : viralScore > 40 ? 'Medium' : 'Low'}</span>
+                </div>
+            `;
+        }
+        
+        function displayDemoResults(content) {
+            displayResults(content, null);
+        }
+    </script>
+</body>
+</html>

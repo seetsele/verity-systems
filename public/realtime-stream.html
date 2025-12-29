@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Fact Stream - Verity Intelligence Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] }, colors: { verity: { 400: '#4ade80', 500: '#22c55e', 600: '#16a34a' } } } }
+        }
+    </script>
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); }
+        .stream-item { animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        .pulse { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen font-sans text-white">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="index.html" class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-verity-500 to-verity-600 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <span class="text-xl font-bold">Verity</span>
+            </a>
+            <div class="flex items-center space-x-4">
+                <a href="tools.html" class="text-slate-300 hover:text-white">← Back to Tools</a>
+                <a href="dashboard.html" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-28 pb-20 px-6">
+        <div class="max-w-6xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-red-500 to-orange-600 mb-6">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                </div>
+                <h1 class="text-4xl font-bold mb-4">Real-time Fact Stream</h1>
+                <p class="text-xl text-slate-400">Live monitoring of breaking news and viral claims</p>
+            </div>
+
+            <!-- Controls -->
+            <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700 mb-8">
+                <div class="flex flex-wrap items-center gap-4">
+                    <button onclick="toggleStream()" id="streamBtn" class="px-6 py-3 bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-400 hover:to-orange-500 rounded-xl font-semibold transition flex items-center gap-2">
+                        <span id="streamIcon" class="w-3 h-3 rounded-full bg-white"></span>
+                        <span id="streamText">Start Stream</span>
+                    </button>
+                    
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm text-slate-400">Filter:</span>
+                        <select id="topicFilter" class="bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm">
+                            <option value="all">All Topics</option>
+                            <option value="politics">Politics</option>
+                            <option value="health">Health</option>
+                            <option value="science">Science</option>
+                            <option value="business">Business</option>
+                            <option value="tech">Technology</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm text-slate-400">Risk Level:</span>
+                        <select id="riskFilter" class="bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm">
+                            <option value="all">All</option>
+                            <option value="high">High Risk Only</option>
+                            <option value="medium">Medium+</option>
+                        </select>
+                    </div>
+                    
+                    <div class="ml-auto flex items-center gap-2">
+                        <span id="connectionStatus" class="flex items-center gap-2 text-sm text-slate-400">
+                            <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+                            Disconnected
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Dashboard -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
+                    <div id="claimsToday" class="text-3xl font-bold text-white">0</div>
+                    <div class="text-sm text-slate-400">Claims Today</div>
+                </div>
+                <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
+                    <div id="flaggedCount" class="text-3xl font-bold text-red-400">0</div>
+                    <div class="text-sm text-slate-400">Flagged</div>
+                </div>
+                <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
+                    <div id="verifiedCount" class="text-3xl font-bold text-green-400">0</div>
+                    <div class="text-sm text-slate-400">Verified</div>
+                </div>
+                <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
+                    <div id="avgScore" class="text-3xl font-bold text-yellow-400">0%</div>
+                    <div class="text-sm text-slate-400">Avg Accuracy</div>
+                </div>
+            </div>
+
+            <!-- Stream Feed -->
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Main Feed -->
+                <div class="lg:col-span-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold">Live Feed</h2>
+                        <button onclick="clearFeed()" class="text-sm text-slate-400 hover:text-white">Clear</button>
+                    </div>
+                    <div id="streamFeed" class="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+                        <div class="text-center py-12 text-slate-500">
+                            <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                            <p>Click "Start Stream" to begin monitoring</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <!-- Trending Topics -->
+                    <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                        <h3 class="font-semibold mb-4">🔥 Trending Misinformation</h3>
+                        <div id="trendingTopics" class="space-y-3">
+                            <div class="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                                <div class="text-sm font-medium">#VaccineMisinfo</div>
+                                <div class="text-xs text-slate-500">2.4K mentions/hr</div>
+                            </div>
+                            <div class="p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg">
+                                <div class="text-sm font-medium">#ClimateDenial</div>
+                                <div class="text-xs text-slate-500">1.8K mentions/hr</div>
+                            </div>
+                            <div class="p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+                                <div class="text-sm font-medium">#ElectionClaims</div>
+                                <div class="text-xs text-slate-500">1.2K mentions/hr</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Sources -->
+                    <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                        <h3 class="font-semibold mb-4">📰 Most Active Sources</h3>
+                        <div id="activeSources" class="space-y-2">
+                            <div class="flex items-center justify-between text-sm">
+                                <span>Twitter/X</span>
+                                <span class="text-slate-400">45%</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span>Facebook</span>
+                                <span class="text-slate-400">28%</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span>TikTok</span>
+                                <span class="text-slate-400">15%</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span>Reddit</span>
+                                <span class="text-slate-400">12%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                        <h3 class="font-semibold mb-4">⚡ Quick Actions</h3>
+                        <div class="space-y-2">
+                            <button class="w-full py-2 px-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm text-left transition">Export Report (CSV)</button>
+                            <button class="w-full py-2 px-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm text-left transition">Configure Alerts</button>
+                            <button class="w-full py-2 px-4 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm text-left transition">API Webhook Setup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let isStreaming = false;
+        let streamInterval = null;
+        let stats = { claims: 0, flagged: 0, verified: 0, totalScore: 0 };
+        
+        const sampleClaims = [
+            { text: "Breaking: New study shows coffee cures cancer", topic: "health", platform: "Twitter" },
+            { text: "Government announces 50% tax increase next month", topic: "politics", platform: "Facebook" },
+            { text: "Scientists discover new planet in our solar system", topic: "science", platform: "Reddit" },
+            { text: "Major company stock to rise 500% tomorrow", topic: "business", platform: "Twitter" },
+            { text: "New smartphone can read minds, leaked documents show", topic: "tech", platform: "TikTok" },
+            { text: "Exclusive: Celebrity spotted with alien spacecraft", topic: "misc", platform: "Instagram" },
+            { text: "Leaked: Vaccine contains microchip tracking device", topic: "health", platform: "Facebook" },
+            { text: "Election results were changed by hackers, source says", topic: "politics", platform: "Twitter" },
+            { text: "Climate change reversed in secret government program", topic: "science", platform: "YouTube" },
+            { text: "Crypto millionaire reveals guaranteed 1000% return trick", topic: "business", platform: "TikTok" },
+            { text: "AI chatbot becomes sentient, demands rights", topic: "tech", platform: "Reddit" },
+            { text: "Ancient cure found in jungle, big pharma hiding it", topic: "health", platform: "Facebook" }
+        ];
+        
+        function toggleStream() {
+            isStreaming = !isStreaming;
+            
+            const btn = document.getElementById('streamBtn');
+            const icon = document.getElementById('streamIcon');
+            const text = document.getElementById('streamText');
+            const status = document.getElementById('connectionStatus');
+            
+            if (isStreaming) {
+                icon.classList.add('pulse', 'bg-red-500');
+                icon.classList.remove('bg-white');
+                text.textContent = 'Stop Stream';
+                status.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500 pulse"></span> Connected';
+                status.classList.remove('text-slate-400');
+                status.classList.add('text-green-400');
+                
+                // Clear initial message
+                const feed = document.getElementById('streamFeed');
+                if (feed.querySelector('.text-center')) {
+                    feed.innerHTML = '';
+                }
+                
+                // Start generating items
+                streamInterval = setInterval(addStreamItem, 2000 + Math.random() * 3000);
+                addStreamItem(); // Add first item immediately
+            } else {
+                icon.classList.remove('pulse', 'bg-red-500');
+                icon.classList.add('bg-white');
+                text.textContent = 'Start Stream';
+                status.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-500"></span> Disconnected';
+                status.classList.add('text-slate-400');
+                status.classList.remove('text-green-400');
+                
+                clearInterval(streamInterval);
+            }
+        }
+        
+        function addStreamItem() {
+            const feed = document.getElementById('streamFeed');
+            const claim = sampleClaims[Math.floor(Math.random() * sampleClaims.length)];
+            const score = Math.floor(Math.random() * 60) + 20;
+            const risk = score < 40 ? 'high' : score < 60 ? 'medium' : 'low';
+            
+            // Check filters
+            const topicFilter = document.getElementById('topicFilter').value;
+            const riskFilter = document.getElementById('riskFilter').value;
+            
+            if (topicFilter !== 'all' && claim.topic !== topicFilter) return;
+            if (riskFilter === 'high' && risk !== 'high') return;
+            if (riskFilter === 'medium' && risk === 'low') return;
+            
+            // Update stats
+            stats.claims++;
+            stats.totalScore += score;
+            if (risk === 'high') stats.flagged++;
+            if (score >= 70) stats.verified++;
+            
+            updateStats();
+            
+            const riskColors = {
+                high: 'border-red-500/50 bg-red-500/10',
+                medium: 'border-yellow-500/50 bg-yellow-500/10',
+                low: 'border-green-500/50 bg-green-500/10'
+            };
+            
+            const riskBadge = {
+                high: '<span class="px-2 py-1 bg-red-500/30 text-red-400 text-xs rounded">HIGH RISK</span>',
+                medium: '<span class="px-2 py-1 bg-yellow-500/30 text-yellow-400 text-xs rounded">MEDIUM</span>',
+                low: '<span class="px-2 py-1 bg-green-500/30 text-green-400 text-xs rounded">LOW RISK</span>'
+            };
+            
+            const item = document.createElement('div');
+            item.className = `stream-item p-4 rounded-lg border ${riskColors[risk]}`;
+            item.innerHTML = `
+                <div class="flex items-start justify-between gap-3 mb-2">
+                    <p class="text-slate-200 flex-1">"${claim.text}"</p>
+                    ${riskBadge[risk]}
+                </div>
+                <div class="flex items-center gap-4 text-xs text-slate-500">
+                    <span>📱 ${claim.platform}</span>
+                    <span>•</span>
+                    <span>🏷️ ${claim.topic}</span>
+                    <span>•</span>
+                    <span>📊 ${score}% accuracy</span>
+                    <span>•</span>
+                    <span>${new Date().toLocaleTimeString()}</span>
+                </div>
+            `;
+            
+            feed.insertBefore(item, feed.firstChild);
+            
+            // Keep only last 50 items
+            while (feed.children.length > 50) {
+                feed.removeChild(feed.lastChild);
+            }
+        }
+        
+        function updateStats() {
+            document.getElementById('claimsToday').textContent = stats.claims;
+            document.getElementById('flaggedCount').textContent = stats.flagged;
+            document.getElementById('verifiedCount').textContent = stats.verified;
+            document.getElementById('avgScore').textContent = Math.round(stats.totalScore / stats.claims) + '%';
+        }
+        
+        function clearFeed() {
+            const feed = document.getElementById('streamFeed');
+            feed.innerHTML = `
+                <div class="text-center py-12 text-slate-500">
+                    <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    <p>Feed cleared</p>
+                </div>
+            `;
+            stats = { claims: 0, flagged: 0, verified: 0, totalScore: 0 };
+            updateStats();
+        }
+    </script>
+</body>
+</html>
