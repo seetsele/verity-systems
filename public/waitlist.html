@@ -324,7 +324,7 @@
         
         .stat-label {
             font-size: 0.75rem;
-            color: #6b7280;
+            color: #9ca3af; /* improved contrast */
             text-transform: uppercase;
             letter-spacing: 0.1em;
             margin-top: 0.25rem;
@@ -367,9 +367,28 @@
         
         .feature-desc {
             font-size: 0.75rem;
-            color: #6b7280;
+            color: #9ca3af; /* improved contrast */
         }
-        
+
+        /* Social proof & perks */
+        .social-proof { margin-top: 2.5rem; display:flex; align-items:center; gap:1rem; justify-content:center; flex-direction:column; text-align:center; }
+        .avatars { display:flex; gap: -12px; align-items:center; }
+        .avatar { width:44px; height:44px; border-radius:50%; border:2px solid rgba(0,0,0,0.25); box-shadow:0 6px 20px rgba(0,0,0,0.4); overflow:hidden; }
+        .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+        .social-text { color:#9ca3af; font-size:0.95rem; margin-top:0.5rem; }
+
+        .perks { display:flex; gap:1rem; margin-top:2rem; justify-content:center; flex-wrap:wrap; }
+        .perk { background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:0.9rem 1rem; border-radius:12px; font-size:0.9rem; color:#d1d5db; display:flex; gap:0.75rem; align-items:center; }
+
+        /* Roadmap */
+        .roadmap { margin-top:3rem; background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:1.25rem; border-radius:12px; }
+        .roadmap h3{ font-size:1rem; font-weight:600; color:white; margin-bottom:0.75rem; }
+        .timeline { list-style:none; display:flex; flex-direction:column; gap:0.75rem; }
+        .timeline-item{ display:flex; align-items:center; gap:1rem; }
+        .timeline-meta{ min-width:110px; font-size:0.85rem; color:#9ca3af; }
+        .progress { flex:1; background:rgba(255,255,255,0.03); height:10px; border-radius:8px; overflow:hidden; }
+        .progress > span{ display:block; height:100%; background:linear-gradient(90deg,var(--cyan),var(--purple)); width:0%; transition:width: 1s ease; }
+
         /* Success State */
         .success-message {
             display: none;
@@ -407,6 +426,8 @@
             color: #94a3b8;
         }
         
+        .sr-only { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; border: 0; padding: 0; margin: -1px; }
+
         /* Responsive */
         @media (max-width: 640px) {
             .form-row {
@@ -480,19 +501,23 @@
             <form class="waitlist-form" id="waitlistForm">
                 <div class="form-row">
                     <div class="form-group">
-                        <input type="text" class="form-input" name="firstName" placeholder="First name" required>
+                        <label for="firstName" class="sr-only">First name</label>
+                        <input id="firstName" type="text" class="form-input" name="firstName" placeholder="First name" required>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-input" name="lastName" placeholder="Last name" required>
+                        <label for="lastName" class="sr-only">Last name</label>
+                        <input id="lastName" type="text" class="form-input" name="lastName" placeholder="Last name" required>
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <input type="email" class="form-input" name="email" placeholder="Email address" required>
+                    <label for="email" class="sr-only">Email address</label>
+                    <input id="email" type="email" class="form-input" name="email" placeholder="Email address" required>
                 </div>
                 
                 <div class="form-group">
-                    <select class="form-input form-select" name="useCase" required>
+                    <label for="useCase" class="sr-only">How will you use Verity?</label>
+                    <select id="useCase" class="form-input form-select" name="useCase" required aria-required="true">
                         <option value="" disabled selected>How will you use Verity?</option>
                         <option value="journalism">Journalism & Media</option>
                         <option value="research">Academic Research</option>
@@ -502,9 +527,28 @@
                         <option value="other">Other</option>
                     </select>
                 </div>
+
+                <div class="form-group" role="radiogroup" aria-label="Select your role">
+                    <label style="display:block;font-size:0.9rem;color:#9ca3af;margin-bottom:0.5rem;">Your role</label>
+                    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+                        <label style="background:rgba(255,255,255,0.02);padding:0.5rem 0.75rem;border-radius:8px;cursor:pointer;font-size:0.9rem;">
+                            <input type="radio" name="role" value="developer" style="margin-right:0.5rem;vertical-align:middle;">Developer
+                        </label>
+                        <label style="background:rgba(255,255,255,0.02);padding:0.5rem 0.75rem;border-radius:8px;cursor:pointer;font-size:0.9rem;">
+                            <input type="radio" name="role" value="journalist" style="margin-right:0.5rem;vertical-align:middle;">Journalist
+                        </label>
+                        <label style="background:rgba(255,255,255,0.02);padding:0.5rem 0.75rem;border-radius:8px;cursor:pointer;font-size:0.9rem;">
+                            <input type="radio" name="role" value="researcher" style="margin-right:0.5rem;vertical-align:middle;">Researcher
+                        </label>
+                        <label style="background:rgba(255,255,255,0.02);padding:0.5rem 0.75rem;border-radius:8px;cursor:pointer;font-size:0.9rem;">
+                            <input type="radio" name="role" value="student" style="margin-right:0.5rem;vertical-align:middle;">Student
+                        </label>
+                    </div>
+                </div>
                 
                 <div class="form-group">
-                    <input type="text" class="form-input" name="organization" placeholder="Organization (optional)">
+                    <label for="organization" class="sr-only">Organization</label>
+                    <input id="organization" type="text" class="form-input" name="organization" placeholder="Organization (optional)">
                 </div>
                 
                 <button type="submit" class="submit-btn" id="submitBtn">
@@ -516,7 +560,7 @@
             </form>
             
             <!-- Success Message -->
-            <div class="success-message" id="successMessage">
+            <div class="success-message" id="successMessage" role="status" aria-live="polite" tabindex="-1">
                 <div class="success-icon">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
                         <path d="M20 6L9 17l-5-5"/>
@@ -529,17 +573,57 @@
             <!-- Stats -->
             <div class="waitlist-stats">
                 <div class="stat">
-                    <div class="stat-value" id="waitlistCount">2,847</div>
+                    <div class="stat-value" id="waitlistCount" aria-live="polite">2,847</div>
                     <div class="stat-label">On Waitlist</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-value">Q1 2025</div>
+                    <div class="stat-value">Dec 30, 2025</div>
                     <div class="stat-label">Launch Date</div>
                 </div>
                 <div class="stat">
                     <div class="stat-value">100</div>
                     <div class="stat-label">Beta Spots Left</div>
                 </div>
+            </div>
+
+            <!-- Social proof -->
+            <div class="social-proof" role="region" aria-label="Community highlights">
+                <div class="avatars" aria-hidden="false">
+                    <div class="avatar" title="User 1"><img alt="avatar" src="https://i.pravatar.cc/44?img=12"></div>
+                    <div class="avatar" title="User 2"><img alt="avatar" src="https://i.pravatar.cc/44?img=45"></div>
+                    <div class="avatar" title="User 3"><img alt="avatar" src="https://i.pravatar.cc/44?img=32"></div>
+                    <div class="avatar" title="User 4"><img alt="avatar" src="https://i.pravatar.cc/44?img=8"></div>
+                </div>
+                <p class="social-text"><strong>Join 2,847 people</strong> getting early access — trusted by journalists, researchers, and teams worldwide.</p>
+
+                <!-- Perks -->
+                <div class="perks" role="list" aria-label="Waitlist perks">
+                    <div class="perk" role="listitem">🎉 Founding member badge</div>
+                    <div class="perk" role="listitem">⚡ Priority access & feature requests</div>
+                    <div class="perk" role="listitem">💬 Dedicated support & community</div>
+                </div>
+
+                <!-- Roadmap -->
+                <section class="roadmap" aria-labelledby="roadmapLabel">
+                    <h3 id="roadmapLabel">Roadmap</h3>
+                    <ul class="timeline">
+                        <li class="timeline-item">
+                            <div class="timeline-meta">Dec 30, 2025</div>
+                            <div class="progress" aria-hidden="true"><span style="width:100%"></span></div>
+                            <div class="timeline-desc" style="min-width:160px;color:#cbd5e1;margin-left:0.75rem">Official Launch — GA</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-meta">Q1 2026</div>
+                            <div class="progress" aria-hidden="true"><span style="width:40%"></span></div>
+                            <div class="timeline-desc" style="min-width:160px;color:#cbd5e1;margin-left:0.75rem">Team features & API keys</div>
+                        </li>
+                        <li class="timeline-item">
+                            <div class="timeline-meta">Q2 2026</div>
+                            <div class="progress" aria-hidden="true"><span style="width:10%"></span></div>
+                            <div class="timeline-desc" style="min-width:160px;color:#cbd5e1;margin-left:0.75rem">Enterprise integrations</div>
+                        </li>
+                    </ul>
+                </section>
             </div>
             
             <!-- Features Preview -->
@@ -602,7 +686,9 @@
                 if (response.ok) {
                     // Show success
                     form.style.display = 'none';
-                    document.getElementById('successMessage').classList.add('show');
+                    const successEl = document.getElementById('successMessage');
+                    successEl.classList.add('show');
+                    successEl.focus();
                     
                     // Update count
                     const countEl = document.getElementById('waitlistCount');
@@ -616,7 +702,9 @@
                 
                 // For demo, show success anyway
                 form.style.display = 'none';
-                document.getElementById('successMessage').classList.add('show');
+                const successEl = document.getElementById('successMessage');
+                successEl.classList.add('show');
+                successEl.focus();
                 
                 const countEl = document.getElementById('waitlistCount');
                 const currentCount = parseInt(countEl.textContent.replace(',', ''));

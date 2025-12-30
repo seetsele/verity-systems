@@ -107,15 +107,18 @@
 <style>@keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.15)}28%{transform:scale(1)}42%{transform:scale(1.1)}56%{transform:scale(1)}}</style>
 <script>window.addEventListener('load',()=>{setTimeout(()=>{const l=document.getElementById('loading-screen');l.style.opacity='0';setTimeout(()=>l.remove(),500)},800)})</script>
 <body class="dashboard-body">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <style>.skip-link{position:absolute;left:12px;top:12px;background:#071428;color:#e6f3ff;padding:0.4rem 0.65rem;border-radius:6px;text-decoration:none;font-size:0.9rem;box-shadow:0 6px 18px rgba(7,20,40,0.5)}</style>
+    <style>.empty-recent p{color:#cbd5e1}</style>
     <div class="page-background">
         <div class="gradient-orb orb-1"></div>
         <div class="gradient-orb orb-2"></div>
         <!-- Floating Badges -->
-        <div class="floating-badge badge-1" style="position:fixed;top:15%;right:8%;background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.3);padding:0.5rem 1rem;border-radius:30px;font-size:0.75rem;color:#22d3ee;display:flex;align-items:center;gap:0.5rem;z-index:1;animation:floatBadge 4s ease-in-out infinite;pointer-events:none;">
+        <div class="floating-badge badge-1" aria-hidden="true" style="position:fixed;top:15%;right:8%;background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.3);padding:0.5rem 1rem;border-radius:30px;font-size:0.75rem;color:#22d3ee;display:flex;align-items:center;gap:0.5rem;z-index:1;animation:floatBadge 4s ease-in-out infinite;pointer-events:none;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             <span>16 AI Providers</span>
         </div>
-        <div class="floating-badge badge-2" style="position:fixed;bottom:20%;right:5%;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);padding:0.5rem 1rem;border-radius:30px;font-size:0.75rem;color:#a855f7;display:flex;align-items:center;gap:0.5rem;z-index:1;animation:floatBadge 5s ease-in-out infinite 1s;pointer-events:none;">
+        <div class="floating-badge badge-2" aria-hidden="true" style="position:fixed;bottom:20%;right:5%;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);padding:0.5rem 1rem;border-radius:30px;font-size:0.75rem;color:#a855f7;display:flex;align-items:center;gap:0.5rem;z-index:1;animation:floatBadge 5s ease-in-out infinite 1s;pointer-events:none;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
             <span>Real-time</span>
         </div>
@@ -134,6 +137,7 @@
                 </svg>
                 <span class="logo-text">verity<span class="dot">.</span></span>
             </a>
+            <div class="sidebar-user" style="font-size:0.85rem;color:#9ca3af;margin-top:0.75rem;">Member since Dec 30, 2025</div>
         </div>
         <nav class="sidebar-nav">
             <a href="dashboard.html" class="nav-item active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</a>
@@ -154,9 +158,9 @@
         </div>
     </aside>
 
-    <main class="main-content">
+    <main id="main-content" class="main-content" role="main">
         <header class="mobile-header">
-            <button class="mobile-menu-toggle" id="mobileMenuToggle"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu" aria-expanded="false"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
             <span class="mobile-logo">verity<span class="dot">.</span></span>
             <div class="mobile-user">JD</div>
         </header>
@@ -519,7 +523,13 @@
         
         function viewDetails(id) { window.location.href = 'history.html'; }
         
-        document.getElementById('mobileMenuToggle')?.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+        const mobileToggle = document.getElementById('mobileMenuToggle');
+        mobileToggle?.addEventListener('click', () => {
+            const sidebar = document.getElementById('sidebar');
+            const expanded = mobileToggle.getAttribute('aria-expanded') === 'true';
+            mobileToggle.setAttribute('aria-expanded', (!expanded).toString());
+            sidebar.classList.toggle('open');
+        });
         document.getElementById('claimInput')?.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); verifyClaim(); } });
         document.addEventListener('DOMContentLoaded', loadDashboard);
     </script>
