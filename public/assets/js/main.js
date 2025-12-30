@@ -933,9 +933,16 @@ function initializeMobileMenu() {
     const navLinks = document.querySelector('.nav-links');
     
     if (mobileMenuBtn) {
+        // Ensure ARIA state and keyboard operability
         mobileMenuBtn.addEventListener('click', () => {
+            const expanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
+            mobileMenuBtn.setAttribute('aria-expanded', String(!expanded));
             navLinks?.classList.toggle('active');
+            if (navLinks) navLinks.setAttribute('aria-hidden', String(expanded));
             mobileMenuBtn.classList.toggle('active');
+        });
+        mobileMenuBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); mobileMenuBtn.click(); }
         });
     }
 }

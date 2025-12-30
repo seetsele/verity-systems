@@ -116,7 +116,7 @@
                 <span class="logo-text">verity<span class="logo-dot">.</span></span>
             </a>
             
-            <div class="nav-links">
+            <div class="nav-links" id="navLinks" aria-hidden="true">
                 <a href="#features" class="nav-link">Features</a>
                 <a href="tools.html" class="nav-link">Tools</a>
                 <a href="ultimate-suite.html" class="nav-link" style="color: #fbbf24;">Ultimate</a>
@@ -146,10 +146,10 @@
                 </a>
             </div>
             
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <span></span>
-                <span></span>
-                <span></span>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="navLinks">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
             </button>
         </div>
     </nav>
@@ -1439,7 +1439,7 @@ verifyClaim();</code></pre>
         <div class="footer-container">
             <div class="footer-main">
                 <div class="footer-brand">
-                    <a href="#" class="logo footer-logo">
+                    <a href="#" class="logo footer-logo" aria-label="Verity home">
                         <svg class="footer-logo-svg" width="200" height="75" viewBox="0 0 800 300" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <text x="80" y="190" font-family="Arial Black, Arial Bold, sans-serif" font-size="160" font-weight="900" letter-spacing="-3">
                                 <tspan fill="#22D3EE">v</tspan><tspan fill="#06B6D4">e</tspan><tspan fill="#0EA5E9">r</tspan><tspan fill="#3B82F6">i</tspan><tspan fill="#4F46E5">t</tspan><tspan fill="#6366F1">y</tspan><tspan fill="#6366F1">.</tspan>

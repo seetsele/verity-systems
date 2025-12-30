@@ -2956,8 +2956,9 @@ section {
 
 .demo-hint {
     font-size: 0.85rem !important;
-    color: var(--text-muted) !important;
-    opacity: 0.7;
+    /* Increased contrast for WCAG AA */
+    color: rgba(255,255,255,0.78) !important;
+    opacity: 1;
 }
 
 /* Enhanced Verification Mode Info */
