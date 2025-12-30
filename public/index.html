@@ -788,29 +788,32 @@
                     </div>
                 </div>
 
-                <aside class="comparison-visual reveal" data-animate aria-hidden="false">
-                    <svg width="80" height="80" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-                        <defs>
-                            <linearGradient id="whyShieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00d9ff"/>
-                                <stop offset="100%" stop-color="#6366f1"/>
-                            </linearGradient>
-                        </defs>
-                        <path fill="none" stroke="url(#whyShieldGrad)" stroke-width="3" d="M100 20 L180 60 L180 130 Q100 200 100 200 Q20 200 20 130 L20 60 Z"/>
-                        <polyline points="85,120 100,140 130,100" fill="none" stroke="url(#whyShieldGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
-                    </svg>
-                    <h3 style="margin:0.25rem 0 0.25rem;">Enterprise-ready verification</h3>
-                    <p style="color:rgba(255,255,255,0.78);text-align:center;">Full source transparency, consensus engine, and APIs built for scale and compliance.</p>
-                    <ul class="compare-bullets" aria-hidden="true">
-                        <li><span class="dot" aria-hidden="true"></span><div><strong>Source transparency</strong><div style="color:rgba(255,255,255,0.75);font-size:0.95rem;">All sources surfaced and linkable for audits.</div></div></li>
-                        <li><span class="dot" aria-hidden="true"></span><div><strong>Consensus engine</strong><div style="color:rgba(255,255,255,0.75);font-size:0.95rem;">Weighted agreement across multiple models and curated sources.</div></div></li>
-                        <li><span class="dot" aria-hidden="true"></span><div><strong>Audit-ready</strong><div style="color:rgba(255,255,255,0.75);font-size:0.95rem;">Tamper-evident logs and cryptographic verification.</div></div></li>
-                    </ul>
-                    <a href="compare.html" class="btn btn-outline btn-cta" aria-label="Read full comparison">Read the full comparison</a>
-                </aside>
+
             </div>
         </div>
     </section>
+
+    <!-- Comparative aside moved to top level for accessibility -->
+    <aside class="comparison-visual reveal" role="complementary" aria-label="Why Verity summary" data-animate>
+        <svg width="80" height="80" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <defs>
+                <linearGradient id="whyShieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00d9ff"/>
+                    <stop offset="100%" stop-color="#6366f1"/>
+                </linearGradient>
+            </defs>
+            <path fill="none" stroke="url(#whyShieldGrad)" stroke-width="3" d="M100 20 L180 60 L180 130 Q100 200 100 200 Q20 200 20 130 L20 60 Z"/>
+            <polyline points="85,120 100,140 130,100" fill="none" stroke="url(#whyShieldGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+        </svg>
+        <h3 style="margin:0.25rem 0 0.25rem;">Enterprise-ready verification</h3>
+        <p style="color:rgba(255,255,255,0.78);text-align:center;">Full source transparency, consensus engine, and APIs built for scale and compliance.</p>
+        <ul class="compare-bullets" aria-hidden="true">
+            <li><span class="dot" aria-hidden="true"></span><div><strong>Source transparency</strong><div style="color:rgba(255,255,255,0.75);font-size:0.95rem;">All sources surfaced and linkable for audits.</div></div></li>
+            <li><span class="dot" aria-hidden="true"></span><div><strong>Consensus engine</strong><div style="color:rgba(255,255,255,0.75);font-size:0.95rem;">Weighted agreement across multiple models and curated sources.</div></div></li>
+            <li><span class="dot" aria-hidden="true"></span><div><strong>Audit-ready</strong><div style="color:rgba(255,255,255,0.75);font-size:0.95rem;">Tamper-evident logs and cryptographic verification.</div></div></li>
+        </ul>
+        <a href="compare.html" class="btn btn-outline btn-cta" aria-label="Read full comparison">Read the full comparison</a>
+    </aside>
 
     <!-- Demo Section -->
     <section class="demo" id="demo">
