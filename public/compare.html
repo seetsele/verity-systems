@@ -12,7 +12,13 @@
         .compare-table th, .compare-table td { padding:0.9rem 1rem; border-bottom:1px solid rgba(255,255,255,0.04); }
         .compare-table th { text-align:left; font-weight:700; }
         .download-actions { display:flex; gap:0.75rem; align-items:center; }
-        @media (max-width:900px){ .compare-grid{grid-template-columns:1fr;}.compare-hero{margin:1rem;}}
+
+        /* Controls */
+        .compare-controls { display:flex; gap:0.75rem; align-items:center; margin-bottom:0.75rem; }
+        .provider-filter.active { background: linear-gradient(135deg,#22d3ee,#6366f1); color: #041025; border-color: transparent; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+        @media (max-width:900px){ .compare-grid{grid-template-columns:1fr;}.compare-hero{margin:1rem;} }
     </style>
 </head>
 <body>
@@ -29,6 +35,19 @@
 
         <div class="compare-grid">
             <section id="matrix">
+                <div class="compare-controls" role="region" aria-label="Compare controls">
+                    <label for="compareSearch" class="sr-only">Search features</label>
+                    <input id="compareSearch" class="form-input" placeholder="Search features (e.g., 'audit', 'api')" aria-label="Search features" style="min-width:220px;flex:1;" />
+
+                    <div role="group" aria-label="Filter by provider" style="display:flex;gap:0.5rem;">
+                        <button class="btn btn-outline provider-filter" data-provider="chatgpt" type="button">ChatGPT: Yes</button>
+                        <button class="btn btn-outline provider-filter" data-provider="perplexity" type="button">Perplexity: Yes</button>
+                        <button class="btn btn-outline provider-filter" data-provider="manual" type="button">Manual: Yes</button>
+                        <button class="btn btn-outline provider-filter" data-provider="verity" type="button">Verity: Yes</button>
+                        <button class="btn btn-ghost" id="clearFilters" type="button">Clear</button>
+                    </div>
+                </div>
+
                 <table class="compare-table" aria-label="Detailed feature comparison">
                     <caption style="text-align:left;padding:0.75rem 1rem;font-weight:700;">Feature matrix</caption>
                     <thead>
@@ -41,40 +60,40 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr data-capability="Shows all sources" data-chatgpt="No" data-perplexity="Partial" data-manual="Yes" data-verity="Yes (linked)">
                             <td>Shows all sources</td>
                             <td style="text-align:center;color:#ef4444;">No</td>
                             <td style="text-align:center;color:#f59e0b;">Partial</td>
                             <td style="text-align:center;color:#10b981;">Yes</td>
                             <td style="text-align:center;color:#10b981;">Yes (linked)</td>
                         </tr>
-                        <tr>
+                        <tr data-capability="Consensus checking" data-chatgpt="No" data-perplexity="No" data-manual="Partial" data-verity="Yes">
                             <td>Consensus checking</td>
                             <td style="text-align:center;color:#ef4444;">No</td>
                             <td style="text-align:center;color:#ef4444;">No</td>
-                            <td style="text-align:center;color:#f59e0b;">Partial (human review)</td>
-                            <td style="text-align:center;color:#10b981;">Yes (model + data-weighted)</td>
+                            <td style="text-align:center;color:#f59e0b;">Partial</td>
+                            <td style="text-align:center;color:#10b981;">Yes</td>
                         </tr>
-                        <tr>
+                        <tr data-capability="Audit trail" data-chatgpt="No" data-perplexity="No" data-manual="No" data-verity="Yes">
                             <td>Audit trail</td>
                             <td style="text-align:center;color:#ef4444;">No</td>
                             <td style="text-align:center;color:#ef4444;">No</td>
                             <td style="text-align:center;color:#ef4444;">No</td>
-                            <td style="text-align:center;color:#10b981;">Yes (tamper-evident)</td>
+                            <td style="text-align:center;color:#10b981;">Yes</td>
                         </tr>
-                        <tr>
+                        <tr data-capability="API access & batch" data-chatgpt="API only" data-perplexity="No" data-manual="No" data-verity="Yes">
                             <td>API access & batch</td>
                             <td style="text-align:center;color:#10b981;">API only</td>
                             <td style="text-align:center;color:#ef4444;">No</td>
                             <td style="text-align:center;color:#ef4444;">No</td>
-                            <td style="text-align:center;color:#10b981;">Yes (batch & SLA)</td>
+                            <td style="text-align:center;color:#10b981;">Yes</td>
                         </tr>
-                        <tr>
+                        <tr data-capability="Compliance & SLAs" data-chatgpt="No" data-perplexity="No" data-manual="Varies" data-verity="Yes">
                             <td>Compliance & SLAs</td>
                             <td style="text-align:center;color:#ef4444;">No</td>
                             <td style="text-align:center;color:#ef4444;">No</td>
                             <td style="text-align:center;color:#6b7280;">Varies</td>
-                            <td style="text-align:center;color:#10b981;">Yes (enterprise)</td>
+                            <td style="text-align:center;color:#10b981;">Yes</td>
                         </tr>
                     </tbody>
                 </table>
@@ -92,5 +111,56 @@
             </aside>
         </div>
     </main>
+
+    <script>
+        // Interactive filter/search for the compare table
+        document.addEventListener('DOMContentLoaded', () => {
+            const search = document.getElementById('compareSearch');
+            const providerButtons = document.querySelectorAll('.provider-filter');
+            const clearBtn = document.getElementById('clearFilters');
+            const rows = Array.from(document.querySelectorAll('.compare-table tbody tr'));
+
+            function normalize(v){ return (v||'').toString().toLowerCase(); }
+
+            function applyFilters(){
+                const q = normalize(search.value.trim());
+                const active = Array.from(providerButtons).find(b=>b.classList.contains('active'))?.dataset?.provider || null;
+
+                rows.forEach(r => {
+                    let show = true;
+                    if (q){
+                        const cap = normalize(r.dataset.capability);
+                        if (!cap.includes(q)) show = false;
+                    }
+                    if (active && show){
+                        const val = normalize(r.dataset[active]);
+                        // treat 'yes' and '✓' and 'api only' as truthy
+                        if (!(/yes|✓|api/i).test(val)) show = false;
+                    }
+                    r.style.display = show ? '' : 'none';
+                });
+            }
+
+            // Wire up provider buttons (single-select toggle)
+            providerButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const active = btn.classList.toggle('active');
+                    // remove active from others (single-select)
+                    providerButtons.forEach(b => { if (b !== btn) b.classList.remove('active'); });
+                    applyFilters();
+                });
+
+                // support keyboard toggling for accessibility
+                btn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); } });
+            });
+
+            search && search.addEventListener('input', () => applyFilters());
+            clearBtn && clearBtn.addEventListener('click', () => {
+                if (search) search.value = '';
+                providerButtons.forEach(b => b.classList.remove('active'));
+                applyFilters();
+            });
+        });
+    </script>
 </body>
 </html>
