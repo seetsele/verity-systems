@@ -48,7 +48,42 @@
             <defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs>
         </svg>
     </div>
-    <style>@keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.15)}28%{transform:scale(1)}42%{transform:scale(1.1)}56%{transform:scale(1)}}</style>
+    <style>
+        @keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.15)}28%{transform:scale(1)}42%{transform:scale(1.1)}56%{transform:scale(1)}}
+
+        /* Comparison section styles */
+        .comparison { padding: 4rem 0; background: linear-gradient(180deg, rgba(99,102,241,0.02), transparent); }
+        .comparison .section-container { max-width: 1100px; margin: 0 auto; padding: 0 1rem; }
+        .section-badge { display:inline-block; background: rgba(34,211,238,0.04); color: #22d3ee; padding: 6px 10px; border-radius: 999px; font-weight: 700; font-size: 0.85rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.6px; }
+        .section-title { font-size: clamp(1.5rem, 3.5vw, 2.25rem); margin-bottom: 0.5rem; font-weight: 800; }
+        .section-description { color: rgba(255,255,255,0.78); margin-bottom: 1.5rem; max-width: 70ch; }
+
+        .comparison-wrap { display:flex; gap: 1.5rem; align-items:flex-start; }
+        .comparison-left { flex: 1; overflow: hidden; background: rgba(255,255,255,0.02); border-radius: 14px; padding: 1.25rem; border: 1px solid rgba(255,255,255,0.04); }
+        .comparison-table { width: 100%; border-collapse: collapse; min-width: 520px; }
+        .comparison-table caption { font-weight: 600; padding-bottom: 0.5rem; text-align:left; }
+        .comparison-table th { padding: 0.75rem 1rem; text-align: left; color: rgba(255,255,255,0.88); font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .comparison-table td { padding: 0.75rem 1rem; text-align:center; }
+        .comparison-table td:first-child { text-align:left; color: rgba(255,255,255,0.9); }
+        .comparison-table tr:hover { background: rgba(255,255,255,0.02); }
+
+        .comparison-visual { width: 320px; min-width: 240px; background: linear-gradient(180deg, rgba(34,211,238,0.03), rgba(99,102,241,0.02)); border-radius: 14px; padding: 1.25rem; display:flex; flex-direction:column; gap: 0.75rem; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.04); box-shadow: 0 8px 30px rgba(6,8,15,0.6); }
+        .compare-bullets { list-style:none; padding:0; margin:0; width:100%; }
+        .compare-bullets li { display:flex; gap:0.75rem; align-items:flex-start; padding:0.5rem 0; color: rgba(255,255,255,0.88); }
+        .compare-bullets .dot { width:10px; height:10px; border-radius:50%; background: linear-gradient(135deg, #22d3ee, #6366f1); margin-top:6px; flex: 0 0 10px; }
+
+        .btn-cta { margin-top: 0.5rem; align-self:stretch; display:inline-flex; justify-content:center; }
+
+        @media (max-width: 900px) {
+            .comparison-wrap { flex-direction: column; }
+            .comparison-visual { width: 100%; }
+            .comparison-left { padding: 1rem; }
+        }
+
+        /* Animate on reveal */
+        .reveal { opacity: 0; transform: translateY(12px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .reveal.is-visible { opacity: 1; transform: none; }
+    </style>
     <script>window.addEventListener('load',()=>{setTimeout(()=>{const l=document.getElementById('loadingScreen');l.style.opacity='0';setTimeout(()=>l.remove(),500)},800)})</script>
 
     <!-- Noise Overlay -->
@@ -690,68 +725,87 @@
             </div>
 
             <div class="comparison-wrap">
-                <div style="overflow-x:auto;">
-                    <table class="comparison-table" aria-label="Why Verity comparison table" style="width:100%;border-collapse:collapse;min-width:640px;">
-                        <caption style="text-align:left;padding-bottom:0.5rem;font-weight:600;">High-level capabilities comparison</caption>
-                        <thead>
-                            <tr style="text-align:left;border-bottom:1px solid rgba(255,255,255,0.06);">
-                                <th style="padding:0.75rem 1rem;min-width:220px;">Capability</th>
-                                <th style="padding:0.75rem 1rem;text-align:center;">ChatGPT</th>
-                                <th style="padding:0.75rem 1rem;text-align:center;">Perplexity</th>
-                                <th style="padding:0.75rem 1rem;text-align:center;">Manual</th>
-                                <th style="padding:0.75rem 1rem;text-align:center;">Verity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="padding:0.75rem 1rem;">Shows all sources</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#ef4444;">✗</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#f59e0b;">~</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#10b981;">✓</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#10b981;">✓</td>
-                            </tr>
-                            <tr style="background:rgba(255,255,255,0.01);">
-                                <td style="padding:0.75rem 1rem;">Consensus checking</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#ef4444;">✗</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#ef4444;">✗</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#f59e0b;">~</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#10b981;">✓</td>
-                            </tr>
-                            <tr>
-                                <td style="padding:0.75rem 1rem;">Audit trail</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#ef4444;">✗</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#ef4444;">✗</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#ef4444;">✗</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#10b981;">✓</td>
-                            </tr>
-                            <tr style="background:rgba(255,255,255,0.01);">
-                                <td style="padding:0.75rem 1rem;">API access</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#10b981;">✓</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#ef4444;">✗</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#ef4444;">✗</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#10b981;">✓</td>
-                            </tr>
-                            <tr>
-                                <td style="padding:0.75rem 1rem;">Batch processing</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#ef4444;">✗</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#ef4444;">✗</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#ef4444;">✗</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#10b981;">✓</td>
-                            </tr>
-                            <tr style="background:rgba(255,255,255,0.01);">
-                                <td style="padding:0.75rem 1rem;">Enterprise SLA</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#ef4444;">✗</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#ef4444;">✗</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#6b7280;">n/a</td>
-                                <td style="padding:0.75rem 1rem;text-align:center;color:#10b981;">✓</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="comparison-left reveal" data-animate>
+                    <div style="overflow-x:auto;">
+                        <table class="comparison-table" aria-label="Why Verity comparison table">
+                            <caption>High-level capabilities comparison</caption>
+                            <thead>
+                                <tr>
+                                    <th>Capability</th>
+                                    <th style="text-align:center;">ChatGPT</th>
+                                    <th style="text-align:center;">Perplexity</th>
+                                    <th style="text-align:center;">Manual</th>
+                                    <th style="text-align:center;">Verity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Shows all sources</td>
+                                    <td style="text-align:center;color:#ef4444;">✗</td>
+                                    <td style="text-align:center;color:#f59e0b;">~</td>
+                                    <td style="text-align:center;color:#10b981;">✓</td>
+                                    <td style="text-align:center;color:#10b981;">✓</td>
+                                </tr>
+                                <tr>
+                                    <td>Consensus checking</td>
+                                    <td style="text-align:center;color:#ef4444;">✗</td>
+                                    <td style="text-align:center;color:#ef4444;">✗</td>
+                                    <td style="text-align:center;color:#f59e0b;">~</td>
+                                    <td style="text-align:center;color:#10b981;">✓</td>
+                                </tr>
+                                <tr>
+                                    <td>Audit trail</td>
+                                    <td style="text-align:center;color:#ef4444;">✗</td>
+                                    <td style="text-align:center;color:#ef4444;">✗</td>
+                                    <td style="text-align:center;color:#ef4444;">✗</td>
+                                    <td style="text-align:center;color:#10b981;">✓</td>
+                                </tr>
+                                <tr>
+                                    <td>API access</td>
+                                    <td style="text-align:center;color:#10b981;">✓</td>
+                                    <td style="text-align:center;color:#ef4444;">✗</td>
+                                    <td style="text-align:center;color:#ef4444;">✗</td>
+                                    <td style="text-align:center;color:#10b981;">✓</td>
+                                </tr>
+                                <tr>
+                                    <td>Batch processing</td>
+                                    <td style="text-align:center;color:#ef4444;">✗</td>
+                                    <td style="text-align:center;color:#ef4444;">✗</td>
+                                    <td style="text-align:center;color:#ef4444;">✗</td>
+                                    <td style="text-align:center;color:#10b981;">✓</td>
+                                </tr>
+                                <tr>
+                                    <td>Enterprise SLA</td>
+                                    <td style="text-align:center;color:#ef4444;">✗</td>
+                                    <td style="text-align:center;color:#ef4444;">✗</td>
+                                    <td style="text-align:center;color:#6b7280;">n/a</td>
+                                    <td style="text-align:center;color:#10b981;">✓</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <p style="margin-top:1rem;">
-                    <a href="compare.html" class="btn btn-outline" style="text-decoration:none;">Read the full comparison</a>
-                </p>
+                <aside class="comparison-visual reveal" data-animate aria-hidden="false">
+                    <svg width="80" height="80" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                        <defs>
+                            <linearGradient id="whyShieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00d9ff"/>
+                                <stop offset="100%" stop-color="#6366f1"/>
+                            </linearGradient>
+                        </defs>
+                        <path fill="none" stroke="url(#whyShieldGrad)" stroke-width="3" d="M100 20 L180 60 L180 130 Q100 200 100 200 Q20 200 20 130 L20 60 Z"/>
+                        <polyline points="85,120 100,140 130,100" fill="none" stroke="url(#whyShieldGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+                    </svg>
+                    <h3 style="margin:0.25rem 0 0.25rem;">Enterprise-ready verification</h3>
+                    <p style="color:rgba(255,255,255,0.78);text-align:center;">Full source transparency, consensus engine, and APIs built for scale and compliance.</p>
+                    <ul class="compare-bullets" aria-hidden="true">
+                        <li><span class="dot" aria-hidden="true"></span><div><strong>Source transparency</strong><div style="color:rgba(255,255,255,0.75);font-size:0.95rem;">All sources surfaced and linkable for audits.</div></div></li>
+                        <li><span class="dot" aria-hidden="true"></span><div><strong>Consensus engine</strong><div style="color:rgba(255,255,255,0.75);font-size:0.95rem;">Weighted agreement across multiple models and curated sources.</div></div></li>
+                        <li><span class="dot" aria-hidden="true"></span><div><strong>Audit-ready</strong><div style="color:rgba(255,255,255,0.75);font-size:0.95rem;">Tamper-evident logs and cryptographic verification.</div></div></li>
+                    </ul>
+                    <a href="compare.html" class="btn btn-outline btn-cta" aria-label="Read full comparison">Read the full comparison</a>
+                </aside>
             </div>
         </div>
     </section>
@@ -1874,6 +1928,27 @@ verifyClaim();`
                     document.body.style.overflow = '';
                     pendingUrl = null;
                 }
+            }
+        });
+    </script>
+    <script>
+        // Reveal animations for the comparison section (GSAP + observer fallback)
+        document.addEventListener('DOMContentLoaded', () => {
+            const toAnimate = document.querySelectorAll('.comparison .reveal');
+            const io = new IntersectionObserver((entries, obs) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('is-visible');
+                        obs.unobserve(e.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+            toAnimate.forEach(el => io.observe(el));
+
+            if (window.gsap) {
+                gsap.from('.comparison .section-header', { opacity: 0, y: 10, duration: 0.6, ease: 'power3.out', delay: 0.12 });
+                gsap.from('.comparison-table tbody tr', { opacity: 0, y: 6, duration: 0.55, stagger: 0.05, ease: 'power3.out', delay: 0.2 });
+                gsap.from('.comparison-visual', { opacity: 0, y: 10, duration: 0.6, ease: 'power3.out', delay: 0.28 });
             }
         });
     </script>
