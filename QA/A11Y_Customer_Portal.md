@@ -38,3 +38,19 @@ If you want, I can:
 - Run color-contrast checks and add a small patch for any low-contrast elements.
 
 Contact: dev+support@verity.com
+
+---
+
+## Update (2025-12-30)
+- **Added** an interactive comparison UI at `public/compare.html` (search + provider filters) to help decision makers explore feature differences.
+- **Scans run:** axe & Lighthouse on `index.html`, `compare.html`, and `customer-portal.html`. Reports saved under `reports/` with timestamps in filenames (e.g., `axe-compare-fresh.json`, `lighthouse-index-fresh.json`).
+- **Results:**
+  - `compare.html` — 0 axe violations after fixes; Lighthouse accessibility report saved.
+  - `customer-portal.html` — 0 axe violations; Lighthouse report saved.
+  - `index.html` — axe found a small set of issues (button-name for `#mobileMenuBtn`, link-name for `.footer-logo`, color-contrast issue `.demo-hint`, plus many `region` / landmark warnings across the page). Recommend triaging high-severity issues first (button/link names and color-contrast).
+
+**Next steps:**
+- Address the `index.html` findings (add accessible labels to mobile menu & footer links, improve contrast for low-contrast elements) and re-run scans.
+- Capture cross-browser screenshots for the compare page and attach them to the PR.
+- Update the PR description to include these fresh reports and a short summary of the remaining index issues.
+
