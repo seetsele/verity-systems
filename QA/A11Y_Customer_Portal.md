@@ -54,3 +54,23 @@ Contact: dev+support@verity.com
 - Capture cross-browser screenshots for the compare page and attach them to the PR.
 - Update the PR description to include these fresh reports and a short summary of the remaining index issues.
 
+---
+
+## Update (2025-12-30 2)
+- **Waitlist page (`public/waitlist.html`)** — Revamp implemented: hero, improved form (labels + role selection), social proof, perks, roadmap, and success state (ARIA `role="status"` + focus). Scans run:
+  - Axe: `reports/axe-waitlist-2025-12-30.json` (initial), re-run: `reports/axe-waitlist-2025-12-30-2.json` (0 violations)
+  - pa11y: `reports/pa11y-waitlist-2025-12-30.json` (no errors)
+  - Lighthouse: `reports/lighthouse-waitlist-2025-12-30-2.json` (report saved)
+  - Screenshots: `reports/waitlist-chromium-2025-12-30.png`, `reports/waitlist-firefox-2025-12-30.png`, `reports/waitlist-webkit-2025-12-30.png`
+
+- **Dashboard (`public/dashboard.html`)** — Minor updates: added "Member since Dec 30, 2025", fixed mobile menu `aria-label`/`aria-expanded`, set decorative badges `aria-hidden="true"`, and improved contrast for skip link & empty states. Scans attempted:
+  - Axe initial: `reports/axe-dashboard-2025-12-30.json` (listed issues: button-name, color-contrast, region)
+  - Axe re-run after fixes: attempted; intermittent Chrome WebDriver errors prevented a fresh run; report exists at `reports/axe-dashboard-2025-12-30.json` showing the initial findings. I will re-run axe and Lighthouse in CI (or locally) when the environment is stable.
+  - pa11y: `reports/pa11y-dashboard-2025-12-30.json` (0 bytes — run failed due to a temporary connection error)
+  - Screenshot: `public/reports/dashboard-chromium-2025-12-30.png` (Chromium capture succeeded; Firefox/WebKit failed intermittently due to connection issues)
+
+**Notes:**
+- Server instability (intermittent connection refused errors when launching headless browsers) caused a few tooling runs to fail; I retried where possible and saved all successful artifacts.
+- Next: re-run axe & Lighthouse for Dashboard in CI where headless browsers are more stable; capture remaining browser screenshots; attach everything to the PR.
+
+
